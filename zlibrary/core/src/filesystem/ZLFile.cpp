@@ -30,6 +30,8 @@
 #include "bzip2/ZLBzip2InputStream.h"
 #include "ZLFSManager.h"
 
+#include <FBase.h>
+
 const ZLFile ZLFile::NO_FILE;
 
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
@@ -40,6 +42,7 @@ ZLFile::ZLFile() : myMimeTypeIsUpToDate(true), myInfoIsFilled(true) {
 ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(!mimeType.empty()), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
 	{
+		AppLog("ZLFile::ZLFile myPath %s", myPath.c_str());
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
 		if (index < myPath.length() - 1) {
 			myNameWithExtension = myPath.substr(index + 1);
@@ -49,12 +52,16 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 	}
 	myNameWithoutExtension = myNameWithExtension;
 
+	AppLog("myNameWithExtension %s", myNameWithExtension.c_str() );
+
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::Instance().myForcedFiles;
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
 	if (it != forcedFiles.end()) {
 		myArchiveType = it->second;
 	} else {
 		myArchiveType = NONE;
+
+
 		std::string lowerCaseName = ZLUnicodeUtil::toLower(myNameWithoutExtension);
 
 		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
@@ -73,9 +80,10 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 			myArchiveType = (ArchiveType)(myArchiveType | TAR);
 		} else if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz") ||
 							 ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
-			//myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3) + "tar";
+			myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3) + "tar";
 			myArchiveType = (ArchiveType)(myArchiveType | TAR | GZIP);
 		}
+
 	}
 
 	int index = myNameWithoutExtension.rfind('.');
@@ -83,30 +91,37 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 		myExtension = ZLUnicodeUtil::toLower(myNameWithoutExtension.substr(index + 1));
 		myNameWithoutExtension = myNameWithoutExtension.substr(0, index);
 	}
+	AppLog(" end of ZLFile::ZLFile");
 }
 
 shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const {
 	if (base != 0) {
 		if (myArchiveType & GZIP) {
-			return new ZLGzipInputStream(base);
+		//	return new ZLGzipInputStream(base);
 		}
 		if (myArchiveType & BZIP2) {
-			return new ZLBzip2InputStream(base);
+		//	return new ZLBzip2InputStream(base);
 		}
 	}
 	return base;
 }
 
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
+
+	AppLog("ZLFile::inputStream()");
+
 	shared_ptr<ZLInputStream> stream;
 	
 	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
+		AppLog("это не архив :)");
 		stream = ourPlainStreamCache[myPath];
 		if (stream.isNull()) {
 			if (isDirectory()) {
+				AppLog("облом)");
 				return 0;
 			}
+			AppLog("createPlainInputStream %s",myPath.c_str());
 			stream = ZLFSManager::Instance().createPlainInputStream(myPath);
 			stream = envelopeCompressedStream(stream);
 			ourPlainStreamCache[myPath] = stream;

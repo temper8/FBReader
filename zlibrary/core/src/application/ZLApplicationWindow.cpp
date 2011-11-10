@@ -19,7 +19,8 @@
 
 #include "ZLApplicationWindow.h"
 
-#include "../view/ZLViewWidget.h"
+#include "ZLViewWidget.h"
+#include "badaApp.h"
 
 ZLApplicationWindow *ZLApplicationWindow::ourInstance = 0;
 
@@ -35,24 +36,26 @@ ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplica
 void ZLApplicationWindow::init() {
 	myApplication->myViewWidget = createViewWidget();
 
-	initToolbar(WINDOW_TOOLBAR);
-	initToolbar(FULLSCREEN_TOOLBAR);
-	initMenu();
+//	initToolbar(WINDOW_TOOLBAR);
+//	initToolbar(FULLSCREEN_TOOLBAR);
+//	initMenu();
 }
-
+/*
 void ZLApplicationWindow::initToolbar(ToolbarType type) {
 	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar(type).items();
 	for (ZLToolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);
 	}
 }
+*/
 
 void ZLApplicationWindow::refresh() {
-	refreshToolbar(WINDOW_TOOLBAR);
-	refreshToolbar(FULLSCREEN_TOOLBAR);
-	processAllEvents();
+	AppLog("ZLApplicationWindow::refresh()");
+//	refreshToolbar(WINDOW_TOOLBAR);
+//	refreshToolbar(FULLSCREEN_TOOLBAR);
+//	processAllEvents();
 }
-
+/*
 void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	const ZLToolbar::ItemVector &items = application().toolbar(type).items();
 	bool canAddSeparator = false;
@@ -96,7 +99,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 						}
 						canAddSeparator = true;
 					}
-					/*
+
 					if (!enabled && button.isPressed()) {
 						button.buttonGroup().press(0);
 						//application().doAction(group->UnselectAllButtonsActionId);
@@ -104,7 +107,9 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 						setToggleButtonState(button);
 						myToggleButtonLock = false;
 					}
-					*/
+
+
+
 					setToolbarItemState(*it, visible, enabled);
 					setToggleButtonState(button);
 				}
@@ -134,17 +139,21 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 		setToolbarItemState(lastSeparator, false, true);
 	}
 }
+*/
 
+/*
 ZLApplicationWindow::ToolbarType ZLApplicationWindow::type(const ZLToolbar::Item &item) const {
 	return
 		(&item.toolbar() == &application().toolbar(WINDOW_TOOLBAR)) ?
 			WINDOW_TOOLBAR : FULLSCREEN_TOOLBAR;
 }
-
+*/
+/*
 bool ZLApplicationWindow::hasFullscreenToolbar() const {
 	return !application().toolbar(FULLSCREEN_TOOLBAR).items().empty();
 }
-
+*/
+/*
 void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {
 	if (myToggleButtonLock) {
 		return;
@@ -167,7 +176,7 @@ void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &but
 	}
 	application().doAction(button.actionId());
 }
-
+*/
 void ZLApplicationWindow::setVisualParameter(const std::string &id, const std::string &value) {
 	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
 	if (it != myParameterMap.end()) {
@@ -178,7 +187,7 @@ void ZLApplicationWindow::setVisualParameter(const std::string &id, const std::s
 void ZLApplicationWindow::setParameterValueList(const std::string &id, const std::vector<std::string> &values) {
 	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
 	if (it != myParameterMap.end()) {
-		it->second->setValueList(values);
+	//	it->second->setValueList(values);
 	}
 }
 
@@ -201,17 +210,17 @@ ZLApplicationWindow::VisualParameter::~VisualParameter() {
 }
 
 const std::string &ZLApplicationWindow::VisualParameter::value() const {
-	myValue = internalValue();
+//	myValue = internalValue();
 	return myValue;
 }
 
 void ZLApplicationWindow::VisualParameter::setValue(const std::string &value) {
 	if (value != myValue) {
 		myValue = value;
-		internalSetValue(value);
+//		internalSetValue(value);
 	}
 }
 
 void ZLApplicationWindow::VisualParameter::restoreOldValue() {
-	internalSetValue(myValue);
+//	internalSetValue(myValue);
 }

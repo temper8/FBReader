@@ -21,9 +21,10 @@
 #define __ZLRUNNABLE_H__
 
 #include <string>
+#include <ZLResource.h>
 
 class ZLResource;
-struct ZLResourceKey;
+//struct ZLResourceKey;
 
 class ZLRunnable {
 

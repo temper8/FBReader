@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include "ZLDialogManager.h"
 #include "ZLProgressDialog.h"
 
@@ -83,20 +83,22 @@ void ZLDialogManager::informationBox(const ZLResourceKey &key, const std::string
 void ZLDialogManager::errorBox(const ZLResourceKey &key) const {
 	errorBox(key, dialogMessage(key));
 }
-
+/*
 int ZLDialogManager::questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	return questionBox(key, dialogMessage(key), button0, button1, button2);
 }
-
+*/
 shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResourceKey &key) const {
 	return 0;
 }
 
 void ZLDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
-	if (!dialog.isNull()) {
-		dialog->run(runnable);
-	} else {
+	AppLog("createProgressDialog");
+//TODO	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
+//	if (!dialog.isNull()) {
+//		dialog->run(runnable);
+//	} else {
+	AppLog("runnable.run()");
 		runnable.run();
-	}
+//	}
 }

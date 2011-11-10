@@ -84,7 +84,8 @@ private:
 	void shutdown();
 	bool readFromBuffer(const char *data, size_t len);
 
-protected:
+//protected:
+public:
 	virtual void startElementHandler(const char *tag, const char **attributes);
 	virtual void endElementHandler(const char *tag);
 	virtual void characterDataHandler(const char *text, size_t len);
@@ -94,11 +95,13 @@ protected:
 
 	bool isInterrupted() const;
 
-protected:
+//protected:
+public:
 	void interrupt();
 	void setErrorMessage(const std::string &message);
 
-private:
+//private:
+public:
 	bool myInterrupted;
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;

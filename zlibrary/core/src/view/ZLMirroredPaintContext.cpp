@@ -90,9 +90,9 @@ void ZLMirroredPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 const std::string ZLMirroredPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	return myBase.realFontFamilyName(fontFamily);
+	return fontFamily;//TODO myBase.realFontFamilyName(fontFamily);
 }
 
 void ZLMirroredPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	myBase.fillFamiliesList(families);
+	//TODO myBase.fillFamiliesList(families);
 }

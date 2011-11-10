@@ -22,7 +22,7 @@
 
 #include <ZLView.h>
 
-#include <ZLBlockTreeNode.h>
+#include "ZLBlockTreeNode.h"
 
 class ZLBlockTreeView : public ZLView {
 

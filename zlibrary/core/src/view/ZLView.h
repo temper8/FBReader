@@ -26,9 +26,9 @@
 
 #include <ZLColor.h>
 #include <ZLTypeId.h>
-
+#include "ZLPaintContext.h"
 class ZLViewWidget;
-class ZLPaintContext;
+//class ZLPaintContext;
 
 class ZLView : public ZLObjectWithRTTI {
 
@@ -52,32 +52,32 @@ public:
 	ZLView(ZLPaintContext &context);
 	virtual ~ZLView();
 
-	virtual const std::string &caption() const = 0;
+//	virtual const std::string &caption() const = 0;
 	virtual void paint() = 0;
 	ZLPaintContext &context() const;
 
 	/*
 	 * returns true iff stylus/finger event was processed
 	 */
-	virtual bool onStylusPress(int x, int y);
+//	virtual bool onStylusPress(int x, int y);
 	virtual bool onStylusRelease(int x, int y);
-	virtual bool onStylusMove(int x, int y);
-	virtual bool onStylusMovePressed(int x, int y);
+//	virtual bool onStylusMove(int x, int y);
+//	virtual bool onStylusMovePressed(int x, int y);
 	virtual bool onFingerTap(int x, int y);
 
 protected:
 	const ZLTypeId &typeId() const;
 
-	virtual ZLColor backgroundColor() const = 0;
+//	virtual ZLColor backgroundColor() const = 0;
 
-	void setScrollbarEnabled(Direction direction, bool enabled);
-	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to);
-	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
-	virtual void onScrollbarStep(Direction direction, int steps);
-	virtual void onScrollbarPageStep(Direction direction, int steps);
+//	void setScrollbarEnabled(Direction direction, bool enabled);
+//	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to);
+//	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+//	virtual void onScrollbarStep(Direction direction, int steps);
+//	virtual void onScrollbarPageStep(Direction direction, int steps);
 
 private:
-	struct ScrollBarInfo {
+/*	struct ScrollBarInfo {
 		ScrollBarInfo();
 
 		bool Enabled;
@@ -91,12 +91,12 @@ private:
 	void updateScrollbarPlacement();
 	void updateScrollbarParameters();
 	void updateScrollbarParameters(Direction direction, const ScrollBarInfo &info, bool invert);
-
+*/
 private:
 	ZLViewWidget *myViewWidget;
 	ZLPaintContext &myContext;
-	ScrollBarInfo myVerticalScrollbarInfo;
-	ScrollBarInfo myHorizontalScrollbarInfo;
+//	ScrollBarInfo myVerticalScrollbarInfo;
+//	ScrollBarInfo myHorizontalScrollbarInfo;
 
 private:
 	ZLView(const ZLView&);

@@ -22,16 +22,23 @@
 
 #include "ZLStreamImage.h"
 
+#include <FBase.h>
+
 const shared_ptr<std::string> ZLStreamImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = inputStream();
+	AppLog("проверка удалось ли что-то открыть?");
 	if (stream.isNull() || !stream->open()) {
+		AppLog("нифига");
 		return 0;
 	}
+	AppLog("о что-то есть");
 	if (mySize == 0) {
 		mySize = stream->sizeOfOpened();
 		if (mySize == 0) {
+			AppLog("а размер-то нулевой");
 			return 0;
 		}
+		AppLog("mySize = %d",mySize);
 	}
 
 	shared_ptr<std::string> imageData = new std::string();

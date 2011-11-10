@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
+
 #include <cstdlib>
 #include <cstdio>
 
@@ -24,8 +26,8 @@
 
 #include <ZLStringUtil.h>
 
-#include "ZLOptions.h"
-#include "ZLConfig.h"
+#include <ZLOptions.h>
+#include <ZLConfig.h>
 
 ZLConfig *ZLOption::ourConfig = 0;
 
@@ -50,6 +52,8 @@ const std::string &ZLOption::getConfigValue() const {
 }
 
 const std::string &ZLOption::getDefaultConfigValue(const std::string &defaultValue) const {
+//	AppLog("getDefaultConfigValue %s",defaultValue.c_str());
+
 	return ourConfig->getDefaultValue(myGroupName, myOptionName, defaultValue);
 }
 
@@ -58,6 +62,7 @@ const std::string &ZLOption::getDefaultConfigValue() const {
 }
 
 void ZLOption::createInstance() {
+//	AppLog(" ZLOption::createInstance()");
 	ourConfig = ZLConfigManager::Instance().createConfig();
 }
 
@@ -113,6 +118,7 @@ bool ZLOption::isAutoSavingSupported() {
 }
 
 ZLOption::ZLOption(const ZLCategoryKey &category, const std::string &groupName, const std::string &optionName) : myCategory(category), myGroupName(groupName), myOptionName(optionName), myIsSynchronized(false) {
+//	AppLog("ZLOption %s %s %s",category.Name.c_str(),groupName.c_str(), optionName.c_str());
 }
 
 ZLOption::~ZLOption() {

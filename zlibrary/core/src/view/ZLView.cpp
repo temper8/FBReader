@@ -16,10 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include "ZLPaintContext.h"
 #include "ZLView.h"
 #include "ZLViewWidget.h"
-#include "ZLPaintContext.h"
+
+#include <FBase.h>
 
 const ZLTypeId ZLView::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
@@ -27,14 +28,15 @@ const ZLTypeId &ZLView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLView::ZLView(ZLPaintContext &context) : myViewWidget(0), myContext(context) {
+ZLView::ZLView(ZLPaintContext &context) :  myViewWidget(0),   myContext(context){
+	AppLog("ZLView::ZLView(ZLPaintContext &context)");
 }
 
 ZLView::~ZLView() {
 }
 
-ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
-}
+//ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
+//}
 
 void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	if (myView != 0) {
@@ -42,9 +44,9 @@ void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	}
 	myView = view;
 	view->myViewWidget = this;
-	rotate(myRotation);
+	//rotate(myRotation);
 }
-
+/*
 bool ZLView::onStylusPress(int, int) {
 	return false;
 }
@@ -64,7 +66,8 @@ bool ZLView::onStylusMovePressed(int, int) {
 bool ZLView::onFingerTap(int, int) {
 	return false;
 }
-
+*/
+/*
 void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
 	if (direction == VERTICAL) {
 		myVerticalScrollbarInfo.Enabled = enabled;
@@ -145,7 +148,8 @@ void ZLView::updateScrollbarParameters(Direction direction, const ScrollBarInfo 
 		);
 	}
 }
-
+*/
+/*
 void ZLView::updateScrollbarParameters() {		
 	if (myViewWidget == 0) {
 		return;
@@ -205,7 +209,7 @@ void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, si
 			from = full - to;
 			to = tmp;
 		}
-		myView->onScrollbarMoved(direction, full, from, to);
+//		myView->onScrollbarMoved(direction, full, from, to);
 	}
 }
 
@@ -213,7 +217,7 @@ void ZLViewWidget::onScrollbarStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
 		bool invert = false;
 		correctDirection(direction, invert);
-		myView->onScrollbarStep(direction, invert ? -steps : steps);
+//		myView->onScrollbarStep(direction, invert ? -steps : steps);
 	}
 }
 
@@ -221,7 +225,7 @@ void ZLViewWidget::onScrollbarPageStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
 		bool invert = false;
 		correctDirection(direction, invert);
-		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
+//		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
 	}
 }
 
@@ -246,3 +250,4 @@ void ZLViewWidget::rotate(ZLView::Angle rotation) {
 ZLView::Angle ZLViewWidget::rotation() const {
 	return myRotation;
 }
+*/

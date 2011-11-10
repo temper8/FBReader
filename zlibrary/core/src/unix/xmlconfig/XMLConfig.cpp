@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
+
 #include <ZLTimeManager.h>
 
 #include "XMLConfig.h"
@@ -24,12 +26,14 @@
 
 void XMLConfigManager::createInstance() {
 	ourInstance = new XMLConfigManager();
+	AppLog("new XMLConfigManager() ");
 }
 
 XMLConfigManager::XMLConfigManager() {
 }
 
 ZLConfig *XMLConfigManager::createConfig() const {
+	AppLog("XMLConfigManager::createConfig() ");
 	ZLConfig *config = new XMLConfig();
 	ourIsInitialised = true;
 	return config;
@@ -93,8 +97,9 @@ void ConfigSaveTask::run() {
 }
 
 XMLConfig::XMLConfig() : myDelta(0) {
-	load();
-	mySaver = new ConfigSaveTask(*this);
+	AppLog("XMLConfig load(); ");
+//	load();
+//	mySaver = new ConfigSaveTask(*this);
 }
 
 XMLConfig::~XMLConfig() {

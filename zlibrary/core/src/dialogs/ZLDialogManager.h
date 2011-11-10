@@ -24,8 +24,8 @@
 
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
-#include <ZLResource.h>
-#include <ZLOpenFileDialog.h>
+//#include <ZLResource.h>
+//#include <ZLOpenFileDialog.h>
 
 class ZLDialog;
 class ZLOptionsDialog;
@@ -71,7 +71,7 @@ public:
 
 	virtual shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const = 0;
 	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
-	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const = 0;
+//	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const = 0;
 
 	void informationBox(const ZLResourceKey &key) const;
 	void informationBox(const ZLResourceKey &key, const std::string &message) const;
@@ -80,8 +80,8 @@ public:
 	void errorBox(const ZLResourceKey &key) const;
 	virtual void errorBox(const ZLResourceKey &key, const std::string &message) const = 0;
 
-	int questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const;
-	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
+//	int questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const;
+//	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
 
 	virtual shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const = 0;
 	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;

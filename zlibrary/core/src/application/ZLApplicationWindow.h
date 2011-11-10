@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include "ZLApplication.h"
+#include <ZLApplication.h>
 #include "ZLToolbar.h"
 
 class ZLApplicationWindow {
@@ -57,18 +57,18 @@ private:
 
 protected:
 	// TODO: change to pure virtual
-	virtual void initMenu() {};
+	//virtual void initMenu() {};
 
-	ToolbarType type(const ZLToolbar::Item &item) const;
+//	ToolbarType type(const ZLToolbar::Item &item) const;
 	bool hasFullscreenToolbar() const;
-	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
-	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
+//	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
+//	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
-	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
-	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
+//	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
+//	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh();
-	virtual void processAllEvents() = 0;
+//	virtual void processAllEvents() = 0;
 
 private:
 	void refreshToolbar(ToolbarType type);
@@ -77,17 +77,17 @@ protected:
 	// TODO: change to pure virtual
 	virtual void present() {}
 
-	virtual void close() = 0;
+	//virtual void close() = 0;
 
-	virtual void setCaption(const std::string &caption) = 0;
+	//virtual void setCaption(const std::string &caption) = 0;
 
-	virtual void grabAllKeys(bool grab) = 0;
+	//virtual void grabAllKeys(bool grab) = 0;
 
-	virtual void setFullscreen(bool fullscreen) = 0;
-	virtual bool isFullscreen() const = 0;
+	//virtual void setFullscreen(bool fullscreen) = 0;
+	//virtual bool isFullscreen() const = 0;
 
 	// TODO: change to pure virtual (?)
-	virtual void setHyperlinkCursor(bool) {}
+	//virtual void setHyperlinkCursor(bool) {}
 
 	void setVisualParameter(const std::string &id, const std::string &value);
 	void setParameterValueList(const std::string &id, const std::vector<std::string> &values);
@@ -101,11 +101,11 @@ protected:
 
 		const std::string &value() const;
 		void setValue(const std::string &value);
-		virtual void setValueList(const std::vector<std::string> &values) = 0;
+	//	virtual void setValueList(const std::vector<std::string> &values) = 0;
 
 	protected:
-		virtual std::string internalValue() const = 0;
-		virtual void internalSetValue(const std::string &value) = 0;
+	//	virtual std::string internalValue() const = 0;
+	//	virtual void internalSetValue(const std::string &value) = 0;
 		void restoreOldValue();
 
 	private:

@@ -31,7 +31,7 @@ public:
 
 	public:
 		virtual ~Filter();
-		virtual bool accepts(const ZLFile &file) const = 0;
+		//TODO virtual bool accepts(const ZLFile &file) const = 0;
 	};
 
 public:

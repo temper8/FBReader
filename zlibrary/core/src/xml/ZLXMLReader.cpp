@@ -63,7 +63,8 @@ bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
 
 
 
-static const size_t BUFFER_SIZE = 2048;
+//static const size_t BUFFER_SIZE = 2048;
+static const size_t BUFFER_SIZE = 52048;
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }
@@ -118,8 +119,10 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
 		if (!readFromBuffer(myParserBuffer, length)) {
+			AppLog(" ZLXMLReader::readDocument break");
 			break;
 		}
+		AppLog(" ZLXMLReader::readDocument length = %d", length);
 	} while ((length == BUFFER_SIZE) && !myInterrupted);
 
 	stream->close();

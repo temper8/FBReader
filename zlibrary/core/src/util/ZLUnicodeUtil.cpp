@@ -22,7 +22,7 @@
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
-#include <ZLXMLReader.h>
+//#include <ZLXMLReader.h>
 
 #include "ZLUnicodeUtil.h"
 
@@ -45,7 +45,7 @@ ZLUnicodeData::ZLUnicodeData(const SymbolType type, ZLUnicodeUtil::Ucs4Char lowe
 }
 
 static std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData> UNICODE_TABLE;
-
+/*
 class ZLUnicodeTableReader : public ZLXMLReader {
 
 private:
@@ -76,16 +76,19 @@ void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **att
 		UNICODE_TABLE.insert(std::make_pair(code, ZLUnicodeData(type, lower, upper)));
 	}
 }
-
+*/
+//TODO подозрительная функция не будет ли на ней вылета
+/*
 static void initUnicodeTable() {
 	static bool inProgress = false;
 	if (!inProgress && UNICODE_TABLE.empty()) {
 		inProgress = true;
-		ZLUnicodeTableReader reader;
-		reader.readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml.gz"));
+//		ZLUnicodeTableReader reader;
+	//	reader.readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml.gz"));
 		inProgress = false;
 	}
 }
+*/
 
 bool ZLUnicodeUtil::isUtf8String(const char *str, int len) {
 	const char *last = str + len;
@@ -352,7 +355,7 @@ void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLe
 }
 
 bool ZLUnicodeUtil::isLetter(Ucs4Char ch) {
-	initUnicodeTable();
+//TODO	initUnicodeTable();
 	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
 	if (it == UNICODE_TABLE.end()) {
 		return false;
@@ -438,7 +441,7 @@ ZLUnicodeUtil::Breakable ZLUnicodeUtil::isBreakable(Ucs4Char c) {
 }
 
 ZLUnicodeUtil::Ucs4Char ZLUnicodeUtil::toLower(Ucs4Char ch) {
-	initUnicodeTable();
+//TODO	initUnicodeTable();
 	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
 	return (it != UNICODE_TABLE.end()) ? it->second.LowerCase : ch;
 }
@@ -461,7 +464,7 @@ std::string ZLUnicodeUtil::toLower(const std::string &utf8String) {
 }
 
 ZLUnicodeUtil::Ucs4Char ZLUnicodeUtil::toUpper(Ucs4Char ch) {
-	initUnicodeTable();
+//TODO 	initUnicodeTable();
 	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
 	return (it != UNICODE_TABLE.end()) ? it->second.UpperCase : ch;
 }

@@ -23,7 +23,7 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
-#include <ZLXMLReader.h>
+//#include <ZLXMLReader.h>
 #include <ZLibrary.h>
 
 #include "ZLKeyUtil.h"
@@ -37,7 +37,7 @@ std::string ZLKeyUtil::ourKeyNamesFileName = "keynames.xml";
 void ZLKeyUtil::setKeyNamesFileName(const std::string &fileName) {
 	ourKeyNamesFileName = fileName;
 }
-
+/*
 class KeyNamesReader : public ZLXMLReader {
 
 private:
@@ -62,10 +62,10 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 		}
 	}
 }
-
+*/
 std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	if (!ourInitialized) {
-		KeyNamesReader().readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + ourKeyNamesFileName));
+//TODO		KeyNamesReader().readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + ourKeyNamesFileName));
 		ourInitialized = true;
 	}
 

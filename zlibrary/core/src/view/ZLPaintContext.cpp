@@ -18,8 +18,10 @@
  */
 
 #include "ZLPaintContext.h"
+#include <FBase.h>
 
 ZLPaintContext::ZLPaintContext() {
+	AppLog("ZLPaintContext::ZLPaintContext()");
 }
 
 ZLPaintContext::~ZLPaintContext() {
@@ -27,7 +29,7 @@ ZLPaintContext::~ZLPaintContext() {
 
 const std::vector<std::string> &ZLPaintContext::fontFamilies() const {
 	if (myFamilies.empty()) {
-		fillFamiliesList(myFamilies);
+//		fillFamiliesList(myFamilies);
 	}
 	return myFamilies;
 }
@@ -53,6 +55,7 @@ int ZLPaintContext::imageWidth(const ZLImageData &image, int width, int height, 
 	return width;
 }
 
+
 int ZLPaintContext::imageHeight(const ZLImageData &image, int width, int height, ScalingType type) const {
 	const int origWidth = image.width();
 	const int origHeight = image.height();
@@ -73,3 +76,4 @@ int ZLPaintContext::imageHeight(const ZLImageData &image, int width, int height,
 	}
 	return height;
 }
+

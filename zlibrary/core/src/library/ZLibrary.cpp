@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <FBaseSys.h>
+
 #include <ZLTimeManager.h>
 #include <ZLDialogManager.h>
 #include <ZLImageManager.h>
@@ -25,9 +27,12 @@
 #include <ZLLogger.h>
 
 #include "ZLibrary.h"
-#include "../filesystem/ZLFSManager.h"
-#include "../options/ZLConfig.h"
-#include "../network/ZLNetworkManager.h"
+
+//#include "../filesystem/ZLFSManager.h"
+#include "ZLFSManager.h"
+
+#include "ZLConfig.h"
+//#include "../network/ZLNetworkManager.h"
 
 bool ZLibrary::ourLocaleIsInitialized = false;
 std::string ZLibrary::ourLanguage;
@@ -41,11 +46,13 @@ std::string ZLibrary::ourApplicationDirectory;
 std::string ZLibrary::ourApplicationWritableDirectory;
 std::string ZLibrary::ourDefaultFilesPathPrefix;
 
-const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
+//const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
+const std::string ZLibrary::BaseDirectory = std::string("/Res");
 
 void ZLibrary::parseArguments(int &argc, char **&argv) {
 	static const std::string LANGUAGE_OPTION = "-lang";
 	static const std::string LOGGER_OPTION = "-log";
+	AppLog("ZLibrary::parseArguments  while argc=%d ",argc);
 	while ((argc > 2) && (argv[1] != 0) && (argv[2] != 0)) {
 		const std::string argument = argv[1];
 		if (LANGUAGE_OPTION == argument) {
@@ -70,21 +77,29 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 		}
 		argc -= 2;
 		argv += 2;
-	}
+	};
+
 	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
+	AppLog("ZLibraryDirectory = %s",ourZLibraryDirectory.c_str());
 }
 
 void ZLibrary::shutdown() {
-	ZLNetworkManager::deleteInstance();
+	AppLog("ZLibrary::shutdown()");
+//	ZLNetworkManager::deleteInstance();
 	ZLImageManager::deleteInstance();
-	ZLCommunicationManager::deleteInstance();
+	AppLog("ZLImageManager::deleteInstance()");
+//	ZLCommunicationManager::deleteInstance();
 	ZLDialogManager::deleteInstance();
 	ZLFSManager::deleteInstance();
+
 	ZLTimeManager::deleteInstance();
+	AppLog("ZLTimeManager::deleteInstance()");
 	ZLConfigManager::deleteInstance();
+	AppLog("ZLConfigManager::deleteInstance()");
 }
 
 std::string ZLibrary::replaceRegExps(const std::string &pattern) {
+	AppLog("ZLibrary::replaceRegExps pattern =%s",pattern.c_str());
 	static const std::string NAME_PATTERN = "%APPLICATION_NAME%";
 	static const std::string LOWERCASENAME_PATTERN = "%application_name%";
 	std::string str = pattern;
@@ -97,21 +112,28 @@ std::string ZLibrary::replaceRegExps(const std::string &pattern) {
 	  str.erase(index, LOWERCASENAME_PATTERN.length());
 		str.insert(index, ZLUnicodeUtil::toLower(ourApplicationName));
 	}
+	AppLog("ZLibrary::replaceRegExps str =%s",str.c_str());
 	return str;
 }
 
 void ZLibrary::initApplication(const std::string &name) {
+	AppLog("ZLibrary::initApplication %s",name.c_str() );
 	ourApplicationName = name;
-	ourImageDirectory = replaceRegExps(IMAGEDIR);
-	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
+	ourImageDirectory = replaceRegExps("/IMAGEDIR");
+	ourApplicationImageDirectory = replaceRegExps("/APPIMAGEDIR");
 	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
 	ourApplicationWritableDirectory =
 #ifdef XMLCONFIGHOMEDIR
-		XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
+		//XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
+		"Home" + FileNameDelimiter + "." + name;
 #else
 		"~" + FileNameDelimiter + "." + name;
 #endif
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
+	AppLog("ZLibrary ourApplicationWritableDirectory =%s",ourApplicationWritableDirectory.c_str());
+	AppLog("ZLibrary ourApplicationDirectory =%s",ourApplicationDirectory.c_str());
+	AppLog("ZLibrary ourApplicationImageDirectory =%s",ourApplicationImageDirectory.c_str());
+	AppLog("ZLibrary ourImageDirectory =%s",ourImageDirectory.c_str());
 }
 
 std::string ZLibrary::Language() {

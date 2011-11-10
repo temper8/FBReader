@@ -17,7 +17,10 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDialogManager.h>
+#include <FBase.h>
+
+//#include <ZLDialogManager.h>
+#include <ZLRunnable.h>
 #include <ZLibrary.h>
 #include <ZLOptions.h>
 
@@ -32,11 +35,14 @@ public:
 };
 
 ZLApplicationBase::ZLApplicationBase(const std::string &name) {
+	AppLog("Create ZLApplicationBase");
 	ZLibrary::initApplication(name);
+	AppLog("ZLibrary::initApplication ");
 	ZLOption::createInstance();
+	AppLog("ZLOption::createInstance() ");
 }
 
 ZLApplicationBase::~ZLApplicationBase() {
 	ConfigSaverRunnable configSaver;
-	ZLDialogManager::Instance().wait(ZLResourceKey("savingConfig"), configSaver);
+//	ZLDialogManager::Instance().wait(ZLResourceKey("savingConfig"), configSaver);
 }

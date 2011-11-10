@@ -20,18 +20,98 @@
 #ifndef __ZLXMLREADERINTERNAL_H__
 #define __ZLXMLREADERINTERNAL_H__
 
-#include <expat.h>
+//#include <expat.h>
+#include "FXml.h"
+#include "FBase.h"
+using namespace Osp::Xml;
+//#include "xmlstring.h"
 
 #include <set>
+/*
+xmlParserInputPtr ResolveEntitySAXFunc (void *ctx, const xmlChar *publicId, const xmlChar *systemId);
+void InternalSubsetSAXFunc (void *ctx, const xmlChar *name, const xmlChar *ExternalID, const xmlChar *SystemID);
+void ExternalSubsetSAXFunc (void *ctx, const xmlChar *name, const xmlChar *ExternalID, const xmlChar *SystemID);
+xmlEntityPtr GetEntitySAXFunc (void *ctx, const xmlChar *name);
+xmlEntityPtr GetParameterEntitySAXFunc (void *ctx, const xmlChar *name);
+
+void EntityDeclSAXFunc (void *ctx, 	const xmlChar *name, int type, const xmlChar *publicId, const xmlChar *systemId, xmlChar *content);
+void NotationDeclSAXFunc(void *ctx,  const xmlChar *name, const xmlChar *publicId, const xmlChar *systemId);
+void AttributeDeclSAXFunc(void *ctx, const xmlChar *elem, const xmlChar *fullname, int type, int def, const xmlChar *defaultValue, xmlEnumerationPtr tree);
+void ElementDeclSAXFunc(void *ctx, const xmlChar *name, int type, xmlElementContentPtr content);
+void UnparsedEntityDeclSAXFunc(void *ctx, const xmlChar *name, const xmlChar *publicId, const xmlChar *systemId, const xmlChar *notationName);
+void SetDocumentLocatorSAXFunc (void *ctx, 	xmlSAXLocatorPtr loc);
+void StartDocumentSAXFunc (void *ctx);
+void EndDocumentSAXFunc (void *ctx);
+void StartElementSAXFunc (void *ctx, const xmlChar *name, const xmlChar **atts);
+void EndElementSAXFunc (void *ctx, const xmlChar *name);
+void AttributeSAXFunc (void *ctx, const xmlChar *name, const xmlChar *value);
+void ReferenceSAXFunc (void *ctx, const xmlChar *name);
+void CharactersSAXFunc (void *ctx, const xmlChar *ch, int len);
+void IgnorableWhitespaceSAXFunc (void *ctx, const xmlChar *ch, int len);
+void ProcessingInstructionSAXFunc (void *ctx, const xmlChar *target, const xmlChar *data);
+void CommentSAXFunc (void *ctx, const xmlChar *value);
+void CdataBlockSAXFunc (void *ctx, const xmlChar *value, int len);
+void WarningSAXFunc (void *ctx, const char *msg, ...);
+void ErrorSAXFunc (void *ctx, const char *msg, ...);
+void FatalErrorSAXFunc (void *ctx, const char *msg, ...);
+int IsStandaloneSAXFunc (void *ctx);
+int HasInternalSubsetSAXFunc (void *ctx);
+int HasExternalSubsetSAXFunc (void *ctx);
+
+
+xmlSAXHandler mySaxHandler = {
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    0,
+    null,
+    null,
+    null,
+    null
+};
+
+
+*/
+
+
+
+
+
+
+
 
 class ZLXMLReader;
 
 class ZLXMLReaderInternal {
 
 private:
-	static void fStartElementHandler(void *userData, const char *name, const char **attributes);
-	static void fEndElementHandler(void *userData, const char *name);
-	static void fCharacterDataHandler(void *userData, const char *text, int len);
+//	static void fStartElementHandler(void *userData, const char *name, const char **attributes);
+//	static void fEndElementHandler(void *userData, const char *name);
+//	static void fCharacterDataHandler(void *userData, const char *text, int len);
 
 public:
 	ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding);
@@ -41,7 +121,8 @@ public:
 
 private:
 	ZLXMLReader &myReader;
-	XML_Parser myParser;
+	xmlSAXHandler MySaxhandler;
+	//XML_Parser myParser;
 	bool myInitialized;
 
 	std::set<shared_ptr<ZLInputStream> > myDTDStreamLocks;

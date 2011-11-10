@@ -24,7 +24,8 @@
 ZLFontFamilyOptionEntry::ZLFontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context) : myOption(option), myContext(context) {
 	std::string value = option.value();
 	if (!value.empty()) {
-		option.setValue(myContext.realFontFamilyName(value));
+		//TODO option.setValue(myContext.realFontFamilyName(value));
+		option.setValue("realFontFamilyName");
 	}
 }
 

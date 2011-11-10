@@ -16,15 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include "ZLTime.h"
 #include "ZLTimeManager.h"
 
 ZLTime::ZLTime() {
+	AppLog("ZLTime::ZLTime()" );
 	*this = ZLTimeManager::Instance().currentTime();
 }
 
 ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {
+	AppLog("ZLTime::ZLTime(long seconds, long milliseconds)" );
 }
 
 ZLTime::~ZLTime() {

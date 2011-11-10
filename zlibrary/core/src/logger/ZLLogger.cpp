@@ -18,6 +18,7 @@
  */
 
 #include <iostream>
+#include <FBase.h>
 
 #include "ZLLogger.h"
 
@@ -53,5 +54,6 @@ void ZLLogger::print(const std::string &className, const std::string &message) c
 }
 
 void ZLLogger::println(const std::string &className, const std::string &message) const {
-	print(className, message + '\n');
+	//TODO иногда виснет на мобильнике print(className, message + '\n');
+	AppLog("ZLLogger %s",message.c_str());
 }

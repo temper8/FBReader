@@ -17,17 +17,22 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
+
 #include <ZLibrary.h>
 
 #include "ZLApplication.h"
 #include "ZLApplicationWindow.h"
 #include "ZLKeyBindings.h"
-#include "ZLToolbar.h"
-#include "ZLMenu.h"
-#include "ZLPopupData.h"
-#include "../view/ZLView.h"
-#include "../view/ZLViewWidget.h"
-#include "../view/ZLPaintContext.h"
+//#include "ZLToolbar.h"
+//#include "ZLMenu.h"
+//#include "ZLPopupData.h"
+#include "ZLView.h"
+#include "GView.h"
+#include "ZLViewWidget.h"
+#include "ZLPaintContext.h"
+
+
 
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
 const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
@@ -61,19 +66,30 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	KeyboardControlOption(ZLCategoryKey::CONFIG, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLCategoryKey::CONFIG, CONFIG, AUTO_SAVE, true),
 	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
-	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250) {
+	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250)
+	{
+	AppLog("Create ZLApplication");
 	ourInstance = this;
+	AppLog("ZLibrary::createContext()");
 	myContext = ZLibrary::createContext();
-	if (ConfigAutoSavingOption.value()) {
-		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
-	}
+
+
+	//myTestView = new GView(*context());
+	AppLog("new GView(*context())");
+//	myInitialView = new GView(*context());
+
+
+//	if (ConfigAutoSavingOption.value()) {
+//		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
+//	}
 
 	myPresentWindowHandler = new PresentWindowHandler();
 	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
 
-	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
-	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
-	createMenubar();
+//	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
+//	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
+//	createMenubar();
+	AppLog("создали ZLApplication");
 }
 
 ZLApplication::~ZLApplication() {
@@ -83,6 +99,8 @@ ZLApplication::~ZLApplication() {
 		}
 	}
 	ourInstance = 0;
+
+
 }
 
 void ZLApplication::initWindow() {
@@ -98,8 +116,7 @@ bool ZLApplication::closeView() {
 	return true;
 }
 
-void ZLApplication::openFile(const ZLFile&) {
-}
+void ZLApplication::openFile(const ZLFile&) { }
 
 bool ZLApplication::canDragFiles(const std::vector<std::string>&) const {
 	return false;
@@ -113,15 +130,19 @@ void ZLApplication::addAction(const std::string &actionId, shared_ptr<Action> ac
 }
 
 void ZLApplication::setView(shared_ptr<ZLView> view) {
+	AppLog("ZLApplication::setView");
 	if (view.isNull()) {
 		return;
 	}
+	AppLog("View not isNull");
 
 	if (!myViewWidget.isNull()) {
+		AppLog("myViewWidget not isNull");
 		myViewWidget->setView(view);
 		resetWindowCaption();
 		refreshWindow();
 	} else {
+		AppLog("myViewWidget  isNull");
 		myInitialView = view;
 	}
 }
@@ -131,17 +152,20 @@ shared_ptr<ZLView> ZLApplication::currentView() const {
 }
 
 void ZLApplication::refreshWindow() {
+	AppLog("ZLApplication::refreshWindow");
 	if (!myViewWidget.isNull()) {
+		AppLog("myViewWidget->repaint()");
 		myViewWidget->repaint();
 	}
 	if (!myWindow.isNull()) {
+		AppLog("myWindow->refresh();");
 		myWindow->refresh();
 	}
 }
 
 void ZLApplication::presentWindow() {
 	if (!myWindow.isNull()) {
-		myWindow->present();
+//		myWindow->present();
 	}
 }
 
@@ -175,11 +199,11 @@ void ZLApplication::doAction(const std::string &actionId) {
 
 void ZLApplication::resetWindowCaption() {
 	if (!myWindow.isNull()) {
-		if ((currentView() == 0) || (currentView()->caption().empty())) {
-			myWindow->setCaption(ZLibrary::ApplicationName());
-		} else {
-			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
-		}
+//		if ((currentView() == 0) || (currentView()->caption().empty())) {
+//			myWindow->setCaption(ZLibrary::ApplicationName());
+//		} else {
+//			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
+//		}
 	}
 }
 
@@ -200,7 +224,7 @@ bool ZLApplication::Action::useKeyDelay() const {
 
 void ZLApplication::trackStylus(bool track) {
 	if (!myViewWidget.isNull()) {
-		myViewWidget->trackStylus(track);
+	//	myViewWidget->trackStylus(track);
 	}
 }
 
@@ -211,38 +235,38 @@ void ZLApplication::doActionByKey(const std::string &key) {
 	}
 	shared_ptr<Action> a = action(bindings->getBinding(key));
 	if (!a.isNull() &&
-			(!a->useKeyDelay() ||
-			 (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value()))) {
+			(!a->useKeyDelay() /*||
+			 myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())*/)) {
 		a->checkAndRun();
-		myLastKeyActionTime = ZLTime();
+	//	myLastKeyActionTime = ZLTime();
 	}
 }
 
 void ZLApplication::grabAllKeys(bool grab) {
 	if (!myWindow.isNull()) {
-		myWindow->grabAllKeys(grab);
+	//	myWindow->grabAllKeys(grab);
 	}
 }
 
 void ZLApplication::setHyperlinkCursor(bool hyperlink) {
 	if (!myWindow.isNull()) {
-		myWindow->setHyperlinkCursor(hyperlink);
+	//	myWindow->setHyperlinkCursor(hyperlink);
 	}
 }
 
 bool ZLApplication::isFullscreen() const {
-	return !myWindow.isNull() && myWindow->isFullscreen();
+	//return !myWindow.isNull() && myWindow->isFullscreen();
 }
 
 void ZLApplication::setFullscreen(bool fullscreen) {
 	if (!myWindow.isNull()) {
-		myWindow->setFullscreen(fullscreen);
+	//	myWindow->setFullscreen(fullscreen);
 	}
 }
 
 void ZLApplication::quit() {
 	if (!myWindow.isNull()) {
-		myWindow->close();
+	//	myWindow->close();
 	}
 }
 

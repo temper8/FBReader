@@ -20,6 +20,9 @@
 #ifndef __XMLCONFIG_H__
 #define __XMLCONFIG_H__
 
+
+#include <FBase.h>
+
 #include <map>
 #include <set>
 #include <string>
@@ -27,9 +30,9 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
-#include "../../options/ZLConfig.h"
+#include <ZLConfig.h>
 
-#include "XMLConfigValue.h"
+#include <XMLConfigValue.h>
 
 class XMLConfigManager : public ZLConfigManager {
 
@@ -112,6 +115,7 @@ inline const std::string &XMLConfig::getValue(const std::string &group, const st
 
 inline const std::string &XMLConfig::getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
 	XMLConfigGroup *configGroup = getDefaultGroup(group);
+//	AppLog("getDefaultValue %s %s %s",group.c_str(),name.c_str(),defaultValue.c_str());
 	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
 }
 

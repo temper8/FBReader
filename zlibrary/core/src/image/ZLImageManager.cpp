@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
+
 #include <algorithm>
 #include <vector>
 
@@ -295,27 +297,34 @@ shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
 	shared_ptr<ZLImageData> data;
 
 	if (image.isSingle()) {
+		AppLog("image.isSingle");
 		const ZLSingleImage &singleImage = (const ZLSingleImage&)image;
 		shared_ptr<std::string> stringData = singleImage.stringData();
+
 		if (stringData.isNull() || stringData->empty()) {
+			AppLog("stringData.isNull() || stringData->empty()");
 			return 0;
 		}
+		AppLog("stringData.length() = %d", stringData->length());
 		data = createData();
+		AppLog("createData()");
 		if (singleImage.mimeType() == "image/palm") {
 			if (!convertFromPalmImageFormat(*stringData, *data)) {
 				return 0;
 			}
 		} else {
 			if (!convertImageDirect(*stringData, *data)) {
+				AppLog("облом с convertImageDirect");
 				return 0;
 			}
 		}
 	} else {
+		AppLog("image.MultiImage");
 		data = createData();
 		if (!convertMultiImage((const ZLMultiImage&)image, *data)) {
 			return 0;
 		}
 	}
-
+	AppLog("Удачно выходим из ZLImageManager::imageData");
 	return data;
 }

@@ -23,6 +23,8 @@
 #include <ZLTimeManager.h>
 
 class ZLUnixTimeManager : public ZLTimeManager {
+protected:
+	ZLUnixTimeManager();
 
 private:
 	ZLTime currentTime() const;
