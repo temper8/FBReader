@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Application>
+    <Entry>FBReader</Entry>
+    <Name>
+        <English>FBReader</English>
+        <eng-GB>FBReader</eng-GB>
+    </Name>
+    <Vendor>Geometer Plus</Vendor>
+    <Description/>
+    <Icons>
+        <MainMenu>FBReader_type4.png<Type1/>
+            <Type2>FBReader_type2.png</Type2>
+            <Type3>FBReader_type3.png</Type3>
+            <Type4>FBReader_type4.png</Type4>
+        </MainMenu>
+        <Setting/>
+        <Ticker/>
+        <QuickPanel/>
+        <LaunchImage>Splash_type4.png<Type1/>
+            <Type2>Splash_type2.png</Type2>
+            <Type3>Splash_type3.png</Type3>
+            <Type4>Splash_type4.png</Type4>
+        </LaunchImage>
+    </Icons>
+    <AutoScaling>
+        <Enabled>true</Enabled>
+        <BaseResolution>NormalSize</BaseResolution>
+    </AutoScaling>
+</Application>
