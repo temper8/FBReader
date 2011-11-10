@@ -24,7 +24,7 @@ class ZLibraryImplementation {
 
 public:
 	static ZLibraryImplementation *Instance;
-
+	static void initLibrary();
 protected:
 	ZLibraryImplementation();
 	virtual ~ZLibraryImplementation();

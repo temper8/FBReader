@@ -16,11 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+#include <FBaseSys.h>
 
-#include <locale.h>
-#include <dlfcn.h>
-#include <dirent.h>
-#include <sys/stat.h>
+
+
+#include <locale>
+//#include <dlfcn.h>
+//#include <dirent.h>
+//#include <sys/stat.h>
 
 #include <algorithm>
 
@@ -29,6 +32,7 @@
 #include <ZLLogger.h>
 
 #include "ZLibraryImplementation.h"
+//#include "ZLbadaLibraryImplementation.h"
 
 const std::string ZLibrary::FileNameDelimiter("/");
 const std::string ZLibrary::PathDelimiter(":");
@@ -65,85 +69,29 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 static void *loadPlugin(const std::string &path) {
+	AppLog("loadPlugin =%s",path.c_str());
 	ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "loading " + path);
-	void *handle = dlopen(path.c_str(), RTLD_NOW);
+	void *handle = 0;//dlopen(path.c_str(), RTLD_NOW);
 	if (handle == 0) {
-		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, dlerror());
+		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, 0);//dlerror());
 	}
 	return handle;
 }
 
 bool ZLibrary::init(int &argc, char **&argv) {
-#ifdef ZLSHARED
-	const std::string pluginPath = std::string(LIBDIR) + "/zlibrary/ui";
-
-	void *handle = 0;
-
-	if ((argc > 2) && std::string("-zlui") == argv[1]) {
-		std::string pluginName = argv[2];
-		if (!ZLStringUtil::stringEndsWith(pluginName, ".so")) {
-			pluginName = pluginPath + "/zlui-" + pluginName + ".so";
-		}
-		handle = loadPlugin(pluginName);
-		argc -= 2;
-		argv += 2;
-	}
-
-	if (handle == 0) {
-		DIR *dir = opendir(pluginPath.c_str());
-		if (dir == 0) {
-			return false;
-		}
-		std::vector<std::string> names;
-		const dirent *file;
-		struct stat fileInfo;
-		while ((file = readdir(dir)) != 0) {
-			const std::string shortName = file->d_name;
-			if ((shortName.substr(0, 5) != "zlui-") ||
-					!ZLStringUtil::stringEndsWith(shortName, ".so")) {
-				continue;
-			}
-			const std::string fullName = pluginPath + "/" + shortName;
-			stat(fullName.c_str(), &fileInfo);
-			if (!S_ISREG(fileInfo.st_mode)) {
-				continue;
-			}
-			names.push_back(fullName);
-		}
-		closedir(dir);
-
-		std::sort(names.begin(), names.end());
-		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
-			handle = loadPlugin(*it);
-			if (handle != 0) {
-				break;
-			}
-		}
-
-		if (handle == 0) {
-			return false;
-		}
-	}
-
-	void (*initLibrary)();
-	*(void**)&initLibrary = dlsym(handle, "initLibrary");
-	const char *error = dlerror();
-	if (error != 0) {
-		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, error);
-		return false;
-	}
-#endif /* ZLSHARED */
-	initLibrary();
-
+	AppLog("Start initLibrary");
+	ZLibraryImplementation::initLibrary();
+	//initLibrary();
 	if (ZLibraryImplementation::Instance == 0) {
 		return false;
 	}
-
+	AppLog("ZLibraryImplementation::Instance !=0");
 	ZLibraryImplementation::Instance->init(argc, argv);
 	return true;
 }
 
 ZLPaintContext *ZLibrary::createContext() {
+	AppLog("*ZLibrary::createContext()");
 	return ZLibraryImplementation::Instance->createContext();
 }
 
