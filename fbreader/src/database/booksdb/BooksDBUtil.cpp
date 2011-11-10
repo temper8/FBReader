@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
+
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
@@ -30,29 +32,32 @@
 
 shared_ptr<Book> BooksDBUtil::getBook(const std::string &filePath, bool checkFile) {
 	const std::string physicalFilePath = ZLFile(filePath).physicalFilePath();
-
+	AppLog("BooksDBUtil::getBook");
 	ZLFile file(physicalFilePath);
 	if (checkFile && !file.exists()) {
 		return 0;
 	}
-
+	AppLog("file.exists");
+/*
 	if (!checkFile || checkInfo(file)) {
+		AppLog("!checkFile || checkInfo(file)");
 		shared_ptr<Book> book = loadFromDB(filePath);
 		if (!book.isNull() && isBookFull(*book)) {
 			return book;
 		}
 	} else {
+		AppLog("else !checkFile || checkInfo(file)");
 		if (physicalFilePath != filePath) {
 			resetZipInfo(file);
 		}
 		saveInfo(file);
 	}
-
+*/
 	shared_ptr<Book> book = Book::loadFromFile(ZLFile(filePath));
 	if (book.isNull()) {
 		return 0;
 	}
-	BooksDB::Instance().saveBook(book);
+//TODO	BooksDB::Instance().saveBook(book);
 	return book;
 }
 

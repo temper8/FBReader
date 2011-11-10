@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+#include <FBase.h>
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
@@ -42,7 +43,9 @@ BooksDB &BooksDB::Instance() {
 		ZLFile dir(databaseDirName());
 		dir.directory(true);
 		ZLFile file(databaseDirName() + ZLibrary::FileNameDelimiter + DATABASE_NAME);
+		AppLog("new BooksDB %s",file.physicalFilePath().c_str());
 		ourInstance = new BooksDB(file.physicalFilePath());
+		AppLog("initDatabase");
 		ourInstance->initDatabase();
 	}
 	return *ourInstance;
@@ -68,15 +71,18 @@ bool BooksDB::initDatabase() {
 
 	ZLFile stateFile(databaseDirName() + ZLibrary::FileNameDelimiter + STATE_DATABASE_NAME);
 	ZLFile netFile(databaseDirName() + ZLibrary::FileNameDelimiter + NET_DATABASE_NAME);
+	AppLog("SQLiteFactory::createCommand");
 	shared_ptr<DBCommand> cmd = SQLiteFactory::createCommand(BooksDBQuery::PREINIT_DATABASE, connection(), "@stateFile", DBValue::DBTEXT, "@netFile", DBValue::DBTEXT);
 	((DBTextValue&)*cmd->parameter("@stateFile").value()) = stateFile.physicalFilePath();
 	((DBTextValue&)*cmd->parameter("@netFile").value()) = netFile.physicalFilePath();
+	AppLog("stateFile.physicalFilePath() = %s",stateFile.physicalFilePath().c_str());
 	if (!cmd->execute()) {
+		AppLog("!cmd->execute()");
 		myInitialized = false;
 		close();
 		return false;
 	}
-
+	AppLog("cmd->execute() удалось");
 	shared_ptr<DBRunnable> runnable = new InitBooksDBRunnable(connection());
 	if (!executeAsTransaction(*runnable)) {
 		myInitialized = false;
@@ -461,6 +467,7 @@ bool BooksDB::unsetNetFile(const std::string &url) {
 }
 
 bool BooksDB::loadBookState(const Book &book, ReadingState &state) {
+	AppLog("BooksDB::loadBookState");
 	state.Paragraph = state.Word = state.Character = 0;
 	if (book.bookId() == 0) {
 		return false;
@@ -472,13 +479,15 @@ bool BooksDB::loadBookState(const Book &book, ReadingState &state) {
 	}
 	if (!reader->next()
 		|| reader->type(0) != DBValue::DBINT /* paragraph */
-		|| reader->type(1) != DBValue::DBINT /* word      */
-		|| reader->type(2) != DBValue::DBINT /* char      */) {
+		|| reader->type(1) != DBValue::DBINT /* word   */
+		|| reader->type(2) != DBValue::DBINT /* char   */   ) {
 		return false;
 	}
 	state.Paragraph = reader->intValue(0);
 	state.Word = reader->intValue(1);
 	state.Character = reader->intValue(2);
+
+	AppLog("BooksDB::loadBookState return");
 	return true;
 }
 

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLImage.h>
 #include <ZLFile.h>
 
@@ -27,12 +27,15 @@
 #include "../library/Book.h"
 
 BookModel::BookModel(const shared_ptr<Book> book) : myBook(book) {
+	AppLog("new BookModel");
 	myBookTextModel = new ZLTextPlainModel(book->language(), 102400);
 	myContentsModel = new ContentsModel(book->language());
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(book->file(), false);
 	if (!plugin.isNull()) {
+		AppLog("plugin->readModel");
 		plugin->readModel(*this);
 	}
+	AppLog("end BookModel");
 }
 
 BookModel::~BookModel() {

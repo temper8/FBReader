@@ -24,7 +24,7 @@
 
 #include "../../fbreader/FBReader.h"
 
-#include "../../network/NetworkLinkCollection.h"
+//TODO #include "../../network/NetworkLinkCollection.h"
 
 
 LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog"), true) {
@@ -35,5 +35,5 @@ LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
 	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
 	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
+//	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
 }

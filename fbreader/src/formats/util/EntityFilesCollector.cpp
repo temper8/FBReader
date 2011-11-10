@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLStringUtil.h>
 #include <ZLibrary.h>
 #include <ZLFile.h>
@@ -44,6 +44,7 @@ const std::vector<std::string> &EntityFilesCollector::externalDTDs(const std::st
 	std::string directoryName =
 		ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter +
 		"formats" + ZLibrary::FileNameDelimiter + format;
+	AppLog("directoryName= %s",directoryName.c_str());
 	shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
 	if (!dtdPath.isNull()) {
 		std::vector<std::string> files;

@@ -48,7 +48,7 @@ private:
 
 public:
 	enum TagCode {
-		_P,
+		_PP, //TODO была _P почему-то не захотаела компилится
 		_SUBTITLE,
 		_CITE,
 		_TEXT_AUTHOR,

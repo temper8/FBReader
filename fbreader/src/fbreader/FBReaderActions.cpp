@@ -65,12 +65,15 @@ void SetModeAction::run() {
 }
 
 void ShowHelpAction::run() {
+	AppLog("ShowHelpAction::run()");
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> book = BooksDBUtil::getBook(fbreader.helpFileName(ZLibrary::Language()));
 	if (book.isNull()) {
+		AppLog("book.isNull()");
 		book = BooksDBUtil::getBook(fbreader.helpFileName("en"));
 	}
 	if (!book.isNull()) {
+		AppLog("book not isNull()");
 		fbreader.openBook(book);
 		fbreader.setMode(FBReader::BOOK_TEXT_MODE);
 		fbreader.refreshWindow();

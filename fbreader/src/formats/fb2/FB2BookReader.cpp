@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <cstdlib>
 #include <cstring>
 
@@ -46,9 +46,12 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 void FB2BookReader::characterDataHandler(const char *text, size_t len) {
 	if ((len > 0) && (myProcessingImage || myModelReader.paragraphIsOpen())) {
 		std::string str(text, len);
+		//AppLog("characterDataHandler");
 		if (myProcessingImage) {
+			AppLog("myImageBuffer.push_back(str)");
 			myImageBuffer.push_back(str);
 		} else {
+		//	AppLog("addData str= %s",str.c_str());
 			myModelReader.addData(str);
 			if (myInsideTitle) {
 				myModelReader.addContentsData(str);
@@ -66,7 +69,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		myModelReader.addHyperlinkLabel(id);
 	}
 	switch (tag) {
-		case _P:
+		case _PP:
 			if (mySectionStarted) {
 				mySectionStarted = false;
 			} else if (myInsideTitle) {
@@ -228,7 +231,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 
 void FB2BookReader::endElementHandler(int tag) {
 	switch (tag) {
-		case _P:
+		case _PP:
 			myModelReader.endParagraph();
 			break;
 		case _V:

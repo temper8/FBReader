@@ -31,9 +31,9 @@
 
 #include "../../fbreader/FBReader.h"
 
-#include "../../network/NetworkLinkCollection.h"
-#include "../../network/NetworkLink.h"
-#include "../../network/UserList.h"
+//TODO  #include "../../network/NetworkLinkCollection.h"
+//TODO  #include "../../network/NetworkLink.h"
+//TODO  #include "../../network/UserList.h"
 
 
 class NetworkLinkBooleanOptionEntry : public ZLBooleanOptionEntry {
@@ -84,7 +84,7 @@ NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 	}
 
 	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
-
+/*
 	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
 	const size_t linkCollectionSize = linkCollection.size();
 	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
@@ -98,7 +98,7 @@ NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 			libraryTab.addOption(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption));
 		}
 	}
-
+*/
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
 	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);
 }

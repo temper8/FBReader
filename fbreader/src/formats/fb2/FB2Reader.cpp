@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <cstring>
 
 #include <ZLStringUtil.h>
@@ -34,7 +34,7 @@ void FB2Reader::endElementHandler(const char *t) {
 }
 
 static const FB2Reader::Tag TAGS[] = {
-	{"p", FB2Reader::_P},
+	{"p", FB2Reader::_PP},
 	{"subtitle", FB2Reader::_SUBTITLE},
 	{"cite", FB2Reader::_CITE},
 	{"text-author", FB2Reader::_TEXT_AUTHOR},
@@ -95,5 +95,6 @@ void FB2Reader::namespaceListChangedHandler() {
 }
 
 const std::vector<std::string> &FB2Reader::externalDTDs() const {
+	AppLog("&FB2Reader::externalDTDs()");
 	return EntityFilesCollector::Instance().externalDTDs("fb2");
 }

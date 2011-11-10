@@ -73,9 +73,11 @@ public:
 
 	ZLBooleanOption UseSeparateBindingsOption;
 
+	ZLStringOption LastOpenedPreferencesDialog;
+
 	ZLBooleanOption EnableSingleClickDictionaryOption;
 
-	ZLStringOption LastOpenedPreferencesDialog;
+
 
 public:
 	FBReader(const std::string &bookToOpen);
@@ -143,8 +145,8 @@ private:
 	shared_ptr<ZLView> myNetworkLibraryView;
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
-	shared_ptr<ZLPopupData> myRecentBooksPopupData;
-	shared_ptr<ZLPopupData> myPreferencesPopupData;
+//	shared_ptr<ZLPopupData> myRecentBooksPopupData;
+//	shared_ptr<ZLPopupData> myPreferencesPopupData;
 
 	ZLTime myLastScrollingTime;
 
@@ -173,17 +175,17 @@ friend class OptionsDialog;
 friend class SystemOptionsDialog;
 friend class FBView;
 
-//friend class ShowCollectionAction;
+friend class ShowCollectionAction;
 friend class ShowHelpAction;
-//friend class ShowOptionsDialogAction;
+friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
 friend class ShowBookInfoAction;
-//friend class ScrollToHomeAction;
-//friend class ScrollToStartOfTextAction;
-//friend class ScrollToEndOfTextAction;
+friend class ScrollToHomeAction;
+friend class ScrollToStartOfTextAction;
+friend class ScrollToEndOfTextAction;
 friend class UndoAction;
-//friend class RedoAction;
+friend class RedoAction;
 friend class SearchAction;
 friend class SearchPatternAction;
 friend class FindNextAction;
@@ -192,12 +194,12 @@ friend class ScrollingAction;
 friend class ScrollingAction2;
 friend class ChangeFontSizeAction;
 friend class CancelAction;
-//friend class ToggleIndicatorAction;
+friend class ToggleIndicatorAction;
 friend class QuitAction;
 friend class OpenPreviousBookAction;
 friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
-//friend class GotoPageNumber;
+friend class GotoPageNumber;
 friend class SelectionAction;
 friend class SearchOnNetworkAction;
 friend class AdvancedSearchOnNetworkAction;
