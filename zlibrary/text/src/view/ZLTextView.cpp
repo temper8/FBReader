@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
 #include <algorithm>
 
 #include <ZLApplication.h>
@@ -60,10 +61,11 @@ void ZLTextView::clear() {
 }
 
 void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
+	AppLog("ZLTextView::setModel");
 	clear();
-
+	AppLog("myTextAreaController.setModel");
 	myTextAreaController.setModel(model);
-
+	AppLog("if (!model.isNull()");
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
 		size_t size = model->paragraphsNumber();
 		myTextSize.reserve(size + 1);
@@ -659,7 +661,7 @@ void ZLTextView::preparePaintInfo() {
 		viewHeight -= indicatorInfo->height() + indicatorInfo->offset();
 	}
 	size_t newHeight = std::max(viewHeight, 1);
-
+	AppLog("newWidth %d newHeight=%d",newWidth,newHeight);
 	if (newWidth != myTextAreaController.area().width() || newHeight != myTextAreaController.area().height()) {
 		myTextAreaController.area().setSize(newWidth, newHeight);
 		myTextAreaController.rebuildPaintInfo(false);

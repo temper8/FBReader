@@ -38,7 +38,7 @@ void ZLTextHyphenationReader::endElementHandler(const char *tag) {
 	if (PATTERN == tag) {
 		myReadPattern = false;
 		if (!myBuffer.empty()) {
-			myHyphenator->myPatternTable.push_back(new ZLTextTeXHyphenationPattern(myBuffer));
+		   myHyphenator->myPatternTable.push_back(new ZLTextTeXHyphenationPattern(myBuffer));
 		}
 		myBuffer.erase();
 	}

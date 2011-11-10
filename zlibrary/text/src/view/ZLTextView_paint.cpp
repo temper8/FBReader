@@ -16,14 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include "ZLTextView.h"
 #include "ZLTextPositionIndicator.h"
 
 void ZLTextView::paint() {
-	context().clear(backgroundColor());
+//	context().clear(backgroundColor());
+	AppLog("ZLTextView::paint()");
+	context().clear(ZLColor(255, 0, 255));
+
+	context().setColor(ZLColor(127, 127, 127));
+	context().drawLine(10, 10, 200 , 400);
+
+	context().setColor(ZLColor(0, 255, 0));
+	context().drawLine(10, 600, 200 , 100);
 
 	myTextAreaController.area().setOffsets(
 		textArea().isRtl() ? rightMargin() : leftMargin(), topMargin()
@@ -32,9 +40,10 @@ void ZLTextView::paint() {
 	preparePaintInfo();
 
 	if (textArea().isEmpty()) {
+		AppLog("правда  textArea().isEmpty()");
 		return;
 	}
-
+	AppLog("myTextAreaController.area().paint();");
 	myTextAreaController.area().paint();
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
@@ -52,10 +61,10 @@ void ZLTextView::paint() {
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&
 			(to - from < full);
 		if (showScrollbar) {
-			setScrollbarEnabled(VERTICAL, true);
-			setScrollbarParameters(VERTICAL, full, from, to);
+		//	setScrollbarEnabled(VERTICAL, true);
+		//	setScrollbarParameters(VERTICAL, full, from, to);
 		} else {
-			setScrollbarEnabled(VERTICAL, false);
+		//	setScrollbarEnabled(VERTICAL, false);
 		}
 	}
 

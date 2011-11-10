@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include <linebreak.h>
@@ -79,17 +79,21 @@ void ZLTextParagraphCursor::Builder::fill() {
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
 			case ZLTextParagraphEntry::STYLE_ENTRY:
+				AppLog("entryKind STYLE_ENTRY");
 				myElements.push_back(new ZLTextStyleElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
+				AppLog("entryKind FIXED_HSPACE_ENTRY");
 				myElements.push_back(new ZLTextFixedHSpaceElement(((ZLTextFixedHSpaceEntry&)*it.entry()).length()));
 				break;
 			case ZLTextParagraphEntry::CONTROL_ENTRY:
 			case ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+				AppLog("entryKind HYPERLINK_CONTROL_ENTRY");
 				myElements.push_back(ZLTextElementPool::Pool.getControlElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::IMAGE_ENTRY:
 			{
+				AppLog("entryKind IMAGE_ENTRY");
 				ImageEntry &imageEntry = (ImageEntry&)*it.entry();
 				shared_ptr<const ZLImage> image = imageEntry.image();
 				if (!image.isNull()) {
@@ -101,9 +105,11 @@ void ZLTextParagraphCursor::Builder::fill() {
 				break;
 			}
 			case ZLTextParagraphEntry::TEXT_ENTRY:
+				AppLog("entryKind TEXT_ENTRY");
 				processTextEntry((const ZLTextEntry&)*it.entry());
 				break;
 			case ZLTextParagraphEntry::RESET_BIDI_ENTRY:
+				AppLog("entryKind RESET_BIDI_ENTRY");
 				updateBidiLevel(myBaseBidiLevel);
 				myLatestBidiLevel = myBaseBidiLevel;
 				break;
@@ -115,6 +121,7 @@ void ZLTextParagraphCursor::Builder::fill() {
 
 void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEntry) {
 	const size_t dataLength = textEntry.dataLength();
+	AppLog("dataLength %d", dataLength);
 	if (dataLength == 0) {
 		return;
 	}
@@ -123,7 +130,8 @@ void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEnt
 	ZLUnicodeUtil::utf8ToUcs4(myUcs4String, textEntry.data(), dataLength);
 	int len = myUcs4String.size();
 	myUcs4String.push_back(0);
-	myBidiLevels.clear();
+	AppLog("myBidiLevels.clear()");
+/*	myBidiLevels.clear();
 	myBidiLevels.assign(len + 1, 0);
 	int firstNonSpace = 0;
 	while ((firstNonSpace < len) &&
@@ -141,11 +149,12 @@ void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEnt
 	for (int i = lastNonSpace; i < len; ++i) {
 		myBidiLevels[i] = myLatestBidiLevel;
 	}
-
+*/
 	myBreaksTable.clear();
 	myBreaksTable.assign(dataLength, 0);
 	const char *start = textEntry.data();
 	const char *end = start + dataLength;
+	AppLog("set_linebreaks_utf8 start %s", start);
 	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), &myBreaksTable[0]);
 
 	ZLUnicodeUtil::Ucs4Char ch = 0, previousCh;
@@ -153,7 +162,7 @@ void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEnt
 	int charLength = 0;
 	int index = 0;
 	const char *wordStart = start;
-	updateBidiLevel(myBidiLevels[0]);
+//	updateBidiLevel(myBidiLevels[0]);
 	for (const char *ptr = start; ptr < end; ptr += charLength, ++index) {
 		previousCh = ch;
 		charLength = ZLUnicodeUtil::firstChar(ch, ptr);
@@ -185,8 +194,9 @@ void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEnt
 					break;
 				case NO_SPACE:
 					if ((ptr > start) &&
-							((((myBreaksTable[ptr - start - 1] != LINEBREAK_NOBREAK) && (previousCh != '-')) && (ptr != wordStart)) ||
-							 (myBidiLevels[index - 1] != myBidiLevels[index]))) {
+							((((myBreaksTable[ptr - start - 1] != LINEBREAK_NOBREAK) && (previousCh != '-')) && (ptr != wordStart))
+								//	||	 (myBidiLevels[index - 1] != myBidiLevels[index])
+									)) {
 						addWord(wordStart, myOffset + (wordStart - start), ptr - wordStart);
 						wordStart = ptr;
 					}
@@ -194,7 +204,7 @@ void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEnt
 			}
 			spaceState = NO_SPACE;
 		}
-		updateBidiLevel(myBidiLevels[index]);
+		//updateBidiLevel(myBidiLevels[index]);
 	}
 	switch (spaceState) {
 		case SPACE:

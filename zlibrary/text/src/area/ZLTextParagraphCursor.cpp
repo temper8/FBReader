@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
 #include <algorithm>
 
 #include <ZLTextParagraph.h>
@@ -78,11 +79,16 @@ ZLTextElementPool::~ZLTextElementPool() {
 }
 
 ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
+	AppLog("ZLTextParagraphCursor::cursor %d",index);
 	ZLTextParagraphCursorPtr result = ZLTextParagraphCursorCache::get(model[index]);
+	AppLog("result.isNull()");
 	if (result.isNull()) {
+		AppLog("result.isNull() true");
 		if (model.kind() == ZLTextModel::TREE_MODEL) {
+			AppLog("result = new ZLTextTreeParagraphCursor");
 			result = new ZLTextTreeParagraphCursor((const ZLTextTreeModel&)model, index);
 		} else {
+			AppLog("result = new ZLTextPlainParagraphCursor");
 			result = new ZLTextPlainParagraphCursor((const ZLTextPlainModel&)model, index);
 		}
 		ZLTextParagraphCursorCache::put(model[index], result);
@@ -91,7 +97,10 @@ ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model,
 }
 
 ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
+	AppLog("ZLTextParagraphCursor::ZLTextParagraphCursor");
+	AppLog("myModel.paragraphsNumber() = %d ",myModel.paragraphsNumber());
 	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
+	AppLog("myIndex %d", myIndex);
 	fill();
 }
 
@@ -213,6 +222,7 @@ void ZLTextParagraphCursor::processControlParagraph(const ZLTextParagraph &parag
 
 void ZLTextParagraphCursor::fill() {
 	const ZLTextParagraph &paragraph = *myModel[myIndex];
+	AppLog("paragraph.kind() %d", paragraph.kind());
 	switch (paragraph.kind()) {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:

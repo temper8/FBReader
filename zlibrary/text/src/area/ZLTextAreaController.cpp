@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include "ZLTextAreaController.h"
 #include "ZLTextArea.h"
 #include "ZLTextAreaStyle.h"
@@ -30,8 +30,13 @@ ZLTextAreaController::~ZLTextAreaController() {
 
 void ZLTextAreaController::setModel(shared_ptr<ZLTextModel> model) {
 	myArea.setModel(model);
-
+	AppLog("myPaintState = myArea.isEmpty()?");
 	myPaintState = myArea.isEmpty() ? NOTHING_TO_PAINT : START_IS_KNOWN;
+	switch (myPaintState) {
+	case NOTHING_TO_PAINT: AppLog("myPaintState = NOTHING_TO_PAINT"); break;
+	case START_IS_KNOWN: AppLog("myPaintState = START_IS_KNOWN"); break;
+	}
+
 }
 
 void ZLTextAreaController::clear() {
@@ -77,23 +82,29 @@ ZLTextWordCursor ZLTextAreaController::findStart(const ZLTextWordCursor &end, Si
 
 ZLTextWordCursor ZLTextAreaController::buildInfos(const ZLTextWordCursor &start) {
 	myArea.myLineInfos.clear();
-
+	AppLog("ZLTextAreaController::buildInfos");
 	ZLTextWordCursor cursor = start;
 	int textHeight = myArea.height();
 	int counter = 0;
 	do {
+		AppLog("do textHeight = %d counter = %d",  myArea.height(), counter);
 		ZLTextWordCursor paragraphEnd = cursor;
 		paragraphEnd.moveToParagraphEnd();
 		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
+		AppLog("paragraphStart = %d paragraphEnd = %d",  paragraphStart.elementIndex(), paragraphEnd.elementIndex());
 
 		ZLTextArea::Style style(myArea, myArea.myProperties.baseStyle());
 		style.applyControls(paragraphStart, cursor);
 		ZLTextLineInfoPtr info = new ZLTextLineInfo(cursor, style.textStyle(), style.bidiLevel());
 
-		while (!info->End.isEndOfParagraph()) {
+		while (!info->End.isEndOfParagraph())
+		{
+			AppLog("myArea.processTextLine");
 			info = myArea.processTextLine(style, info->End, paragraphEnd);
 			textHeight -= info->Height + info->Descent;
+			AppLog("info->Height = %d info->Descent = %d", info->Height, info->Descent);
+			AppLog("textHeight =%d counter = %d", textHeight, counter);
 			if ((textHeight < 0) && (counter > 0)) {
 				break;
 			}

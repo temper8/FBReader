@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include <ZLMirroredPaintContext.h>
@@ -40,19 +40,26 @@ int ZLTextArea::realX(int x) const {
 
 void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
-
+	AppLog("ZLTextArea::setModel");
 	if (model.isNull() || model->paragraphsNumber() == 0) {
 		myModel = 0;
+		AppLog("myModel = 0;");
 		return;
 	}
-
+	AppLog("myModel = model;");
 	myModel = model;
 	if (model->isRtl()) {
+		AppLog("myMirroredContext = new");
 		myMirroredContext = new ZLMirroredPaintContext(myContext);
 	} else {
-		myMirroredContext.reset();
+		AppLog("myMirroredContext.reset()");
+		 myMirroredContext.reset();
 	}
+
+	AppLog(" ZLTextParagraphCursor::cursor");
 	myStartCursor = ZLTextParagraphCursor::cursor(*model);
+	if (myStartCursor.isNull()) AppLog("myStartCursor = 0;");
+	AppLog("myEndCursor = 0;");
 	myEndCursor = 0;
 }
 
@@ -162,6 +169,7 @@ ZLTextSelectionModel &ZLTextArea::selectionModel() {
 }
 
 void ZLTextArea::paint() {
+	AppLog("ZLTextArea::paint()");
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
 
@@ -170,12 +178,14 @@ void ZLTextArea::paint() {
 	labels.push_back(0);
 
 	ZLTextArea::Style style(*this, myProperties.baseStyle());
-
+	AppLog("myLineInfos.size() = %d",myLineInfos.size());
 	int y = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
+		AppLog("prepareTextLine");
 		prepareTextLine(style, info, y);
 		y += info.Height + info.Descent + info.VSpaceAfter;
+		AppLog("prepareTextLine y = %d",y);
 		labels.push_back(myTextElementMap.size());
 	}
 
