@@ -36,7 +36,7 @@ ZLBlockTreeView::ZLBlockTreeView(ZLPaintContext &context) : ZLView(context), myR
 
 void ZLBlockTreeView::paint() {
 	ZLPaintContext &context = this->context();
-	context.clear(backgroundColor());
+//	context.clear(backgroundColor());
 
 	bool firstNodeFound = false;
 	int vOffset = 0 - myNodePartToSkip;
@@ -76,14 +76,14 @@ void ZLBlockTreeView::paint() {
 
 	const bool showScrollbar = before > 0 || after > 0;
 	myCanScrollForward = after > 0;
-	setScrollbarEnabled(VERTICAL, showScrollbar);
+/*	setScrollbarEnabled(VERTICAL, showScrollbar);
 	if (showScrollbar) {
 		setScrollbarParameters(VERTICAL,
 			before + maxY + after,
 			before,
 			before + maxY
 		);
-	}
+	}*/
 }
 
 ZLBlockTreeNode *ZLBlockTreeView::findNode(int &y) {

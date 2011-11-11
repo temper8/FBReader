@@ -20,8 +20,8 @@
 #ifndef __ZLbadaFSDIR_H__
 #define __ZLbadaFSDIR_H__
 
-//#include "../../filesystem/ZLFSDir.h"
-#include "ZLFSDir.h"
+#include "../../../../core/src/filesystem/ZLFSDir.h"
+//#include "ZLFSDir.h"
 
 class ZLbadaFSDir : public ZLFSDir {
 

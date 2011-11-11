@@ -30,9 +30,9 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
-#include <ZLConfig.h>
+#include "../../options/ZLConfig.h"
 
-#include <XMLConfigValue.h>
+#include "XMLConfigValue.h"
 
 class XMLConfigManager : public ZLConfigManager {
 

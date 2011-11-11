@@ -28,10 +28,10 @@
 
 #include "ZLibrary.h"
 
-//#include "../filesystem/ZLFSManager.h"
-#include "ZLFSManager.h"
+#include "../filesystem/ZLFSManager.h"
 
-#include "ZLConfig.h"
+
+#include "../options/ZLConfig.h"
 //#include "../network/ZLNetworkManager.h"
 
 bool ZLibrary::ourLocaleIsInitialized = false;

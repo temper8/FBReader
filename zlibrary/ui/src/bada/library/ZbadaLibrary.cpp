@@ -21,6 +21,7 @@
 #include "../view/ZLbadaPaintContext.h"
 #include "../image/ZLbadaImageManager.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
+#include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 //#include "IConvEncodingConverter.h"
 
 void ZLibraryImplementation::initLibrary() {

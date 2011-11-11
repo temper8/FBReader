@@ -184,6 +184,7 @@ FBReader::~FBReader() {
 }
 
 void FBReader::initWindow() {
+	AppLog("FBReader::initWindow()");
 	ZLApplication::initWindow();
 	trackStylus(true);
 
@@ -192,7 +193,7 @@ void FBReader::initWindow() {
 		ZLDialogManager::Instance().wait(ZLResourceKey("migrate"), migration);
 	}
 */
-	AppLog("FBReader::initWindow()");
+
 	if (!myBookAlreadyOpen) {
 		AppLog("FBReader::initWindow()   !myBookAlreadyOpen");
 		shared_ptr<Book> book;
@@ -202,19 +203,19 @@ void FBReader::initWindow() {
 		}
 
 		if (book.isNull()) {
-			AppLog("FBReader::initWindow()   book.isNull() пытаемся открыть последнюю книгу");
-			const BookList &books = Library::Instance().recentBooks();
-			if (!books.empty()) {
-				book = books[0];
-			}
+			AppLog("book.isNull() пытаемся открыть последнюю книгу");
+		//	const BookList &books = Library::Instance().recentBooks();
+		//	if (!books.empty()) {
+		//		book = books[0];
+		//	}
 		}
 		if (book.isNull()) {
-			AppLog("FBReader::initWindow()   book.isNull() хелп на какномнибудь языке");
-			book = BooksDBUtil::getBook(helpFileName(ZLibrary::Language()));
+			AppLog("book.isNull() хелп на какномнибудь языке");
+		//	book = BooksDBUtil::getBook(helpFileName(ZLibrary::Language()));
 		}
 
 		if (book.isNull()) {
-			AppLog("FBReader::initWindow()   book.isNull() хелп на англицком");
+			AppLog("book.isNull() почитаем хелп на англицком");
 			book = BooksDBUtil::getBook(helpFileName("en"));
 		}
 		AppLog("openBook(book)");

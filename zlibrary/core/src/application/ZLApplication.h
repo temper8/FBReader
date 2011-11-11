@@ -31,7 +31,7 @@
 #include <ZLTime.h>
 
 #include "ZLTime.h"
-//#include <ZLResource.h>
+#include <ZLResource.h>
 
 #include <ZLMessage.h>
 
@@ -44,9 +44,9 @@ class ZLViewWidget;
 class ZLPaintContext;
 class ZLKeyBindings;
 class ZLToolbar;
-//class ZLPopupData;
-//class ZLMenubar;
-//class ZLFile;
+class ZLPopupData;
+class ZLMenubar;
+class ZLFile;
 
 class ZLApplicationBase {
 
@@ -127,7 +127,7 @@ protected:
 
 
 	void addAction(const std::string &actionId, shared_ptr<Action> action);
-//	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
+	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
 
 	void setView(shared_ptr<ZLView> view);
 	ZLView::Angle rotation() const;
@@ -183,8 +183,8 @@ public:
 	const ZLToolbar &toolbar(int index) const;
 
 private:
-//	void createMenubar();
-//	const ZLMenubar &menubar() const;
+	void createMenubar();
+	const ZLMenubar &menubar() const;
 
 private:
 	shared_ptr<GView> myTestView;
@@ -194,7 +194,7 @@ private:
 	std::map<std::string,shared_ptr<Action> > myActionMap;
 	mutable shared_ptr<ZLToolbar> myToolbar;
 	mutable shared_ptr<ZLToolbar> myFullscreenToolbar;
-//	mutable shared_ptr<ZLMenubar> myMenubar;
+	mutable shared_ptr<ZLMenubar> myMenubar;
 	shared_ptr<ZLPaintContext> myContext;
 	shared_ptr <ZLApplicationWindow> myWindow;
 	ZLTime myLastKeyActionTime;

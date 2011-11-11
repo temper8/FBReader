@@ -20,8 +20,8 @@
 #ifndef __ZLbadaFSMANAGER_H__
 #define __ZLbadaFSMANAGER_H__
 
-//#include "../../filesystem/ZLFSManager.h"
-#include "ZLFSManager.h"
+#include "../../../../core/src/filesystem/ZLFSManager.h"
+//#include "ZLFSManager.h"
 
 class ZLbadaFSManager : public ZLFSManager {
 

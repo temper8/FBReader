@@ -1,4 +1,6 @@
 *.o
 *.d
 *.pyc
+.Target-Debug
+DebugInfo
 fbreader/FBReader

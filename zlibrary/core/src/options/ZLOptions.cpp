@@ -26,8 +26,8 @@
 
 #include <ZLStringUtil.h>
 
-#include <ZLOptions.h>
-#include <ZLConfig.h>
+#include "ZLOptions.h"
+#include "ZLConfig.h"
 
 ZLConfig *ZLOption::ourConfig = 0;
 

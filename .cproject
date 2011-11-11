@@ -8,8 +8,11 @@
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/FBReader"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/FBReader-Git"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/FBReader/.Target-Debug"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/FBReader-Git/.Target-Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="FBReader"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="FBReader-Git"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -38,15 +41,16 @@
 								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths.58363788" name="Include paths (-I)" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SDKROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PROJECT_ROOT}/inc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/zlibrary/core/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/zlibrary/text/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/linebreak}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/bzip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/sqlite}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/zlib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/fbreader/fbreader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/core/include/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/core/include/optionEntries/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/text/include/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/linebreak}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/bzip}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/sqlite}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/zlib}&quot;"/>
 								</option>
-								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def.1713406225" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def" valueType="definedSymbols">
+								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def.1713406225" name="Defined symbols (-D)" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_DEBUG"/>
 									<listOptionValue builtIn="false" value="SHP"/>
 									<listOptionValue builtIn="false" value="XMLCONFIGHOMEDIR=Home"/>
@@ -494,8 +498,11 @@
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/FBReader"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/FBReader-Git"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/FBReader/.Target-Release"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/FBReader-Git/.Target-Release"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="FBReader"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="FBReader-Git"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -534,8 +541,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

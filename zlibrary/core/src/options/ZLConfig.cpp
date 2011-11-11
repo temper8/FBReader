@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLConfig.h>
+#include "ZLConfig.h"
 
 ZLConfigManager *ZLConfigManager::ourInstance = 0;
 bool ZLConfigManager::ourIsInitialised = false;
