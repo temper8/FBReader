@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Signature>
   <FileList>
-    <File>/Bin/FBReader-Git.exe</File>
+    <File>/Bin/FBReader.exe</File>
     <File>/Info/manifest.xml</File>
   </FileList>
   <certificateChain>
@@ -14,10 +14,10 @@ MIICaDCCAdGgAwIBAAIJAPoO2ouFgE4LMA0GCSqGSIb3DQEBBQUAMHIxCzAJBgNVBAYTAktSMRwwGgYD
   </certificateChain>
   <SignValue>
     <Package>
-VHJjg/UquURzUtQYClUAYfB4r7dhrX2t5SwxBuqsE2eJJg9My0RAggdfjPVjOb4xonWgy9Ou9l2c4ZUy7kZgvvpXTLJZO+xj6Sr60c94lY/GI5SDRJAhcRquC0GM9rcgNr+3+gKPzLPtzWvyImDT20+2XJplAnRsGXw8CT1TuTI=
+WtAhZH4gHK0zPePs/u5vbBiq5aVrHnYe5VvFSThUQy1JxEFx5XbVkE5QinyRrtfwwKsUdnPk4sycLOLrp7OnfV2PG1/S/D/a0ckiIVRnvkTcNpsowa5Znoez2DXgEqWm2PGC6jkS8T1w7D/Rc9eIH+x7sD0cs8n1muB56j4dRec=
     </Package>
     <AppSignature>
-mQQyriYNyDVdBnjprx+yInr5mjJkU6em/R7qlJcu61pHO/dv0/pTmeE4vKjZA2yP8QM9TEoi4QlhfrGshbcdmB4Cv8thfOvCGcUNHLWwfFGgVgRs+ijrqz8UU0Y0+UHOKZ6Ovr9VK/2xOPB1qWX6QHYaV2zkAfmMjbRcfLmMr44=
+e1BgI8wRBmwgsBQlGjLfq+G284eLwMZaEbp3CLzQhOZBrSamH2nSBubpjW8ldR6wLFfr42tbAMNBJQm5g9BsEDMa5xqeGWOOc6+2um6cDZey+TMI7sHssb+9nX8doq5wfrSerxA7EscxrLSpNs9WPaJx52cQnEaKW9MQWF+P3LM=
     </AppSignature>
   </SignValue>
 </Signature>

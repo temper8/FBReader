@@ -38,22 +38,16 @@
 							</builder>
 							<tool id="cdt.managedbuild.tool.osp.gnu.arm.archiver.base.1470974104" name="bada Archiver" superClass="cdt.managedbuild.tool.osp.gnu.arm.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.osp.gnu.target.cpp.compiler.exe.debug.1612317938" name="bada C++ Compiler" superClass="cdt.managedbuild.tool.osp.gnu.target.cpp.compiler.exe.debug">
-								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths.58363788" name="Include paths (-I)" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths" valueType="includePath">
+								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths.1838067807" name="Include paths (-I)" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SDKROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PROJECT_ROOT}/inc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/core/include/hardlink}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/core/include/optionEntries/hardlink}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/zlibrary/text/include/hardlink}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/linebreak}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/bzip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/sqlite}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader-Git/lib/zlib}&quot;"/>
-								</option>
-								<option id="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def.1713406225" name="Defined symbols (-D)" superClass="osp.gnu.target.cpp.compiler.debug.exe.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="_DEBUG"/>
-									<listOptionValue builtIn="false" value="SHP"/>
-									<listOptionValue builtIn="false" value="XMLCONFIGHOMEDIR=Home"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/zlibrary/core/include/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/zlibrary/text/include/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/zlibrary/core/include/optionEntries/hardlink}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/linebreak}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/bzip}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/sqlite}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FBReader/lib/zlib}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.osp.gnu.cpp.compiler.input.458427859" superClass="cdt.managedbuild.tool.osp.gnu.cpp.compiler.input"/>
 							</tool>
