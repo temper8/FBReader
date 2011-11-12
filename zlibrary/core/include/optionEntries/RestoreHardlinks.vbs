@@ -19,7 +19,7 @@ if fso1.getextensionname(file) = ext then
 	        strListFolders = strListFolders & file.Name& "-" & "-" &TextLine & vbCrLf
                 fn=file.Name
 '		fso1.DeleteFile(file.Name)
-		WshShell.Run("%COMSPEC% /K fsutil hardlink create hardlink\"+fn+ " "+Textline)
+		WshShell.Run("%COMSPEC% /K fsutil hardlink create hardlink\optionEntries\"+fn+ " "+Textline)
 		WScript.Sleep (200)
 		end if
       end  if
