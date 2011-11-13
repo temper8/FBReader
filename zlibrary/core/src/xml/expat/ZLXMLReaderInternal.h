@@ -122,6 +122,7 @@ public:
 private:
 	ZLXMLReader &myReader;
 	xmlSAXHandler MySaxhandler;
+
 	//XML_Parser myParser;
 	bool myInitialized;
 

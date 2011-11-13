@@ -8,8 +8,13 @@
 #include "ZLbadaPaintContext.h"
 #include "../image/ZLbadaImageManager.h"
 //#include <FGraphics.h>
+#include <FText.h>
 using namespace Osp::Graphics;
 using namespace Osp::Base::Utility;
+using namespace Osp::Base;
+using namespace Osp::Text;
+
+
 
 
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
@@ -85,12 +90,20 @@ void ZLbadaPaintContext::setFillColor(ZLColor color, FillStyle style){
 
 int ZLbadaPaintContext::stringWidth(const char *str, int len, bool) const {
 	Osp::Base::String bada_str;
-	//TODO вопрос с длинной конверируемой строки??
-	StringUtil::Utf8ToString(str, bada_str);
+    ByteBuffer buffer;
+    buffer.Construct(len + 1);
+    buffer.SetArray((byte*)str, 0, len);
+    buffer.SetByte('\0');
+    buffer.Flip();
+	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
+//	StringUtil::Utf8ToString((const char *)buffer.GetPointer(), bada_str);
+    Utf8Encoding utf8;
+    int charCount;
+    utf8.GetCharCount(buffer, charCount);
+    utf8.GetString(buffer, bada_str);
 
     Dimension dim;
-   // Osp::Graphics::Font pFont = __pCanvas->GetFontN();
-    pCanvas->GetFontN()->GetTextExtent(bada_str, len, dim);
+    pCanvas->GetFontN()->GetTextExtent(bada_str, charCount, dim);
 //    AppLog("ZLbadaPaintContext::stringWidth %d",dim.width );
 	return dim.width;
 }
@@ -114,10 +127,19 @@ int ZLbadaPaintContext::descent() const{
 
 void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool rtl){
 	Osp::Base::String bada_str;
-	//TODO вопрос с длинной конверируемой строки??
-//	AppLog("ZLbadaPaintContext::drawString");
-	StringUtil::Utf8ToString(str, bada_str);
-	pCanvas->DrawText(Point(x, y), bada_str,len);
+    ByteBuffer buffer;
+    buffer.Construct(len + 1);
+    buffer.SetArray((byte*)str, 0, len);
+    buffer.SetByte('\0');
+    buffer.Flip();
+	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
+//	StringUtil::Utf8ToString((const char *)buffer.GetPointer(), bada_str);
+    Utf8Encoding utf8;
+    int charCount;
+    utf8.GetCharCount(buffer, charCount);
+    utf8.GetString(buffer, bada_str);
+ //   AppLog("charCount = %d : len = %d", charCount,len);
+	pCanvas->DrawText(Point(x, y), bada_str,charCount);
 }
 
 void ZLbadaPaintContext::fillRectangle(int x0, int y0, int x1, int y1){
@@ -160,6 +182,7 @@ void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image, int w
 		Qt::SmoothTransformation
 	);*/
 	//myPainter->drawImage(x, y - scaled.height(), scaled);
+	AppLog("draw image w = %d, h = %d", width, height);
 	pCanvas->DrawBitmap(Rectangle(x,y,width,height),*pBmp);
 
 }
