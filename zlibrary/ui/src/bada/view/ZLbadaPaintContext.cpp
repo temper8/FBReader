@@ -183,7 +183,8 @@ void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image, int w
 	);*/
 	//myPainter->drawImage(x, y - scaled.height(), scaled);
 	AppLog("draw image w = %d, h = %d", width, height);
-	pCanvas->DrawBitmap(Rectangle(x,y,width,height),*pBmp);
+	//pCanvas->DrawBitmap(Rectangle(x,y,width,height),*pBmp);
+	pCanvas->DrawBitmap(Point(x, y), *pBmp);
 
 }
 
