@@ -95,7 +95,7 @@ int ZLbadaPaintContext::stringWidth(const char *str, int len, bool) const {
     buffer.SetArray((byte*)str, 0, len);
     buffer.SetByte('\0');
     buffer.Flip();
-	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
+//	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
 //	StringUtil::Utf8ToString((const char *)buffer.GetPointer(), bada_str);
     Utf8Encoding utf8;
     int charCount;
@@ -132,7 +132,7 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
     buffer.SetArray((byte*)str, 0, len);
     buffer.SetByte('\0');
     buffer.Flip();
-	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
+//	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
 //	StringUtil::Utf8ToString((const char *)buffer.GetPointer(), bada_str);
     Utf8Encoding utf8;
     int charCount;

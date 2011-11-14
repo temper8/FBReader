@@ -99,7 +99,7 @@ bool badaForm::Initialize()
 	// Construct an XML form
 	//Construct(L"IDF_B2FORM");
 	//Construct(FORM_STYLE_NORMAL);
-	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_INDICATOR|FORM_STYLE_OPTIONKEY);
+	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_INDICATOR);
 	//SetName(L"IDF_FORM1");
 	SetTitleText(L"FBReader Form");
 	// Create an OptionKey
