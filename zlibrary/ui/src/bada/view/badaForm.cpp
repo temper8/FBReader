@@ -48,6 +48,11 @@ void
 badaForm::OnTouchLongPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchLongPressed");
+	// Display the OptionMenu
+	if (__pOptionMenu != null){
+		__pOptionMenu->SetShowState(true);
+		__pOptionMenu->Show();
+	}
 }
 
 void
@@ -93,7 +98,24 @@ bool badaForm::Initialize()
 {
 	// Construct an XML form
 	//Construct(L"IDF_B2FORM");
-	Construct(FORM_STYLE_NORMAL);
+	//Construct(FORM_STYLE_NORMAL);
+	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_INDICATOR|FORM_STYLE_OPTIONKEY);
+	//SetName(L"IDF_FORM1");
+	SetTitleText(L"FBReader Form");
+	// Create an OptionKey
+	//SetOptionkeyActionId(ID_OPTIONKEY);
+	//AddOptionkeyActionListener(*this);
+
+	// Create an OptionMenu
+	__pOptionMenu = new OptionMenu();
+	__pOptionMenu->Construct();
+	__pOptionMenu->AddItem("Библиотека",ID_OPTIONMENU_ITEM1);
+	__pOptionMenu->AddItem("Открыть",ID_OPTIONMENU_ITEM2);
+	__pOptionMenu->AddItem("Поиск",ID_OPTIONMENU_ITEM3);
+	__pOptionMenu->AddItem("Настройки",ID_OPTIONMENU_ITEM4);
+	__pOptionMenu->AddItem("О программе",ID_OPTIONMENU_ITEM5);
+	__pOptionMenu->AddItem("Содержание",ID_OPTIONMENU_ITEM6);
+	__pOptionMenu->AddActionEventListener(*this);
 
 	return true;
 }
@@ -140,6 +162,14 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 			context.pCanvas = control.GetCanvasN();
 
 			myHolder.view()->paint();
+		}
+		break;
+	case ID_OPTIONKEY:
+		{
+			// Display the OptionMenu
+			if (__pOptionMenu != null)
+				__pOptionMenu->SetShowState(true);
+			__pOptionMenu->Show();
 		}
 		break;
 	default:

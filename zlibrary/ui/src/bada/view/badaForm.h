@@ -26,7 +26,14 @@ public:
 protected:
 	static const int ID_BUTTON_OK = 101;
 	Osp::Ui::Controls::Button *__pButtonOk;
-
+	static const int ID_OPTIONKEY = 100;
+	static const int ID_OPTIONMENU_ITEM1 = 200;
+	static const int ID_OPTIONMENU_ITEM2 = 201;
+	static const int ID_OPTIONMENU_ITEM3 = 202;
+	static const int ID_OPTIONMENU_ITEM4 = 203;
+	static const int ID_OPTIONMENU_ITEM5 = 204;
+	static const int ID_OPTIONMENU_ITEM6 = 205;
+	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
 
 public:
 
