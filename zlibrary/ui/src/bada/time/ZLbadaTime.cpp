@@ -24,7 +24,7 @@ ZLbadaTimeManager::ZLbadaTimeManager(): ZLUnixTimeManager() {
 }
 
 void ZLbadaTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
-	AppLog("ZLbadaTimeManager::addTask" );
+	AppLog("ZLbadaTimeManager::addTask interval=%d",interval );
 /*	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {
 		int id = startTimer(interval);

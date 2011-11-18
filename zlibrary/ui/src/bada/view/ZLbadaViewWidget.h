@@ -12,13 +12,12 @@
 #include "../application/ZLbadaApplicationWindow.h"
 #include "badaForm.h"
 
-//class B2Form;
 class ZLbadaViewWidget: public ZLViewWidget {
 
 private:
     ZLApplication *myApplication;
 public:
-    badaForm *bForm;
+    badaForm *mybadaForm;
 	//void setView(shared_ptr<ZLView> view);
     void repaint();
 	ZLbadaViewWidget(ZLView::Angle initialAngle);

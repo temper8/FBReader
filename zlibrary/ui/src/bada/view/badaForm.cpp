@@ -3,7 +3,9 @@
 #include "ZLBadaViewWidget.h"
 #include "ZLbadaPaintContext.h"
 #include "badaForm.h"
+#include "OpenFileForm.h"
 
+using namespace Osp::App;
 using namespace Osp::Base;
 using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
@@ -96,6 +98,7 @@ badaForm::~badaForm(void)
 
 bool badaForm::Initialize()
 {
+	AppLog("badaForm::Initialize()");
 	// Construct an XML form
 	//Construct(L"IDF_B2FORM");
 	//Construct(FORM_STYLE_NORMAL);
@@ -122,6 +125,7 @@ bool badaForm::Initialize()
 
 result badaForm::OnInitializing(void)
 {
+	AppLog("badaForm::OnInitializing()");
 	result r = E_SUCCESS;
 
 	// TODO: Add your initialization code here
@@ -172,9 +176,91 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 			__pOptionMenu->Show();
 		}
 		break;
+	case ID_OPTIONMENU_ITEM2:
+		AppLog("go open file");
+		goOpenFileForm();
+		break;
+	case ID_OPTIONMENU_ITEM3:
+		AppLog("ID_OPTIONMENU_ITEM3");
+		break;
+	case ID_OPTIONMENU_ITEM4:
+			AppLog("ID_OPTIONMENU_ITEM4");
+			break;
+
 	default:
 		break;
 	}
 }
+
+void badaForm::goOpenFileForm()
+{
+	result r = E_SUCCESS;
+	AppLog("go detail form");
+		Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+		OpenFileForm* pOpenFileForm = new OpenFileForm;
+
+		if(pOpenFileForm->Initialize()){
+			r = pFrame->AddControl(*pOpenFileForm);
+			if(IsFailed(r)){
+				AppLog("pOpenFileForm->Initialize() is failed by %s.", GetErrorMessage(r));
+				return;
+			}
+
+			r = pFrame->SetCurrentForm(*pOpenFileForm);
+			if(IsFailed(r)){
+				AppLog("pFrame->SetCurrentForm() is failed by %s.", GetErrorMessage(r));
+				return;
+			}
+
+			pOpenFileForm->SetPreviousForm(this);
+			AppLog("LoadContentInfo");
+			//_detailForm->LoadContentInfo((ContentSearchResult*)__pLstContentInfo->GetAt(index));
+
+			r = pFrame->Draw();
+			if(IsFailed(r)){
+				AppLog("pFrame->Draw() is failed by %s.", GetErrorMessage(r));
+				return;
+			}
+			r = pFrame->Show();
+			if(IsFailed(r)){
+				AppLog("pFrame->Show() is failed by %s.", GetErrorMessage(r));
+				return;
+			}
+		}
+}
+
+void badaForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs)
+{
+	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	AppLog("badaForm::OnUserEventReceivedN");
+/*
+	switch(requestId)
+	{
+	case 0:
+		{
+			pFrame->SetCurrentForm(*this);
+			pFrame->RequestRedraw();
+			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
+			if (pDetailForm != null)
+				pFrame->RemoveControl(*pDetailForm);
+		}
+		break;
+	case 1:
+		{
+			pFrame->SetCurrentForm(*this);
+			pFrame->RequestRedraw();
+			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
+			if (pDetailForm != null)
+				pFrame->RemoveControl(*pDetailForm);
+
+			SearchContent();
+		}
+		break;
+	default:
+		break;
+	}
+	*/
+}
+
 
 

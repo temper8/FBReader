@@ -22,6 +22,7 @@
 #include "../view/ZLViewWidget.h"
 
 bool ZLApplication::RotationAction::isVisible() const {
+
 	ZLApplication &application = ZLApplication::Instance();
 	return (application.myViewWidget != 0) &&
 				 ((application.RotationAngleOption.value() != ZLView::DEGREES0) ||

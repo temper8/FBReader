@@ -72,7 +72,7 @@ ZLPaintContext *ZLbadaLibraryImplementation::createContext() {
 }
 
 badaApp*  ZLbadaLibraryImplementation::myBadaApp;
-ZLApplication* ZLbadaLibraryImplementation::ZLApp;
+ZLApplication* ZLbadaLibraryImplementation::myZLApplication;
 
 void ZLbadaLibraryImplementation::SetBada2App(badaApp* b) {
 	myBadaApp = b;
@@ -80,9 +80,9 @@ void ZLbadaLibraryImplementation::SetBada2App(badaApp* b) {
 void  ZLbadaLibraryImplementation::createApplicationWindow() {
 
 	AppLog("createApplicationWindow(ZLApp)");
-	ZLDialogManager::Instance().createApplicationWindow(ZLApp);
+	ZLDialogManager::Instance().createApplicationWindow(myZLApplication);
 	//ZLBadaApplicationWindow *b = ZLApp->myApp
-	ZLApp->initWindow();
+	myZLApplication->initWindow();
 }
 
 void ZLbadaLibraryImplementation::run(ZLApplication *application) {

@@ -142,10 +142,12 @@ void ZLMenuVisitor::processMenu(ZLApplication &application) {
 }
 
 void ZLMenuVisitor::processMenu(ZLMenu &menu) {
+	AppLog("ZLMenuVisitor::processMenu ");
 	const ZLMenu::ItemVector &items = menu.items();
 	for (ZLMenu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
 			case ZLMenu::Item::ITEM:
+				AppLog("ZLMenuVisitor::processItem ");
 				processItem((ZLMenubar::PlainItem&)**it);
 				break;
 			case ZLMenu::Item::SUBMENU:

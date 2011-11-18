@@ -57,18 +57,18 @@ private:
 
 protected:
 	// TODO: change to pure virtual
-	//virtual void initMenu() {};
+	virtual void initMenu() {};
 
-//	ToolbarType type(const ZLToolbar::Item &item) const;
+	ToolbarType type(const ZLToolbar::Item &item) const;
 	bool hasFullscreenToolbar() const;
-//	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
-//	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
+	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
+	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
-//	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
-//	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
+	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
+	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh();
-//	virtual void processAllEvents() = 0;
+	virtual void processAllEvents() = 0;
 
 private:
 	void refreshToolbar(ToolbarType type);
@@ -79,7 +79,7 @@ protected:
 
 	//virtual void close() = 0;
 
-	//virtual void setCaption(const std::string &caption) = 0;
+	virtual void setCaption(const std::string &caption) = 0;
 
 	//virtual void grabAllKeys(bool grab) = 0;
 

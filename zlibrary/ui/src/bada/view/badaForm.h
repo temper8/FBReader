@@ -34,7 +34,7 @@ protected:
 	static const int ID_OPTIONMENU_ITEM5 = 204;
 	static const int ID_OPTIONMENU_ITEM6 = 205;
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
-
+	void goOpenFileForm();
 public:
 
 	ZLbadaViewWidget &myHolder;
@@ -51,7 +51,7 @@ public:
 	virtual void  OnTouchMoved (const Osp::Ui::Control &source, const Osp::Graphics::Point &currentPosition, const Osp::Ui::TouchEventInfo &touchInfo);
 	virtual void  OnTouchPressed (const Osp::Ui::Control &source, const Osp::Graphics::Point &currentPosition, const Osp::Ui::TouchEventInfo &touchInfo);
 	virtual void  OnTouchReleased (const Osp::Ui::Control &source, const Osp::Graphics::Point &currentPosition, const Osp::Ui::TouchEventInfo &touchInfo);
-
+	void OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
 };
 
 #endif	//_B2FORM_H_

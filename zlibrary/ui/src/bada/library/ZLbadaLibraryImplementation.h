@@ -60,9 +60,9 @@ private:
 
 public:
 	static badaApp*  myBadaApp;
-    static ZLApplication* ZLApp;
+    static ZLApplication* myZLApplication;
 	static void createApplicationWindow();
-	static void SetZLApplication(ZLApplication* a) { ZLApp = a; };
+	static void SetZLApplication(ZLApplication* a) { myZLApplication = a; };
 	static void SetBada2App(badaApp* b);
 	ZLbadaLibraryImplementation();
 	~ZLbadaLibraryImplementation();

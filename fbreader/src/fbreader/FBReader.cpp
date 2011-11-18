@@ -102,7 +102,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	AppLog("Создаем FBReader");
 	myBookTextView = new BookTextView(*context());
 //	myFootnoteView = new FootnoteView(*context());
-//	myContentsView = new ContentsView(*context());
+	myContentsView = new ContentsView(*context());
 //	myNetworkLibraryView = new NetworkView(*context());
 //	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 //	myLibraryByTagView = new LibraryByTagView(*context());
@@ -210,13 +210,13 @@ void FBReader::initWindow() {
 		//	}
 		}
 		if (book.isNull()) {
-			AppLog("book.isNull() хелп на какномнибудь языке");
+			AppLog("book.isNull() хелп на каком-нибудь языке");
 		//	book = BooksDBUtil::getBook(helpFileName(ZLibrary::Language()));
 		}
 
 		if (book.isNull()) {
 			AppLog("book.isNull() почитаем хелп на англицком");
-			book = BooksDBUtil::getBook(helpFileName("en"));
+			book = BooksDBUtil::getBook(helpFileName("ru"));
 		}
 		AppLog("openBook(book)");
 		openBook(book);

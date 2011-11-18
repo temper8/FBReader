@@ -24,9 +24,9 @@
 #include "ZLApplication.h"
 #include "ZLApplicationWindow.h"
 #include "ZLKeyBindings.h"
-//#include "ZLToolbar.h"
-//#include "ZLMenu.h"
-//#include "ZLPopupData.h"
+#include "ZLToolbar.h"
+#include "ZLMenu.h"
+#include "ZLPopupData.h"
 #include "ZLView.h"
 #include "GView.h"
 #include "ZLViewWidget.h"
@@ -74,8 +74,8 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	myContext = ZLibrary::createContext();
 
 
-	//myTestView = new GView(*context());
-	AppLog("new GView(*context())");
+
+//	AppLog("new GView(*context())");
 //	myInitialView = new GView(*context());
 
 
@@ -86,9 +86,9 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	myPresentWindowHandler = new PresentWindowHandler();
 	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
 
-//	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
-//	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
-//	createMenubar();
+	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
+	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
+	createMenubar();
 	AppLog("создали ZLApplication");
 }
 
@@ -189,6 +189,47 @@ bool ZLApplication::isActionEnabled(const std::string &actionId) const {
 	shared_ptr<Action> _action = action(actionId);
 	return !_action.isNull() && _action->isEnabled();
 }
+/*
+
+shared_ptr<ZLApplication::Action> ZLApplication::action(const std::string &actionId) const {
+	AppLog("ZLApplication::action");
+	std::map<std::string,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+	if (it != myActionMap.end()) AppLog("myActionMap.find"); else AppLog("myActionMap.end()");
+
+	return (it != myActionMap.end()) ? it->second : 0;
+}
+
+bool ZLApplication::isActionVisible(const std::string &actionId) const {
+	AppLog("isActionVisible");
+	shared_ptr<Action> a = action(actionId);
+	AppLog("a?");
+	if (a.isNull()) AppLog("a ==0");
+	AppLog("прошел a.isNull");
+	if (!a.isNull()){
+		AppLog("!a.isNull()");
+		return  a->isVisible();
+	}
+
+	else
+	{
+		AppLog("a.isNull()");
+		return false;
+	}
+
+}
+
+bool ZLApplication::isActionEnabled(const std::string &actionId) const {
+	shared_ptr<Action> _action = action(actionId);
+	if (!_action.isNull()) return true;//_action->isEnabled();
+	else
+	{
+		AppLog("_action.isNull()");
+		return false;
+	}
+
+
+}
+*/
 
 void ZLApplication::doAction(const std::string &actionId) {
 	shared_ptr<Action> _action = action(actionId);
@@ -199,11 +240,11 @@ void ZLApplication::doAction(const std::string &actionId) {
 
 void ZLApplication::resetWindowCaption() {
 	if (!myWindow.isNull()) {
-//		if ((currentView() == 0) || (currentView()->caption().empty())) {
-//			myWindow->setCaption(ZLibrary::ApplicationName());
-//		} else {
-//			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
-//		}
+		if ((currentView() == 0) || (currentView()->caption().empty())) {
+			myWindow->setCaption(ZLibrary::ApplicationName());
+		} else {
+			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
+		}
 	}
 }
 

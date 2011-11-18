@@ -182,7 +182,7 @@ void ZLTextArea::paint() {
 	int y = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
-		AppLog("prepareTextLine");
+	//	AppLog("prepareTextLine");
 		prepareTextLine(style, info, y);
 		y += info.Height + info.Descent + info.VSpaceAfter;
 		AppLog("prepareTextLine y = %d",y);
