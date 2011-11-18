@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config test="qwe">
+<config>
   <group name="Options">
     <option name="BookPath" value="~/FBooks:~/Books"/>
     <option name="DownloadDirectory" value="~/FBooks"/>
