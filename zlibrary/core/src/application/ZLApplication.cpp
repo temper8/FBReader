@@ -234,6 +234,7 @@ bool ZLApplication::isActionEnabled(const std::string &actionId) const {
 void ZLApplication::doAction(const std::string &actionId) {
 	shared_ptr<Action> _action = action(actionId);
 	if (!_action.isNull()) {
+		AppLog("ZLApplication::doAction %s",actionId.c_str());
 		_action->checkAndRun();
 	}
 }

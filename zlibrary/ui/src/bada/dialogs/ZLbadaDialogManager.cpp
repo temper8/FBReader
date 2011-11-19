@@ -23,20 +23,25 @@
 //#include <qclipboard.h>
 
 
-#include "ZLbadaDialog.h"
+
 //#include "ZLQtOptionsDialog.h"
-#include "ZLbadaOpenFileDialog.h"
+
 //#include "ZLQtDialogContent.h"
 //#include "ZLQtProgressDialog.h"
 //#include "ZLQtUtil.h"
 
 //#include "../image/ZLQtImageManager.h"
-//#include "ZLQtApplicationWindow.h"
+
+#include <FBase.h>
+#include <FContent.h>
 #include "../application/ZLbadaApplicationWindow.h"
 #include "../view/badaForm.h"
+#include "../view/ZLbadaViewWidget.h"
+#include "ZLbadaDialog.h"
 #include "ZLbadaDialogManager.h"
+#include "ZLbadaOpenFileDialog.h"
 
-
+using namespace Osp::Ui::Controls;
 
 void ZLbadaDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLbadaApplicationWindow(application);
@@ -53,28 +58,32 @@ shared_ptr<ZLOptionsDialog> ZLBadaDialogManager::createOptionsDialog(const ZLRes
 */
 
 shared_ptr<ZLOpenFileDialog> ZLbadaDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
-	return new ZLbadaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
-}
-/*
-void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	QMessageBox::information(
-		qApp->mainWidget(),
-		::qtString(title),
-		::qtString(message),
-		::qtButtonName(OK_BUTTON)
-	);
+	ZLbadaOpenFileDialog *b= new ZLbadaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
+	AppLog("ZLbadaDialogManager::createOpenFileDialog");
+	b->pSearchResultInfo = myApplicationWindow->viewWidget().mybadaForm->pSearchResultInfo;
+
+	return b;
 }
 
-void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	QMessageBox::critical(
+void ZLbadaDialogManager::informationBox(const std::string &title, const std::string &message) const {
+//	QMessageBox::information(
+//		qApp->mainWidget(),
+//		::qtString(title),
+//		::qtString(message),
+//		::qtButtonName(OK_BUTTON)
+//	);
+}
+
+void ZLbadaDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
+/*	QMessageBox::critical(
 		qApp->mainWidget(),
 		::qtString(dialogTitle(key)),
 		::qtString(message),
 		::qtButtonName(OK_BUTTON)
-	);
+	);*/
 }
-
-int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+/*
+int ZLbadaDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	return QMessageBox::question(
 		qApp->mainWidget(),
 		::qtString(dialogTitle(key)),

@@ -1,10 +1,13 @@
-#ifndef _B2FORM_H_
-#define _B2FORM_H_
+#ifndef _BADAFORM_H_
+#define _BADAFORM_H_
+
+#include <string>
 
 #include <FBase.h>
 #include <FUi.h>
 //#include "ZLView.h"
 #include <FGraphics.h>
+#include <FContent.h>
 
 class ZLbadaViewWidget;
 
@@ -27,16 +30,19 @@ protected:
 	static const int ID_BUTTON_OK = 101;
 	Osp::Ui::Controls::Button *__pButtonOk;
 	static const int ID_OPTIONKEY = 100;
-	static const int ID_OPTIONMENU_ITEM1 = 200;
-	static const int ID_OPTIONMENU_ITEM2 = 201;
-	static const int ID_OPTIONMENU_ITEM3 = 202;
-	static const int ID_OPTIONMENU_ITEM4 = 203;
-	static const int ID_OPTIONMENU_ITEM5 = 204;
-	static const int ID_OPTIONMENU_ITEM6 = 205;
+	static const int ID_OPTIONMENU_ITEM0 = 200;
+	static const int ID_OPTIONMENU_ITEM1 = 201;
+	static const int ID_OPTIONMENU_ITEM2 = 202;
+	static const int ID_OPTIONMENU_ITEM3 = 203;
+	static const int ID_OPTIONMENU_ITEM4 = 204;
+	static const int ID_OPTIONMENU_ITEM5 = 205;
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
-	void goOpenFileForm();
-public:
+	std::string ActionIdList[10];
 
+public:
+    void AddMenuItem(const std::string &name,const  std::string &id);
+    Osp::Content::ContentSearchResult* pSearchResultInfo;
+	void goOpenFileForm();
 	ZLbadaViewWidget &myHolder;
 	virtual result OnDraw(void);
 	virtual result OnInitializing(void);
@@ -54,4 +60,4 @@ public:
 	void OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
 };
 
-#endif	//_B2FORM_H_
+#endif	//_BADAFORM_H_

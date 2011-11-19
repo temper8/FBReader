@@ -18,8 +18,13 @@
  */
 
 //#include <qfiledialog.h>
-
+#include <FBase.h>
 #include "ZLbadaOpenFileDialog.h"
+#include "DialogApp.h"
+using namespace Osp::Base;
+using namespace Osp::Base::Collection;
+using namespace Osp::Ui::Controls;
+using namespace Osp::Content;
 
 
 ZLbadaOpenFileDialog::ZLbadaOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter) {
@@ -27,10 +32,53 @@ ZLbadaOpenFileDialog::ZLbadaOpenFileDialog(const std::string &title, const std::
 //	myDialog->setCaption(QString::fromUtf8(title.c_str()));
 //	myDialog->setDir(QString::fromUtf8(directoryPath.c_str()));
 //	myDialog->setSelection(QString::fromUtf8(filePath.c_str()));
+	AppLog(" ZLbadaOpenFileDialog title=%s, directoryPath=%s",title.c_str(),directoryPath.c_str());
 }
 
 ZLbadaOpenFileDialog::~ZLbadaOpenFileDialog() {
 //	delete myDialog;
+}
+
+
+bool ZLbadaOpenFileDialog::run(){
+	String tmpContentPath;
+	ByteBuffer* bb;
+
+	MessageBox *pMessageBox = new MessageBox();
+	if (pSearchResultInfo) {
+		tmpContentPath = ((ContentInfo*)pSearchResultInfo->GetContentInfo())->GetContentPath();
+		bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);
+		AppLog("tmpContentPath %s",(char*)bb->GetPointer());
+		selectedFile =   std::string((const char*)bb->GetPointer());
+
+		pMessageBox->Construct(L"Открыть файл?", tmpContentPath , MSGBOX_STYLE_OKCANCEL ,3000);
+	}
+	else
+	{
+		pMessageBox->Construct(L"Открыть файл?", L"А нечего открывать :)" , MSGBOX_STYLE_OKCANCEL ,3000);
+		}
+	int ModalResult;
+	pMessageBox->ShowAndWait(ModalResult);
+
+	delete pMessageBox;
+
+/*	AppLog("ZLbadaOpenFileDialog::run()");
+
+	ArrayList* pArgs = new ArrayList();
+	pArgs->Construct();
+	String str1(L"osp.operation.MAIN");
+	pArgs->Add(str1);
+	result r = E_SUCCESS;
+	AppLog("Osp::App::Application::Execute");
+    r = Osp::App::Application::Execute(DialogApp::CreateInstance, pArgs);
+
+	if (IsFailed(r))
+			{
+				AppLog("Application execution failed-[%s].", GetErrorMessage(r));
+	 			r &= 0x0000FFFF;
+	 		}
+	AppLog("Osp::App::Application::Execute OK");*/
+	if (pSearchResultInfo) return true; else return false;
 }
 
 bool ZLbadaOpenFileDialog::runInternal() {
@@ -38,34 +86,13 @@ bool ZLbadaOpenFileDialog::runInternal() {
 }
 
 std::string ZLbadaOpenFileDialog::filePath() const {
+	if (pSearchResultInfo) return selectedFile; else return std::string();
 //	QString path = myDialog->selectedFile();
-//	return path.isNull() ? std::string() : (const char*)path.utf8();
+	//return "path";// ? std::string() : (const char*)path.utf8();
 }
 
 std::string ZLbadaOpenFileDialog::directoryPath() const {
-//	return (const char*)myDialog->dir()->absPath().utf8();
+ return "directoryPath";//(const char*)myDialog->dir()->absPath().utf8();
 }
 
-void ZLbadaOpenFileDialog::setPosition(int x, int y) {
-//	myDialog->move(x, y);
-}
 
-void ZLbadaOpenFileDialog::setSize(int width, int height) {
-//	myDialog->resize(width, height);
-}
-
-int ZLbadaOpenFileDialog::x() const {
-//	return myDialog->x();
-}
-
-int ZLbadaOpenFileDialog::y() const {
-//	return myDialog->y();
-}
-
-int ZLbadaOpenFileDialog::width() const {
-//	return myDialog->width();
-}
-
-int ZLbadaOpenFileDialog::height() const {
-//	return myDialog->height();
-}

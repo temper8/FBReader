@@ -246,7 +246,8 @@ bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
 		} else {
 			book = BooksDBUtil::getBook(bookFile.path());
 			if (!book.isNull()) {
-				BooksDB::Instance().insertIntoBookList(*book);
+				AppLog("BooksDB::Instance().insertIntoBookList(*book)");
+				//	BooksDB::Instance().insertIntoBookList(*book);
 			}
 		}
 		return true;

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLFile.h>
@@ -46,7 +46,7 @@ AddBookAction::AddBookAction(int visibleInModes) :
 
 void AddBookAction::run() {
 	const ZLResourceKey dialogKey("addFileDialog");
-
+	AppLog(" AddBookAction::run()");
 	FileFilter filter;
 	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), FileOption.value(), filter);
 	bool code = dialog->run();

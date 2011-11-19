@@ -33,8 +33,7 @@ Application* badaApp::CreateInstance(void)
 	return new badaApp();
 }
 
-bool
-badaApp::OnAppInitializing(AppRegistry& appRegistry)
+bool badaApp::OnAppInitializing(AppRegistry& appRegistry)
 {
 	// TODO:
 	// Initialize UI resources and application specific data.

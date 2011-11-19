@@ -38,10 +38,15 @@ void ZLbadaApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::S
 
 void ZLbadaApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
 	AppLog("MenuBuilder::processItem actionId=%s name=%s",item.actionId().c_str(),item.name().c_str());
-
-/*	GtkWidget *gtkItem = gtk_button_new_with_label(item.name().c_str());
 	const std::string &id = item.actionId();
+	const std::string &name = item.name();
 	shared_ptr<ZLApplication::Action> action = myWindow.application().action(id);
+	myWindow.myViewWidget->mybadaForm->AddMenuItem(name, id);
+	//__pOptionMenu->AddItem(item.name().c_str(),200);
+	//__pOptionMenu->AddItem("Библиотека",ID_OPTIONMENU_ITEM1);
+
+	/*GtkWidget *gtkItem = gtk_button_new_with_label(item.name().c_str());
+
 	if (!action.isNull()) {
 		ZLGtkSignalUtil::connectSignalAfter(GTK_OBJECT(gtkItem), "clicked", G_CALLBACK(menuActionSlot), &*action);
 	}
@@ -171,10 +176,10 @@ ZLViewWidget *ZLbadaApplicationWindow::createViewWidget() {
 
 	AppLog("createViewWidget");
 	ZLView::Angle Angle = ZLView::DEGREES0;// application().AngleStateOption.value();
-	ZLbadaViewWidget *viewWidget = new ZLbadaViewWidget(Angle);
+	myViewWidget = new ZLbadaViewWidget(Angle);
 
 	// Create a form
-	badaForm *pbadaForm = new badaForm(*viewWidget);
+	badaForm *pbadaForm = new badaForm(*myViewWidget);
 	pbadaForm->Initialize();
 	pbadaForm->SetOrientation(ORIENTATION_AUTOMATIC_FOUR_DIRECTION);
 
@@ -183,11 +188,12 @@ ZLViewWidget *ZLbadaApplicationWindow::createViewWidget() {
 	Frame *pFrame = ZLbadaLibraryImplementation::myBadaApp->GetAppFrame()->GetFrame();
 	pFrame->AddControl(*pbadaForm);
 	AppLog("pFrame->AddControl(*pbadaForm)");
+
 	// Set the current form
 	pFrame->SetCurrentForm(*pbadaForm);
 	AppLog("SetCurrentForm(*pbadaForm)");
-	viewWidget->mybadaForm = pbadaForm;
-
+	myViewWidget->mybadaForm = pbadaForm;
+	myViewWidget->myWindows = this;
 
 
 //	QVBoxLayout *layout = new QVBoxLayout(main);
@@ -201,5 +207,5 @@ ZLViewWidget *ZLbadaApplicationWindow::createViewWidget() {
 //	myMainWindow->connectCSTButtons(myCST);
 
 	//myMainWindow->setCentralWidget(main);
-	return viewWidget;
+	return myViewWidget;
 }

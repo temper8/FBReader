@@ -40,6 +40,7 @@ std::string ZLbadaFSManager::convertFilenameToUtf8(const std::string &name) cons
 		return name;
 	}
 	 AppLog("ZLbadaFSManager::convertFilenameToUtf8");
+	 return name;
 	//QString qString = QString::fromLocal8Bit(name.c_str());
 	//return (qString == QString::null) ? "" : (const char*)qString.toUtf8();
 }

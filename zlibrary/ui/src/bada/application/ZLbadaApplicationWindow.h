@@ -13,6 +13,7 @@
 #include "../../../../core/src/application/ZLMenu.h"
 #include "../view/badaApp.h"
 
+class ZLbadaViewWidget;
 
 class ZLbadaApplicationWindow: public ZLApplicationWindow {
 public:
@@ -44,9 +45,12 @@ protected:
 	virtual void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item);
 
+private:
+	ZLbadaViewWidget *myViewWidget;
 
 public:
 
+	ZLbadaViewWidget &viewWidget() const;
 	badaApp*  myBadaApp;
 	ZLViewWidget *createViewWidget();
 
@@ -55,5 +59,7 @@ public:
 
 	friend class MenuBuilder;
 };
+
+inline ZLbadaViewWidget &ZLbadaApplicationWindow::viewWidget() const { return *myViewWidget; }
 
 #endif /* ZLBADAAPPLICATIONWINDOW_H_ */

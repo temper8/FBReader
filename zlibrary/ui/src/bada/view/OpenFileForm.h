@@ -37,6 +37,8 @@ protected:
 
 	void    _ClearContentInfoList();
 public:
+
+
 	result	OnInitializing(void);
 	result	OnTerminating(void);
 	void	OnActionPerformed(const Osp::Ui::Control& source, int actionId);

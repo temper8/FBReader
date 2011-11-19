@@ -43,20 +43,22 @@ ZLbadaDialog::ZLbadaDialog(const ZLResource &resource) /*: QDialog(0, 0, true)*/
 	*/
 }
 
-/*
-ZLQtDialog::~ZLQtDialog() {
+
+ZLbadaDialog::~ZLbadaDialog() {
 }
 
-void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
-	QPushButton *button = new QPushButton(myButtonGroup);
+void ZLbadaDialog::addButton(const ZLResourceKey &key, bool accept) {
+	AppLog(" ZLbadaDialog::addButton()");
+/*	QPushButton *button = new QPushButton(myButtonGroup);
 	button->setText(::qtButtonName(key));
 	myButtons.push_back(button);
 	myButtonLayout->addWidget(button, 0, myButtons.size());
-	connect(button, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
+	connect(button, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));*/
 }
-*/
+
 bool ZLbadaDialog::run() {
 	AppLog(" ZLbadaDialog::run()");
+
 	/*QSize maxSize(0, 0);
 	for (std::vector<QButton*>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		QSize buttonSize = (*it)->sizeHint();

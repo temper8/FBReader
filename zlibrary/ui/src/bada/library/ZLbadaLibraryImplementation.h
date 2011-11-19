@@ -59,6 +59,7 @@ private:
 	void run(ZLApplication *application);
 
 public:
+
 	static badaApp*  myBadaApp;
     static ZLApplication* myZLApplication;
 	static void createApplicationWindow();

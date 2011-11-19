@@ -34,8 +34,8 @@ OpenFileForm::~OpenFileForm() {
 bool OpenFileForm::Initialize()
 {
 	AppLog("OpenFileForm::Initialize \n");
-	// Construct an XML form
-	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_INDICATOR|FORM_STYLE_SOFTKEY_1);
+	// Construct an XML form FORM_STYLE_INDICATOR|
+	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
 	SetTitleText(L"OpenFileForm");
 
 //	AddSoftkeyActionListener(SOFTKEY_0, *this);
@@ -56,7 +56,7 @@ result OpenFileForm::OnInitializing(void)
 	// Creates close button
 
 	    Button* pBtnClose = new Button();
-	    pBtnClose->Construct(Rectangle(50, 50, 150, 150), L"Button");
+	    pBtnClose->Construct(Rectangle(50, 50, 150, 150), L"Нажми");
 
 
 
@@ -119,6 +119,15 @@ void OpenFileForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 	tmpContentPath = ((ContentInfo*)pInfo->GetContentInfo())->GetContentPath();
 	bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);
 	AppLog("tmpContentPath %s",(char*)bb->GetPointer());
+
+	AppLog("Выбран файл! \n");
+	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	pFrame->SetCurrentForm(*pPreviousForm);
+	pPreviousForm->Draw();
+	pPreviousForm->Show();
+	((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
+	pPreviousForm->SendUserEvent(0, null);
+
     switch (itemId)
     {
         case 500:
@@ -159,9 +168,9 @@ void OpenFileForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 			pFrame->SetCurrentForm(*pPreviousForm);
 			pPreviousForm->Draw();
 			pPreviousForm->Show();
-			badaForm* pbadaForm = (badaForm*)(pFrame->GetControl("badaForm"));
-			if (pbadaForm != null)
-				pbadaForm->SendUserEvent(0, null);
+			((badaForm*)pPreviousForm)->pSearchResultInfo=null;
+			pPreviousForm->SendUserEvent(0, null);
+
 
 		}
 		break;

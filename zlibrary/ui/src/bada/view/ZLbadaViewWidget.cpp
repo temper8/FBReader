@@ -8,6 +8,10 @@
 #include "ZLbadaViewWidget.h"
 #include "badaForm.h"
 
+void ZLbadaViewWidget::doAction(std::string &actionId){
+	myWindows->application().doAction(actionId);
+}
+
 ZLbadaViewWidget::ZLbadaViewWidget(ZLView::Angle initialAngle): ZLViewWidget(initialAngle) {
 	// TODO Auto-generated constructor stub
 

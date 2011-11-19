@@ -9,6 +9,7 @@ using namespace Osp::App;
 using namespace Osp::Base;
 using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
+using namespace Osp::Base::Collection;
 
 result badaForm::OnDraw(void)
 {
@@ -112,12 +113,12 @@ bool badaForm::Initialize()
 	// Create an OptionMenu
 	__pOptionMenu = new OptionMenu();
 	__pOptionMenu->Construct();
-	__pOptionMenu->AddItem("Библиотека",ID_OPTIONMENU_ITEM1);
-	__pOptionMenu->AddItem("Открыть",ID_OPTIONMENU_ITEM2);
-	__pOptionMenu->AddItem("Поиск",ID_OPTIONMENU_ITEM3);
-	__pOptionMenu->AddItem("Настройки",ID_OPTIONMENU_ITEM4);
-	__pOptionMenu->AddItem("О программе",ID_OPTIONMENU_ITEM5);
-	__pOptionMenu->AddItem("Содержание",ID_OPTIONMENU_ITEM6);
+	//__pOptionMenu->AddItem("Библиотека",ID_OPTIONMENU_ITEM1);
+	//__pOptionMenu->AddItem("Открыть",ID_OPTIONMENU_ITEM2);
+	//__pOptionMenu->AddItem("Поиск",ID_OPTIONMENU_ITEM3);
+	//__pOptionMenu->AddItem("Настройки",ID_OPTIONMENU_ITEM4);
+	//__pOptionMenu->AddItem("О программе",ID_OPTIONMENU_ITEM5);
+	//__pOptionMenu->AddItem("Содержание",ID_OPTIONMENU_ITEM6);
 	__pOptionMenu->AddActionEventListener(*this);
 
 	return true;
@@ -149,13 +150,23 @@ result badaForm::OnTerminating(void)
 {
 	result r = E_SUCCESS;
 
-	// TODO: Add your termination code here
+    delete __pOptionMenu;
 
 	return r;
 }
 
+void badaForm::AddMenuItem(const std::string &name,const  std::string &id){
+	AppLog("badaForm::AddMenuItem %s,%s",name.c_str(),id.c_str());
+	int count =__pOptionMenu->GetItemCount();
+	AppLog("badaForm::AddMenuItem count=%d,%s",count);
+	ActionIdList[count] = id;
+	__pOptionMenu->AddItem(name.c_str(),ID_OPTIONMENU_ITEM0 + count);
+
+
+}
 void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 {
+    int indx;
 	switch(actionId)
 	{
 	case ID_BUTTON_OK:
@@ -176,16 +187,27 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 			__pOptionMenu->Show();
 		}
 		break;
+
+
+	case ID_OPTIONMENU_ITEM0:
+	case ID_OPTIONMENU_ITEM1:
 	case ID_OPTIONMENU_ITEM2:
-		AppLog("go open file");
-		goOpenFileForm();
-		break;
 	case ID_OPTIONMENU_ITEM3:
-		AppLog("ID_OPTIONMENU_ITEM3");
-		break;
 	case ID_OPTIONMENU_ITEM4:
-			AppLog("ID_OPTIONMENU_ITEM4");
-			break;
+	case ID_OPTIONMENU_ITEM5:
+		indx = __pOptionMenu->GetItemIndexFromActionId(actionId);
+    	AppLog("OPTIONMENU %d",indx);
+        if (indx==2) {
+
+        	AppLog("go open file");
+     		goOpenFileForm();
+    	  }
+        else {
+        	AppLog("делаем что-то другое");
+        	myHolder.doAction(ActionIdList[indx]);
+        };
+
+		break;
 
 	default:
 		break;
@@ -211,7 +233,7 @@ void badaForm::goOpenFileForm()
 				AppLog("pFrame->SetCurrentForm() is failed by %s.", GetErrorMessage(r));
 				return;
 			}
-
+			//pOpenFileForm->
 			pOpenFileForm->SetPreviousForm(this);
 			AppLog("LoadContentInfo");
 			//_detailForm->LoadContentInfo((ContentSearchResult*)__pLstContentInfo->GetAt(index));
@@ -233,33 +255,37 @@ void badaForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::
 {
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	AppLog("badaForm::OnUserEventReceivedN");
-/*
+
 	switch(requestId)
 	{
 	case 0:
 		{
+			AppLog("badaForm::а теперь Акшен открываем файл");
 			pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
-			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
-			if (pDetailForm != null)
-				pFrame->RemoveControl(*pDetailForm);
+			myHolder.doAction(ActionIdList[2]);
+			//DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
+			//badaForm* pbadaForm = (badaForm*)(pFrame->GetControl("badaForm"));
+			//if (pDetailForm != null)
+			//	pFrame->RemoveControl(*pDetailForm);
 		}
 		break;
 	case 1:
 		{
-			pFrame->SetCurrentForm(*this);
+		/*	pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
 			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
 			if (pDetailForm != null)
 				pFrame->RemoveControl(*pDetailForm);
 
 			SearchContent();
+			*/
 		}
 		break;
 	default:
 		break;
 	}
-	*/
+
 }
 
 

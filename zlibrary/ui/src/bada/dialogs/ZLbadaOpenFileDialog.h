@@ -23,26 +23,21 @@
 //#include "../../../../core/src/desktop/dialogs/ZLDesktopOpenFileDialog.h"
 #include "ZLOpenFileDialog.h"
 //class QFileDialog;
+#include <FContent.h>
 
 class ZLbadaOpenFileDialog : public ZLOpenFileDialog {
 
 public:
-//	ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
 
 	ZLbadaOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
 	~ZLbadaOpenFileDialog();
 	bool run();
 
 	bool runInternal();
+	std::string selectedFile;
 	std::string filePath() const;
 	std::string directoryPath() const;
-
-	void setPosition(int x, int y);
-	void setSize(int width, int height);
-	int x() const;
-	int y() const;
-	int width() const;
-	int height() const;
+	Osp::Content::ContentSearchResult* pSearchResultInfo;
 
 private:
 	//QFileDialog *myDialog;
