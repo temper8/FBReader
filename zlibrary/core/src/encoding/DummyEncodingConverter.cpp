@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLUnicodeUtil.h>
 
 #include "DummyEncodingConverter.h"
@@ -36,6 +36,7 @@ friend class DummyEncodingConverterProvider;
 };
 
 bool DummyEncodingConverterProvider::providesConverter(const std::string &encoding) {
+	AppLog("DummyEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	const std::string lowerCasedEncoding = ZLUnicodeUtil::toLower(encoding);
 	return (lowerCasedEncoding == "utf-8") || (lowerCasedEncoding == "us-ascii");
 }

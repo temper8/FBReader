@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include "ZLEncodingConverter.h"
 #include "ZLEncodingConverterProvider.h"
 
@@ -27,16 +27,22 @@ ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
 }
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
+	//AppLog("ZLEncodingConverterInfo::canCreateConverter()");
 	ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
+	//AppLog("ZLEncodingCollection::Instance()");
 	const std::vector<shared_ptr<ZLEncodingConverterProvider> > &providers = collection.providers();
+	//AppLog("collection.providers()");
 	for (std::vector<shared_ptr<ZLEncodingConverterProvider> >::const_iterator it = providers.begin(); it != providers.end(); ++it) {
+	//	AppLog("for1 ");
 		for (std::vector<std::string>::const_iterator jt = myAliases.begin(); jt != myAliases.end(); ++jt) {
+		//	AppLog("for2 myAliases=%s",jt->c_str());
 			if ((*it)->providesConverter(*jt)) {
+				//AppLog("return true; ");
 				return true;
 			}
 		}
 	}
-
+	//AppLog("return false; ");
 	return false;
 }
 

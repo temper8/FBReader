@@ -19,7 +19,7 @@
 
 #ifndef __ZLENCODINGCONVERTERPROVIDER_H__
 #define __ZLENCODINGCONVERTERPROVIDER_H__
-
+#include <FBase.h>
 #include <string>
 
 #include <shared_ptr.h>

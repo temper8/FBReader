@@ -52,6 +52,10 @@
 								<inputType id="cdt.managedbuild.tool.osp.gnu.cpp.compiler.input.458427859" superClass="cdt.managedbuild.tool.osp.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.osp.gnu.target.c.compiler.exe.debug.115030815" name="bada C Compiler" superClass="cdt.managedbuild.tool.osp.gnu.target.c.compiler.exe.debug">
+								<option id="osp.gnu.target.c.compiler.debug.exe.option.include.paths.1866065000" name="Include paths (-I)" superClass="osp.gnu.target.c.compiler.debug.exe.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${SDKROOT}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT_ROOT}/inc&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.osp.gnu.c.compiler.input.996290034" superClass="cdt.managedbuild.tool.osp.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.osp.gnu.target.c.linker.exe.debug.453458940" name="bada C Linker" superClass="cdt.managedbuild.tool.osp.gnu.target.c.linker.exe.debug"/>

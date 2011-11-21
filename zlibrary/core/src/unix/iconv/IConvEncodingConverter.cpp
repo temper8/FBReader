@@ -17,7 +17,16 @@
  * 02110-1301, USA.
  */
 
-#include <iconv.h>
+    // includes
+    #include <FBase.h>
+    #include <FText.h>
+
+    // namespace
+    using namespace Osp::Base;
+    using namespace Osp::Text;
+
+
+//#include <iconv.h>
 
 #include <ZLUnicodeUtil.h>
 
@@ -34,18 +43,33 @@ private:
 	bool fillTable(int *map);
 
 private:
-	iconv_t myIConverter;
+//	iconv_t
+	Encoding* myIConverter;
 	std::string myBuffer;
 
 friend class IConvEncodingConverterProvider;
 };
 
 bool IConvEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	iconv_t converter = iconv_open("utf-8", encoding.c_str());
+	AppLog("IConvEncodingConverterProvider::providesConverter %s",encoding.c_str());
+	 Osp::Base:: String bada_encoding(encoding.c_str());
+	//iconv_t converter = iconv_open("utf-8", encoding.c_str());
+	 result r = E_SUCCESS;
+	 Encoding* pEnc = Encoding::GetEncodingN(bada_encoding);
+	 // Encoding* pEnc = Encoding::GetEncodingN(L"ISO-8859-2");
+	 // Exceptions:
+	 // E_SUCCESS The method is successful.
+	 // E_UNSUPPORTED_TYPE The specified encoding type is not supported.
+	if (GetLastResult() == E_SUCCESS) {
+			delete pEnc;
+		return true;
+	}
+
+/*
 	if (converter != (iconv_t)-1) {
 		iconv_close(converter);
 		return true;
-	}
+	}*/
 	return false;
 }
 
@@ -54,17 +78,21 @@ shared_ptr<ZLEncodingConverter> IConvEncodingConverterProvider::createConverter(
 }
 
 IConvEncodingConverter::IConvEncodingConverter(const std::string &encoding) {
-	myIConverter = iconv_open("utf-8", encoding.c_str());
+AppLog("IConvEncodingConverterProvider::IConvEncodingConverter %s",encoding.c_str());
+
+//	myIConverter = iconv_open("utf-8", encoding.c_str());
 }
 
 IConvEncodingConverter::~IConvEncodingConverter() {
-	if (myIConverter != (iconv_t)-1) {
-		iconv_close(myIConverter);
-	}
+	AppLog("IConvEncodingConverterProvider::~IConvEncodingConverter()");
+//	if (myIConverter != (iconv_t)-1) {
+		//iconv_close(myIConverter);
+	//}
 }
 
 void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
+	AppLog("IConvEncodingConverterProvider::convert()");
+/*	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
 		return;
 	}
 
@@ -108,6 +136,7 @@ iconvlabel:
 		goto iconvlabel;
 	}
 	dst.erase(oldLength + startOutSize - outSize);
+	*/
 }
 
 void IConvEncodingConverter::reset() {
@@ -115,7 +144,8 @@ void IConvEncodingConverter::reset() {
 }
 
 bool IConvEncodingConverter::fillTable(int *map) {
-	if (myIConverter == (iconv_t)-1) {
+	AppLog("IConvEncodingConverterProvider::fillTable()");
+/*	if (myIConverter == (iconv_t)-1) {
 		return false;
 	}
 
@@ -141,6 +171,10 @@ bool IConvEncodingConverter::fillTable(int *map) {
 		} else {
 			map[i] = i;
 		}
+
 	}
-	return true;
+	*/
+	return false;
+	//return true;
+
 }
