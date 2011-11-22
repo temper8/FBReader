@@ -97,6 +97,7 @@ void ZLTextParagraphCursor::Builder::fill() {
 				ImageEntry &imageEntry = (ImageEntry&)*it.entry();
 				shared_ptr<const ZLImage> image = imageEntry.image();
 				if (!image.isNull()) {
+					AppLog("!image.isNull()");
 					shared_ptr<ZLImageData> data = ZLImageManager::Instance().imageData(*image);
 					if (!data.isNull()) {
 						myElements.push_back(new ZLTextImageElement(imageEntry.id(), data));

@@ -64,7 +64,7 @@ bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
 
 
 //static const size_t BUFFER_SIZE = 2048;
-static const size_t BUFFER_SIZE = 100048;
+static const size_t BUFFER_SIZE = 200048;
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }

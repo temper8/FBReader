@@ -153,8 +153,11 @@ shared_ptr<ZLOutputStream> ZLFile::outputStream(bool writeThrough) const {
 }
 
 shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
+
 	if (exists()) {
+		AppLog("ZLFile::directory exists");
 		if (isDirectory()) {
+			AppLog("ZLFile::directory isDirectory");
 			return ZLFSManager::Instance().createPlainDirectory(myPath);
 		} else if (myArchiveType & ZIP) {
 			return new ZLZipDir(myPath);

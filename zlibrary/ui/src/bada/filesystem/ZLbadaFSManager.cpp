@@ -32,6 +32,11 @@
 #include "ZLbadaFileOutputStream.h"
 
 #include <FBase.h>
+#include <FIo.h>
+
+using namespace Osp::Base;
+using namespace Osp::Io;
+
 
 //--------------
 
@@ -70,10 +75,21 @@ static std::string getHomeDir() {
 ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
 	ZLFileInfo info;
 	struct stat fileStat;
-	info.Exists = stat(path.c_str(), &fileStat) == 0;
+    result r = E_SUCCESS;
+    FileAttributes attr;
+    r = File::GetAttributes(path.c_str(), attr);
+   //TODO if(IsFailed(r)) goto CATCH;
+
+	//info.Exists = stat(path.c_str(), &fileStat) == 0;
+    info.Exists = (r==E_SUCCESS);
+
+	AppLog("ZLbadaFSManager::fileInfo");
 	if (info.Exists) {
-		info.Size = fileStat.st_size;
-		info.IsDirectory = S_ISDIR(fileStat.st_mode);
+		info.Size = attr.GetFileSize();//fileStat.st_size;
+		AppLog("ZLbadaFSManager::fileInfo.Size %d",fileStat.st_size);
+		//AppLog("ZLbadaFSManager::fileInfo.st_mode %x",fileStat.st_mode);
+		info.IsDirectory = attr.IsDirectory();//S_ISDIR(fileStat.st_mode);
+		if (info.IsDirectory) AppLog("ZLbadaFSManager::fileInfo.IsDirectory");
 	}
 	return info;
 }

@@ -25,6 +25,7 @@
 
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
+#include <stdlib.h>
 
 //void ZLXMLReaderInternal::fCharacterDataHandler(void *userData, const char *text, int len) {
 //void fCharacterDataHandler(void *userData, const char *text, int len) {
@@ -38,7 +39,7 @@ void fCharacterDataHandler(void *userData,	const xmlChar *text, int len) {
 		if (len<50) {
 			memset(buf, 0, 99);
 		    strncpy(buf, (const char*)text, len);
-			AppLog("fCharacterDataHandler text=%s",buf);
+	//		AppLog("fCharacterDataHandler text=%s",buf);
 		}
 	//	AppLog("fCharacterDataHandler len = %d",len);
 	}
@@ -49,7 +50,7 @@ void fCharacterDataHandler(void *userData,	const xmlChar *text, int len) {
 //void fStartElementHandler(void *userData, const char *name, const char **attributes) {
 void fStartElementHandler2(void *userData, const char *name, const char **attributes) {
 
-	AppLog("fStartElementHandler::name=%s",(const char*)name);
+//	AppLog("fStartElementHandler2::name=%s",(const char*)name);
 //	if (*attributes!=0) 	AppLog("fStartElementHandler:: attr = %s::%s",(const char*)attributes[0],(const char*)attributes[1]);
 //	else {AppLog("A!=0"); return;}
 	ZLXMLReader &reader = *(ZLXMLReader*)userData;
@@ -117,11 +118,16 @@ void fEndElementHandler(void *userData, const xmlChar *name) {
 //	AppLog("fEndElementHandler name = %s",(const char*)name );
 	ZLXMLReader &reader = *(ZLXMLReader*)userData;
 	if (!reader.isInterrupted()) {
+	//	AppLog("reader.endElementHandler");
 		reader.endElementHandler((const char*)name);
+	//	AppLog("reader.endElementHandler ok");
 		if (reader.processNamespaces()) {
+	//		AppLog("reader.processNamespaces ok");
 			shared_ptr<std::map<std::string,std::string> > oldMap = reader.myNamespaces.back();
+	//		AppLog("reader.myNamespaces.pop_back()");
 			reader.myNamespaces.pop_back();
 			if (reader.myNamespaces.back() != oldMap) {
+			//	AppLog("reader.namespaceListChangedHandler()");
 				reader.namespaceListChangedHandler();
 			}
 		}
@@ -185,6 +191,7 @@ static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *en
 	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::Instance().info(name);
 	if (!info.isNull()) {
 		shared_ptr<ZLEncodingConverter> converter = info->createConverter();
+		//converter
 		if (!converter.isNull() && converter->fillTable(encoding->map)) {
 			return XML_STATUS_OK;
 		}
@@ -230,7 +237,14 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 
 void fErrorSAXFunc (void *ctx, const char *msg, ...)
 {
-	AppLog("fErrorSAXFunc - %s", msg);
+    va_list args;
+
+    va_start(args, msg);
+    //g_logv("XML", G_LOG_LEVEL_CRITICAL, msg, args);
+    AppLog("fErrorSAXFunc ");
+    AppLog(msg, args);
+    va_end(args);
+
 }
 
 void fFatalErrorSAXFunc (void *ctx,	const char *msg, ...)
@@ -238,6 +252,41 @@ void fFatalErrorSAXFunc (void *ctx,	const char *msg, ...)
 	AppLog("fErrorSAXFunc %s", msg);
 }
 
+int	fxmlCharEncodingInputFunc(unsigned char * out, int * outlen,
+					 const unsigned char * in,  int * inlen)
+{
+	//AppLog("fxmlCharEncodingInputFunc inlen=%d",*inlen);
+//	AppLog("fxmlCharEncodingInputFunc start inlen =%d, outlen =%d",*inlen, *outlen);
+//	if (out!=0) {AppLog("fxmlCharEncodingInputFunc out!=0 %s");}
+	//AppLog("fxmlCharEncodingInputFunc in=%s",in);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::Instance().info("windows-1251");
+	if (!info.isNull()) {
+		shared_ptr<ZLEncodingConverter> converter = info->createConverter();
+		if (!converter.isNull()) {
+		//	AppLog("in =%s",in);
+			std::string myBuffer;
+			converter->convert(myBuffer, (const char*)in, (const char*)(in + *inlen));
+			//TODO проверка на размер буффера
+			*outlen = myBuffer.length();
+			//*outlen = *inlen;
+			//AppLog("fxmlCharEncodingInputFunc len =%d, size =%d",*outlen, myBuffer.size());
+		//	out =(unsigned char*)malloc(*outlen);
+			//memcpy(out,(char*)myBuffer.c_str(),*outlen);
+			memcpy(out,(char*)myBuffer.data(),*outlen);
+			//memcpy(out,(char*)in,*outlen);
+	//		AppLog("fxmlCharEncodingInputFunc inlen =%d, outlen =%d",*inlen, *outlen);
+	//		AppLog("out =%s",out);
+			return *outlen;
+		}
+	};
+	return -1;
+
+}
+int	fxmlCharEncodingOutputFunc(unsigned char * out, int * outlen,
+					 const unsigned char * in,  int * inlen)
+{
+	AppLog("xmlCharEncodingOutputFunc");
+}
 
 void ZLXMLReaderInternal::init(const char *encoding) {
 	if (myInitialized) {
@@ -263,12 +312,15 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 
 //	XML_SetUserData(myParser, &myReader);
 	AppLog("XML_SetUserData");
-
+	if (encoding != 0) {
+		AppLog("encoding %s",encoding);}
 	//if (encoding != 0) {
 		//XML_SetEncoding(myParser, encoding);
 //	XML_SetEncoding(myParser, "");
 	//}
 //	AppLog("xmlSAXVersion %d",xmlSAXVersion(&MySaxhandler,2));
+	//xmlInitCharEncodingHandlers	();
+	xmlNewCharEncodingHandler("windows-1251",fxmlCharEncodingInputFunc,fxmlCharEncodingOutputFunc);
 
 	AppLog("XML_SetEncoding");
 	MySaxhandler.startElement = fStartElementHandler;

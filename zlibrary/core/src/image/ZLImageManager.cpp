@@ -294,6 +294,7 @@ bool ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageDa
 }
 
 shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
+	AppLog("ZLImageManager::imageData");
 	shared_ptr<ZLImageData> data;
 
 	if (image.isSingle()) {

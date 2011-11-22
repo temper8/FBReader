@@ -119,7 +119,16 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
     pBuffer->SetArray((const unsigned char*)stringData.data(),0, stringData.length());
     AppLog("SetArray %d",  stringData.length());
    // ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,IMG_FORMAT_JPG, BITMAP_PIXEL_FORMAT_ARGB8888);
-    ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,IMG_FORMAT_PNG, BITMAP_PIXEL_FORMAT_ARGB8888);
+    ImageFormat iformat;
+    if (strncmp(stringData.data()+1, "PNG", 3) == 0) {
+    	AppLog("iformat = IMG_FORMAT_PNG" );
+    	iformat = IMG_FORMAT_PNG;
+    }
+    else {
+    	iformat = IMG_FORMAT_JPG;
+    	AppLog("iformat = IMG_FORMAT_JPG" );
+    }
+    ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
     r = GetLastResult();
  //   ((ZLbadaImageData&)data).pBitmap = pImage.DecodeN(L"/Home/SampleImage.jpg", BITMAP_PIXEL_FORMAT_ARGB8888);
     imageWidth = ((ZLbadaImageData&)data).pBitmap->GetWidth();

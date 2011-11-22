@@ -26,10 +26,10 @@
 class ZLbadaFSDir : public ZLFSDir {
 
 public:
-	ZLbadaFSDir(const std::string &name) : ZLFSDir(name) {}
+	ZLbadaFSDir(const std::string &name);
 
 	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 };
-
+inline ZLbadaFSDir::ZLbadaFSDir(const std::string &name) : ZLFSDir(name) {}
 #endif /* __ZLbadaFSDIR_H__ */
