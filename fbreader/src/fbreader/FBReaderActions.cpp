@@ -49,6 +49,7 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Library.h"
 #include "../library/Book.h"
+#include <FBase.h>
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
@@ -61,6 +62,7 @@ SetModeAction::SetModeAction(FBReader::ViewMode modeToSet, int visibleInModes) :
 }
 
 void SetModeAction::run() {
+	AppLog("SetModeAction::run()");
 	FBReader::Instance().setMode(myModeToSet);
 }
 
@@ -171,6 +173,7 @@ ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TE
 }
 
 void ShowBookInfoAction::run() {
+	AppLog("ShowBookInfoAction::run()");
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	shared_ptr<Book> book = fbreader.myModel->book();

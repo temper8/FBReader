@@ -171,6 +171,7 @@ void ZLApplication::presentWindow() {
 
 void ZLApplication::Action::checkAndRun() {
 	if (isEnabled()) {
+		AppLog("Action isEnabled()");
 		run();
 	}
 }

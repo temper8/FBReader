@@ -308,13 +308,13 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 	if (!book.isNull()) {
 		AppLog("FBReader::openBookInternal");
 		BookTextView &bookTextView = (BookTextView&)*myBookTextView;
-	//	ContentsView &contentsView = (ContentsView&)*myContentsView;
+		ContentsView &contentsView = (ContentsView&)*myContentsView;
 	//	FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
 		AppLog("bookTextView.saveState()");
 	//	bookTextView.saveState();
 		bookTextView.setModel(0, 0);
 		bookTextView.setContentsModel(0);
-//		contentsView.setModel(0);
+		contentsView.setModel(0);
 
 		myModel.reset();
 		AppLog("new BookModel(book)");
@@ -330,8 +330,8 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		bookTextView.setContentsModel(myModel->contentsModel());
 //		footnoteView.setModel(0);
 //		footnoteView.setCaption(book->title());
-//		contentsView.setModel(myModel->contentsModel());
-//		contentsView.setCaption(book->title());
+		contentsView.setModel(myModel->contentsModel());
+		contentsView.setCaption(book->title());
 		AppLog("Library::Instance().addBook(book");
 	//	Library::Instance().addBook(book);
 	//	Library::Instance().addBookToRecentList(book);
@@ -426,19 +426,23 @@ void FBReader::setMode(ViewMode mode) {
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
+			AppLog("set BOOK_TEXT_MODE");
 			setHyperlinkCursor(false);
 			((ZLTextView&)*myBookTextView).forceScrollbarUpdate();
 			setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
+			AppLog("set CONTENTS_MODE");
 			((ContentsView&)*myContentsView).gotoReference();
 			setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:
+			AppLog("set FOOTNOTE_MODE");
 			setView(myFootnoteView);
 			break;
 		case LIBRARY_MODE:
 		{
+			AppLog("book not isNull()");
 			shared_ptr<Book> currentBook = myModel->book();
 			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
 			((LibraryView&)*myLibraryByTagView).showBook(currentBook);

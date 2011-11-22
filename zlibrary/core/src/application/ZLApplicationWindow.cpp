@@ -71,7 +71,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				{
 					ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
 					const std::string &id = button.actionId();
-					AppLog("MENU_BUTTON button.actionId %s", id.c_str());
+				//	AppLog("MENU_BUTTON button.actionId %s", id.c_str());
 					const bool visible = application().isActionVisible(id);
 					const bool enabled = application().isActionEnabled(id);
 					if (visible) {
@@ -88,7 +88,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				{
 					ZLToolbar::ToggleButtonItem &button = (ZLToolbar::ToggleButtonItem&)**it;
 					const std::string &id = button.actionId();
-					AppLog("TOGGLE_BUTTON button.actionId %s", id.c_str());
+				//	AppLog("TOGGLE_BUTTON button.actionId %s", id.c_str());
 					const bool visible = application().isActionVisible(id);
 					const bool enabled = application().isActionEnabled(id);
         
@@ -116,7 +116,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				}
 				break;
 			case ZLToolbar::Item::SEPARATOR:
-				AppLog("SEPARATOR ");
+			//	AppLog("SEPARATOR ");
 				if (canAddSeparator) {
 					lastSeparator = *it;
 					canAddSeparator = false;
@@ -125,7 +125,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				}
 				break;
 			case ZLToolbar::Item::FILL_SEPARATOR:
-				AppLog("FILL_SEPARATOR ");
+			//	AppLog("FILL_SEPARATOR ");
 				if (canAddSeparator) {
 					lastSeparator = *it;
 					canAddSeparator = false;
@@ -137,7 +137,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				}
 				break;
 		}
-		AppLog("next for ");
+		//AppLog("next for ");
 	}
 	AppLog("END for ");
 	if (!lastSeparator.isNull()) {
