@@ -96,10 +96,6 @@ shared_ptr<ZLImageData> ZLbadaImageManager::createData() const {
 
 bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	((ZLbadaImageData&)data).init(0, 0);
-
-	//((ZLbadaImageData&)data).myImage->
-	//loadFromData((const unsigned char*)stringData.data(), stringData.length());
-	// Step1: Create Image instance.
 	result r = E_SUCCESS;
 	Image Image;
 	r = Image.Construct();
@@ -118,7 +114,6 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
 	pBuffer->Construct(stringData.length());
     pBuffer->SetArray((const unsigned char*)stringData.data(),0, stringData.length());
     AppLog("SetArray %d",  stringData.length());
-   // ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,IMG_FORMAT_JPG, BITMAP_PIXEL_FORMAT_ARGB8888);
     ImageFormat iformat;
     if (strncmp(stringData.data()+1, "PNG", 3) == 0) {
     	AppLog("iformat = IMG_FORMAT_PNG" );
@@ -130,7 +125,6 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
     }
     ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
     r = GetLastResult();
- //   ((ZLbadaImageData&)data).pBitmap = pImage.DecodeN(L"/Home/SampleImage.jpg", BITMAP_PIXEL_FORMAT_ARGB8888);
     imageWidth = ((ZLbadaImageData&)data).pBitmap->GetWidth();
     imageHeight = ((ZLbadaImageData&)data).pBitmap->GetHeight();
 	AppLog("image w = %d, h = %d", imageWidth, imageHeight);

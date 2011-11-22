@@ -13,6 +13,7 @@
 #include "ZLView.h"
 #include <ZLFile.h>
 #include "ZLFileImage.h"
+#include "ZLImageManager.h"
 
 using namespace Osp::Graphics;
 using namespace Osp::Base::Utility;

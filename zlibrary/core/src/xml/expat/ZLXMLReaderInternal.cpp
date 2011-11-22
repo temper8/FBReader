@@ -59,7 +59,7 @@ void fStartElementHandler2(void *userData, const char *name, const char **attrib
 		//AppLog("!reader.isInterrupted()");
 		if (reader.processNamespaces()) {
 			int count = 0;
-			AppLog("int count = 0");
+			//AppLog("int count = 0");
 			//AppLog("attr = %s::%s",(const char*)attributes[0],(const char*)attributes[1]);
 			for (const char **a = (const char**)attributes; (*a != 0) && (*(a + 1) != 0); a += 2) {
 				AppLog("*a=%s",*a);

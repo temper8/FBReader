@@ -35,8 +35,8 @@ ZLView::ZLView(ZLPaintContext &context) :  myViewWidget(0),   myContext(context)
 ZLView::~ZLView() {
 }
 
-//ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
-//}
+ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
+}
 
 void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	if (myView != 0) {
@@ -44,9 +44,9 @@ void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	}
 	myView = view;
 	view->myViewWidget = this;
-	//rotate(myRotation);
+	rotate(myRotation);
 }
-/*
+
 bool ZLView::onStylusPress(int, int) {
 	return false;
 }
@@ -66,8 +66,8 @@ bool ZLView::onStylusMovePressed(int, int) {
 bool ZLView::onFingerTap(int, int) {
 	return false;
 }
-*/
-/*
+
+
 void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
 	if (direction == VERTICAL) {
 		myVerticalScrollbarInfo.Enabled = enabled;
@@ -148,8 +148,7 @@ void ZLView::updateScrollbarParameters(Direction direction, const ScrollBarInfo 
 		);
 	}
 }
-*/
-/*
+
 void ZLView::updateScrollbarParameters() {		
 	if (myViewWidget == 0) {
 		return;
@@ -250,4 +249,4 @@ void ZLViewWidget::rotate(ZLView::Angle rotation) {
 ZLView::Angle ZLViewWidget::rotation() const {
 	return myRotation;
 }
-*/
+

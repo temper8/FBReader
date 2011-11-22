@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+#include <FBase.h>
 
 #include <ZLResource.h>
 #include <ZLibrary.h>
@@ -93,17 +94,20 @@ void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
 	if (origWidth == 0 || origHeight == 0) {
 		return;
 	}
-
+	AppLog("origWidth = %d, origHeight =%d)",origWidth,origHeight);
 	int coeff = std::min(w / origWidth, h / origHeight);
 	if (coeff == 0) {
 		coeff = 1;
 	}
+	AppLog("coeff = %d",coeff);
 	int width = coeff * origWidth;
 	int height = coeff * origHeight;
+	AppLog("width = %d, height =%d)",width,height);
 	if (width > w || height > h) {
 		width = context.imageWidth(*coverData, w, h, ZLPaintContext::SCALE_REDUCE_SIZE);
 		height = context.imageHeight(*coverData, w, h, ZLPaintContext::SCALE_REDUCE_SIZE);
 	}
+	AppLog("width = %d, height =%d)",width,height);
 	context.drawImage(hOffset + (w - width) / 2, vOffset + (h + height) / 2, *coverData, width, height, ZLPaintContext::SCALE_FIT_TO_SIZE);
 }
 

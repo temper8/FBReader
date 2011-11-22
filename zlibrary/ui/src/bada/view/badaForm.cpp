@@ -33,6 +33,11 @@ badaForm::
 OnTouchDoublePressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchDoublePressed");
+	// Display the OptionMenu
+	if (__pOptionMenu != null){
+		__pOptionMenu->SetShowState(true);
+		__pOptionMenu->Show();
+	}
 }
 
 void
@@ -51,11 +56,7 @@ void
 badaForm::OnTouchLongPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchLongPressed");
-	// Display the OptionMenu
-	if (__pOptionMenu != null){
-		__pOptionMenu->SetShowState(true);
-		__pOptionMenu->Show();
-	}
+
 }
 
 void

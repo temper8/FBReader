@@ -35,3 +35,14 @@ void ZLbadaViewWidget::repaint() {
 
 }
 
+void ZLbadaViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled){
+	AppLog("ZLbadaViewWidget::setScrollbarEnabled");
+}
+
+void ZLbadaViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard){
+	AppLog("ZLbadaViewWidget::setScrollbarPlacement");
+}
+void ZLbadaViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to){
+	AppLog("ZLbadaViewWidget::setScrollbarParameters");
+}
+

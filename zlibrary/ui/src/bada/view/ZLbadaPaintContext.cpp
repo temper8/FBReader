@@ -139,7 +139,7 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
     utf8.GetCharCount(buffer, charCount);
     utf8.GetString(buffer, bada_str);
  //   AppLog("charCount = %d : len = %d", charCount,len);
-	pCanvas->DrawText(Point(x, y), bada_str,charCount);
+	pCanvas->DrawText(Point(x, y-pCanvas->GetFontN()->GetMaxHeight()), bada_str,charCount);
 }
 
 void ZLbadaPaintContext::fillRectangle(int x0, int y0, int x1, int y1){
@@ -167,24 +167,24 @@ void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 }
 
 void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
-	//const QImage *qImage = ((ZLQtImageData&)image).image();
 	Bitmap *pBmp;
 	pBmp = 	((ZLbadaImageData&)image).pBitmap;
 	if (pBmp == 0) {
 		return;
 	}
-	/*TODO ScalingType ни как не обрабатывается
+	//TODO ScalingType ни как не обрабатывается
 
-	 const QImage &scaled = qImage->scaled(
-		QSize(imageWidth(image, width, height, type),
-					imageHeight(image, width, height, type)),
-		Qt::KeepAspectRatio,
-		Qt::SmoothTransformation
-	);*/
+	// const QImage &scaled = qImage->scaled(	QSize(
+
+	int w =	imageWidth(image, width, height, type);
+	int h = imageHeight(image, width, height, type);
+	//	Qt::KeepAspectRatio,
+	//	Qt::SmoothTransformation
 	//myPainter->drawImage(x, y - scaled.height(), scaled);
 	AppLog("draw image w = %d, h = %d", width, height);
-	//pCanvas->DrawBitmap(Rectangle(x,y,width,height),*pBmp);
-	pCanvas->DrawBitmap(Point(x, y), *pBmp);
+	AppLog("draw image2 w = %d, h = %d", w, h);
+	pCanvas->DrawBitmap(Rectangle(x,y-h,w,h),*pBmp);
+	//pCanvas->DrawBitmap(Point(x, y-pBmp->GetHeight()), *pBmp);
 
 }
 
