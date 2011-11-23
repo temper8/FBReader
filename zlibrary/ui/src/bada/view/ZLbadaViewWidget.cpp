@@ -13,12 +13,10 @@ void ZLbadaViewWidget::doAction(std::string &actionId){
 }
 
 ZLbadaViewWidget::ZLbadaViewWidget(ZLView::Angle initialAngle): ZLViewWidget(initialAngle) {
-	// TODO Auto-generated constructor stub
-
 }
 
 ZLbadaViewWidget::~ZLbadaViewWidget() {
-	// TODO Auto-generated destructor stub
+
 }
 
 //void ZLbadaViewWidget::setView(shared_ptr<ZLView> view){

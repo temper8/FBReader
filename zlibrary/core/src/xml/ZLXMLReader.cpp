@@ -64,7 +64,7 @@ bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
 
 
 //static const size_t BUFFER_SIZE = 2048;
-static const size_t BUFFER_SIZE = 200048;
+static const size_t BUFFER_SIZE = 50048;
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }
@@ -114,7 +114,6 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 		}
 	}
 	initialize(useWindows1252 ? "windows-1252" : 0);
-
 	size_t length;
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);

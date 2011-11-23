@@ -156,6 +156,7 @@ void ZLTextTeXHyphenator::load(const std::string &language) {
 	
 	unload();
 	AppLog("ZLTextHyphenationReader.readDocument");
+	//TODO загрузка ZLTextHyphenationReader
 //	ZLTextHyphenationReader(this).readDocument(ZLFile(
 //		PatternZip() + ":" + language + POSTFIX
 //	));

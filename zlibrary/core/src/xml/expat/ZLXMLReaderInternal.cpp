@@ -221,18 +221,6 @@ static void parseDTD(xmlSAXHandlerPtr sax, const std::string &fileName) {
 	XML_ParserFree(entityParser);
 }
 */
-ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
-	AppLog("XML_ParserCreate");
-//	myParser = XML_ParserCreate(encoding);
-//	pMySaxhandler  = &mySaxHandler;
-	myInitialized = false;
-}
-
-ZLXMLReaderInternal::~ZLXMLReaderInternal() {
-	AppLog("XML_ParserFree");
-	xmlCleanupParser();
-//	XML_ParserFree(myParser);
-}
 
 
 void fErrorSAXFunc (void *ctx, const char *msg, ...)
@@ -297,7 +285,6 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	myInitialized = true;
 	//XML_UseForeignDTD(myParser, XML_TRUE);
 	MySaxhandler.initialized = 1;//XML_PARSER_DTD;//XML_PARSER_START;
-	//MySaxhandler.
 	AppLog("XML_UseForeignDTD %d",xmlSubstituteEntitiesDefault(0));
 	const std::vector<std::string> &dtds = myReader.externalDTDs();
 	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
@@ -323,20 +310,6 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	xmlNewCharEncodingHandler("windows-1251",fxmlCharEncodingInputFunc,fxmlCharEncodingOutputFunc);
 
 	AppLog("XML_SetEncoding");
-	MySaxhandler.startElement = fStartElementHandler;
-	MySaxhandler.endElement = fEndElementHandler;
-	MySaxhandler.characters = fCharacterDataHandler;
-	MySaxhandler.warning =	fWarningSAXFunc;
-	MySaxhandler.hasExternalSubset = fHasInternalSubsetSAXFunc;
-	MySaxhandler.hasInternalSubset = fHasExternalSubsetSAXFunc;
-	MySaxhandler.resolveEntity = fResolveEntitySAXFunc;
-	MySaxhandler.unparsedEntityDecl = fUnparsedEntityDeclSAXFunc;
-	MySaxhandler.getEntity = fgetEntity;
-	MySaxhandler.error = fErrorSAXFunc;
-	MySaxhandler.fatalError = fFatalErrorSAXFunc;
-
-//MySaxhandler.elementDecl
-//	= fEntityDeclSAXFunc;
 
 
 	//pMySaxhandler->startElement = fStartElementHandler;
@@ -352,10 +325,41 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 }
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
-	//XMLPUBFUN int XMLCALL xmlSAXUserParseMemory (xmlSAXHandlerPtr sax, void *user_data, const char *buffer, int size)
-
-	int r = xmlSAXUserParseMemory (&MySaxhandler, &myReader, buffer, len);
-	AppLog("xmlSAXUserParseMemory len = %d , r=%d", len, r);
+	int r = xmlParseChunk(ctxt, buffer, len, 0);
+	AppLog("xmlParseChunk 2 len = %d, r=%d", len,r);
 	return true;
-	//return XML_Parse(myParser, buffer, len, 0) != XML_STATUS_ERROR;
 }
+
+ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
+	AppLog("XML_ParserCreate");
+	MySaxhandler.startElement = fStartElementHandler;
+	MySaxhandler.endElement = fEndElementHandler;
+	MySaxhandler.characters = fCharacterDataHandler;
+	MySaxhandler.warning =	fWarningSAXFunc;
+	MySaxhandler.hasExternalSubset = fHasInternalSubsetSAXFunc;
+	MySaxhandler.hasInternalSubset = fHasExternalSubsetSAXFunc;
+	MySaxhandler.resolveEntity = fResolveEntitySAXFunc;
+	MySaxhandler.unparsedEntityDecl = fUnparsedEntityDeclSAXFunc;
+	MySaxhandler.getEntity = fgetEntity;
+	MySaxhandler.error = fErrorSAXFunc;
+	MySaxhandler.fatalError = fFatalErrorSAXFunc;
+	ctxt = xmlCreatePushParserCtxt(&MySaxhandler,  &myReader, NULL, 0, NULL);
+	AppLog("xmlCreatePushParserCtxt");
+	 if (ctxt == NULL) {
+			AppLog("xmlCreatePushParserCtxt контекст создать не удалось");
+	     return;
+	 }
+	// int r = xmlCtxtUseOptions(ctxt, XML_PARSE_SAX1);
+	// AppLog("xmlCtxtUseOptions  r=%d",r);
+	myInitialized = false;
+}
+
+ZLXMLReaderInternal::~ZLXMLReaderInternal() {
+	AppLog("XML_ParserFree");
+    xmlParseChunk(ctxt, 0, 0, 1);
+    xmlFreeParserCtxt(ctxt);
+
+	xmlCleanupParser();
+//	XML_ParserFree(myParser);
+}
+

@@ -14,9 +14,6 @@ using namespace Osp::Base::Utility;
 using namespace Osp::Base;
 using namespace Osp::Text;
 
-
-
-
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 	//  AppLog("ZLbadaPaintContext::setFont %d",size );
 //TODO не понял этот кусок из qt-версии, и потому заремарил
@@ -55,8 +52,6 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 
 }
 
-
-
 int ZLbadaPaintContext::width() const {
 	if (!pCanvas) {
 		return 0;
@@ -70,7 +65,6 @@ int ZLbadaPaintContext::height() const {
 	}
 	return pCanvas->GetBounds().height;
 }
-
 
 void ZLbadaPaintContext::clear(ZLColor color){
 	pCanvas->SetBackgroundColor(Color(color.Red, color.Green, color.Blue, 0xFF));
@@ -156,13 +150,10 @@ void ZLbadaPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 
 void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	Bitmap *pBmp;
-	AppLog("draw image start");
 	pBmp = 	((ZLbadaImageData&)image).pBitmap;
-	AppLog("init bmp");
     int imageWidth = pBmp->GetWidth();
     int imageHeight = pBmp->GetHeight();
-	AppLog("draw image w = %d, h = %d", imageWidth, imageHeight);
-
+//	AppLog("draw image w = %d, h = %d", imageWidth, imageHeight);
 	pCanvas->DrawBitmap(Point(x, y), *pBmp);
 }
 
@@ -174,18 +165,11 @@ void ZLbadaPaintContext::drawImage(int x, int y, const ZLImageData &image, int w
 	}
 	//TODO ScalingType ни как не обрабатывается
 
-	// const QImage &scaled = qImage->scaled(	QSize(
-
 	int w =	imageWidth(image, width, height, type);
 	int h = imageHeight(image, width, height, type);
 	//	Qt::KeepAspectRatio,
 	//	Qt::SmoothTransformation
-	//myPainter->drawImage(x, y - scaled.height(), scaled);
-	AppLog("draw image w = %d, h = %d", width, height);
-	AppLog("draw image2 w = %d, h = %d", w, h);
 	pCanvas->DrawBitmap(Rectangle(x,y-h,w,h),*pBmp);
-	//pCanvas->DrawBitmap(Point(x, y-pBmp->GetHeight()), *pBmp);
-
 }
 
 
