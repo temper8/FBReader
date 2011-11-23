@@ -86,7 +86,8 @@ ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
 	AppLog("ZLbadaFSManager::fileInfo");
 	if (info.Exists) {
 		info.Size = attr.GetFileSize();//fileStat.st_size;
-		AppLog("ZLbadaFSManager::fileInfo.Size %d",fileStat.st_size);
+		//AppLog("ZLbadaFSManager::fileInfo.Size %d",fileStat.st_size);
+		AppLog("ZLbadaFSManager::fileInfo.Size %d",info.Size);
 		//AppLog("ZLbadaFSManager::fileInfo.st_mode %x",fileStat.st_mode);
 		info.IsDirectory = attr.IsDirectory();//S_ISDIR(fileStat.st_mode);
 		if (info.IsDirectory) AppLog("ZLbadaFSManager::fileInfo.IsDirectory");
