@@ -37,6 +37,7 @@
 #include "../../library/Book.h"
 #include "../../library/Tag.h"
 #include "../../library/Author.h"
+#include <FBase.h>
 
 static const size_t AUTHOR_ENTRIES_POOL_SIZE = 64;
 static const size_t TAG_ENTRIES_POOL_SIZE = 64;
@@ -510,35 +511,41 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookInfoApplyAction(*this));
 
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
+	AppLog("myDialog->createTab");
 	commonTab.addOption(ZLResourceKey("file"), 
 		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()))
 	);
+	AppLog("commonTab.addOption file");
 	commonTab.addOption(ZLResourceKey("title"), new BookTitleEntry(*this));
-
+	AppLog("commonTab.addOption title");
 	myEncodingEntry = new BookEncodingEntry(*this);
+	AppLog("new BookEncodingEntry");
 	myEncodingSetEntry =
 		(myEncodingEntry->initialValue() != Book::AutoEncoding) ?
 		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
 	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
 	languageCodes.push_back("de-traditional");
+	AppLog("languageCodes.push_back");
 	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
-	mySeriesTitleEntry = new SeriesTitleEntry(*this);
-	myBookIndexEntry = new BookIndexEntry(*this);
-
+	AppLog("myLanguageEntry = new BookLanguageEntry");
+	//mySeriesTitleEntry = new SeriesTitleEntry(*this);
+	AppLog("mySeriesTitleEntry = new SeriesTitleEntry");
+	//myBookIndexEntry = new BookIndexEntry(*this);
+	AppLog("myBookIndexEntry = new BookIndexEntry");
 	commonTab.addOption(ZLResourceKey("language"), myLanguageEntry);
 	if (myEncodingSetEntry != 0) {
 		commonTab.addOption(ZLResourceKey("encodingSet"), myEncodingSetEntry);
 	}
 	commonTab.addOption(ZLResourceKey("encoding"), myEncodingEntry);
 
-	initAuthorEntries();
+	//initAuthorEntries();
 
 	ZLDialogContent &seriesTab = myDialog->createTab(ZLResourceKey("Series"));
-	seriesTab.addOption(ZLResourceKey("seriesTitle"), mySeriesTitleEntry);
-	seriesTab.addOption(ZLResourceKey("bookIndex"), myBookIndexEntry);
+//	seriesTab.addOption(ZLResourceKey("seriesTitle"), mySeriesTitleEntry);
+//	seriesTab.addOption(ZLResourceKey("bookIndex"), myBookIndexEntry);
 
-	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
-	/*
+//	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
+	/* не мои комменты
 	ZLOrderOptionEntry *orderEntry = new ZLOrderOptionEntry();
 	orderEntry->values().push_back("First");
 	orderEntry->values().push_back("Second");
@@ -548,7 +555,7 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	seriesTab.addOption(orderEntry);
 	*/
 
-	initTagEntries();
+	//initTagEntries();
 
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*book);
 	if (!plugin.isNull()) {

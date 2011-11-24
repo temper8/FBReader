@@ -58,9 +58,9 @@ public:
 
 	virtual void setActive(bool active);
 	bool isActive() const;
-
+	ZLOptionView *myView;//TODO сделал пабликом для отладки
 private:
-	ZLOptionView *myView;
+
 	bool myIsVisible;
 	bool myIsActive;
 };

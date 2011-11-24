@@ -54,7 +54,7 @@ Library::Library() :
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
-	BooksDBUtil::getRecentBooks(myRecentBooks);
+//TODO	BooksDBUtil::getRecentBooks(myRecentBooks);
 }
 
 void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {

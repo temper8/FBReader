@@ -24,7 +24,7 @@
 
 
 
-//#include "ZLQtOptionsDialog.h"
+
 
 //#include "ZLQtDialogContent.h"
 //#include "ZLQtProgressDialog.h"
@@ -40,6 +40,7 @@
 #include "ZLbadaDialog.h"
 #include "ZLbadaDialogManager.h"
 #include "ZLbadaOpenFileDialog.h"
+#include "ZLbadaOptionsDialog.h"
 
 using namespace Osp::Ui::Controls;
 
@@ -51,11 +52,11 @@ void ZLbadaDialogManager::createApplicationWindow(ZLApplication *application) co
 shared_ptr<ZLDialog> ZLbadaDialogManager::createDialog(const ZLResourceKey &key) const {
 	return new ZLbadaDialog(resource()[key]);
 }
-/*
-shared_ptr<ZLOptionsDialog> ZLBadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
-	return new ZLBadaOptionsDialog(resource()[key], applyAction, showApplyButton);
+
+shared_ptr<ZLOptionsDialog> ZLbadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	return new ZLbadaOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
-*/
+
 
 shared_ptr<ZLOpenFileDialog> ZLbadaDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	ZLbadaOpenFileDialog *b= new ZLbadaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
