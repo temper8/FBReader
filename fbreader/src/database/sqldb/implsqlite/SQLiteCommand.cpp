@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <iostream>
 #include <algorithm>
 
@@ -27,6 +27,7 @@
 
 #include "SQLiteConnection.h"
 #include "SQLiteDataReader.h"
+#include "SQLiteDataBase.h"
 
 
 std::string SQLiteCommand::packCommand(const std::string &command) {
@@ -69,10 +70,10 @@ bool SQLiteCommand::execute() {
 	if (!prepareStatements(con)) {
 		return false;
 	}
-	std::vector<sqlite3_stmt *>::iterator it = myStatements.begin();
-	std::vector<sqlite3_stmt *>::iterator end = myStatements.end();
+	std::vector<SQLiteStatement *>::iterator it = myStatements.begin();
+	std::vector<SQLiteStatement *>::iterator end = myStatements.end();
 	while (true) {
-		int res = sqlite3_step(*it);
+		int res = (*it)->step();
 		switch (res) {
 		case SQLITE_DONE:
 			if (++it == end) {
@@ -102,10 +103,10 @@ shared_ptr<DBValue> SQLiteCommand::executeScalar() {
 	if (!prepareStatements(con)) {
 		return 0;
 	}
-	std::vector<sqlite3_stmt *>::iterator it = myStatements.begin();
-	std::vector<sqlite3_stmt *>::iterator end = myStatements.end();
+	std::vector<SQLiteStatement *>::iterator it = myStatements.begin();
+	std::vector<SQLiteStatement *>::iterator end = myStatements.end();
 	while (true) {
-		int res = sqlite3_step(*it);
+		int res = (*it)->step();
 		switch (res) {
 		case SQLITE_DONE:
 			if (++it == end) {
@@ -145,33 +146,40 @@ shared_ptr<DBDataReader> SQLiteCommand::executeReader() {
 
 
 bool SQLiteCommand::prepareStatements(SQLiteConnection &conn) {
-	sqlite3 *db = conn.database();
+	Database *db = conn.database();
 	if (myLocked) {
 		return false;
 	}
+
 	if (myStatements.size() != 0) {
+
 		const size_t size = myStatements.size();
 		int res = SQLITE_OK;
 		for (size_t i = 0; i < size && res == SQLITE_OK; ++i) {
-			res = sqlite3_reset(myStatements[i]);
+			res = myStatements[i]->reset();
 		}
 		if (res == SQLITE_OK) {
 			bindParameters();
 			return true;
 		}
 		finalizeStatements();
+
 	}
 	const std::string sql = commandString();
 	const int length = -1;
 	const char *tail = sql.c_str();
+
+
 	while (true) {
-		sqlite3_stmt *statement;
-		int res = sqlite3_prepare_v2(db, tail, length, &statement, &tail);
+		SQLiteStatement *statement;
+		int res = SQLiteStatement::prepare(db, tail, &statement, &tail);
 		if (res != SQLITE_OK) {
 			dumpError();
 			finalizeStatements();
 			return false;
 		}
+
+
 		if (statement == 0) {
 			break;
 		}
@@ -194,11 +202,12 @@ void SQLiteCommand::prepareBindContext() {
 	size_t number = 0;
 
 	for (size_t i = 0; i < myStatements.size(); ++i) {
-		sqlite3_stmt *statement = myStatements[i];
-		const int count = sqlite3_bind_parameter_count(statement);
+		SQLiteStatement *statement = myStatements[i];
+		const int count = statement->bind_parameter_count();
+
 		for (int j = 1; j <= count; ++j) {
 			++number;
-			const char *name = sqlite3_bind_parameter_name(statement, j);
+			const char *name = statement->bind_parameter_name(j);
 			if (name == 0) {
 				myBindContext.push_back(BindParameter(number));
 			} else {
@@ -209,6 +218,7 @@ void SQLiteCommand::prepareBindContext() {
 			}
 		}
 	}
+
 }
 
 
@@ -250,8 +260,8 @@ bool SQLiteCommand::bindParameterByName(const std::string &name, shared_ptr<DBVa
 	bool res = true;
 	bool binded = false;
 	for (size_t i = 0; i < size; ++i) {
-		sqlite3_stmt *statement = myStatements[i];
-		const int index = sqlite3_bind_parameter_index(statement, name.c_str());
+		SQLiteStatement *statement = myStatements[i];
+		const int index = statement->bind_parameter_index(name.c_str());
 		if (index == 0) {
 			continue;
 		}
@@ -273,8 +283,8 @@ bool SQLiteCommand::bindParameterByIndex(size_t index, shared_ptr<DBValue> value
 	const size_t size = myStatements.size();
 	int number = index;
 	for (size_t i = 0; i < size; ++i) {
-		sqlite3_stmt *statement = myStatements[i];
-		const int count = sqlite3_bind_parameter_count(statement);
+		SQLiteStatement *statement = myStatements[i];
+		const int count = statement->bind_parameter_count();
 		if (number > count) {
 			number -= count;
 			continue;
@@ -284,26 +294,27 @@ bool SQLiteCommand::bindParameterByIndex(size_t index, shared_ptr<DBValue> value
 	return true;
 }
 
-bool SQLiteCommand::bindParameter(sqlite3_stmt *statement, int number, shared_ptr<DBValue> value) {
+bool SQLiteCommand::bindParameter(SQLiteStatement *statement, int number, shared_ptr<DBValue> value) {
 	DBValue::ValueType type = (value.isNull()) ? (DBValue::DBNULL) : (value->type());
 	int res;
 	switch (type) {
 	case DBValue::DBNULL:
-		res = sqlite3_bind_null(statement, number);
+		res = statement->bind_null(number);
 		break;
 	case DBValue::DBINT:
-		res = sqlite3_bind_int(statement, number, ((DBIntValue &) *value).value());
+		res = statement->bind_int(number, ((DBIntValue &) *value).value());
 		break;
 	case DBValue::DBREAL:
-		res = sqlite3_bind_double(statement, number, ((DBRealValue &) *value).value());
+		res = statement->bind_double(number, ((DBRealValue &) *value).value());
 		break;
 	case DBValue::DBTEXT:
-		res = sqlite3_bind_text(statement, number, ((DBTextValue &) *value).value().c_str(), -1 /* zero-terminated string */, SQLITE_TRANSIENT);
+		res = statement->bind_text( number, ((DBTextValue &) *value).value().c_str());
 		break;
 	default:
 		return false;
 	}
-	if (res != SQLITE_OK) {
+	if (res != SQLITE_OK)
+	{
 		dumpError();
 	}
 	return res == SQLITE_OK;
@@ -314,10 +325,11 @@ void SQLiteCommand::finalizeStatements() {
 	SQLiteConnection &con = (SQLiteConnection &) connection();
 	const size_t size = myStatements.size();
 	for (size_t i = 0; i < size; ++i) {
-		sqlite3_stmt *statement = myStatements[i];
+		SQLiteStatement *statement = myStatements[i];
 		con.removeStatement(statement);
-		const int res = sqlite3_finalize(statement);
-		if (res != SQLITE_OK) {
+		const int res = statement->finalize();
+		if (res != SQLITE_OK)
+		{
 			dumpError();
 		}
 	}
@@ -354,7 +366,7 @@ bool SQLiteCommand::resetStatements() {
 	const size_t size = myStatements.size();
 	int res = SQLITE_OK;
 	for (size_t i = 0; i < size && res == SQLITE_OK; ++i) {
-		res = sqlite3_reset(myStatements[i]);
+		res = myStatements[i]->reset();
 	}
 	if (res == SQLITE_OK) {
 		return true;

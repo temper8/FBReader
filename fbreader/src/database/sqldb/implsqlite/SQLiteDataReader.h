@@ -29,7 +29,7 @@
 class SQLiteDataReader : public DBDataReader {
 
 public:
-	static shared_ptr<DBValue> makeDBValue(sqlite3_stmt *statement, size_t column);
+	static shared_ptr<DBValue> makeDBValue(SQLiteStatement *statement, size_t column);
 
 public:
 	SQLiteDataReader(SQLiteCommand &command);
@@ -50,7 +50,7 @@ public:
 	std::string textValue(size_t column, const std::string &defaultValue) const;
 
 private:
-	sqlite3_stmt *currentStatement() const;
+	SQLiteStatement *currentStatement() const;
 
 private:
 	SQLiteCommand &myCommand;
@@ -59,6 +59,6 @@ private:
 };
 
 
-inline sqlite3_stmt *SQLiteDataReader::currentStatement() const { return myCommand.statements()[myCurrentStatement]; }
+inline SQLiteStatement *SQLiteDataReader::currentStatement() const { return myCommand.statements()[myCurrentStatement]; }
 
 #endif /* __SQLITEDATAREADER_H__ */

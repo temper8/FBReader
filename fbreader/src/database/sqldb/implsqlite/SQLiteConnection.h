@@ -20,13 +20,19 @@
 #ifndef __SQLITECONNECTION_H__
 #define __SQLITECONNECTION_H__
 
-#include <sqlite3.h>
+//#include <sqlite3.h>
+#include <FIo.h>
+using namespace Osp::Io;
+#include <FBase.h>
+#include "../DBConnection.h"
+#include "SQLiteStatement.h"
 
 #include <algorithm>
 #include <vector>
 #include <string>
 
-#include "../DBConnection.h"
+
+
 
 class SQLiteConnection : public DBConnection {
 
@@ -41,10 +47,11 @@ public:
 public:
 	const std::string &name() const;
 
-	sqlite3 *database(); // TODO: hide sqlite3 object inside
+	//sqlite3 *database(); // TODO: hide sqlite3 object inside
+	Database *database();
 
-	void addStatement(sqlite3_stmt *statement);
-	void removeStatement(sqlite3_stmt *statement);
+	void addStatement(SQLiteStatement *statement);
+	void removeStatement(SQLiteStatement *statement);
 
 public:
 	void dumpError() const;
@@ -54,8 +61,8 @@ private:
 
 private:
 	const std::string myName;
-	sqlite3 *myDatabase;
-	std::vector<sqlite3_stmt *> myStatements;
+	Database *myDatabase;
+	std::vector<SQLiteStatement *> myStatements;
 
 private: // disable copying:
 	SQLiteConnection(const SQLiteConnection &);
@@ -64,12 +71,12 @@ private: // disable copying:
 
 
 inline const std::string &SQLiteConnection::name() const { return myName; }
-inline sqlite3 *SQLiteConnection::database() { return myDatabase; }
+inline Database *SQLiteConnection::database() { return myDatabase; }
 
-inline void SQLiteConnection::addStatement(sqlite3_stmt *statement) { myStatements.push_back(statement); }
+inline void SQLiteConnection::addStatement(SQLiteStatement *statement) { myStatements.push_back(statement); }
 
-inline void SQLiteConnection::removeStatement(sqlite3_stmt *statement) {
-	std::vector<sqlite3_stmt *>::iterator it = std::find(myStatements.begin(), myStatements.end(), statement);
+inline void SQLiteConnection::removeStatement(SQLiteStatement *statement) {
+	std::vector<SQLiteStatement *>::iterator it = std::find(myStatements.begin(), myStatements.end(), statement);
 	if (it != myStatements.end()) {
 		myStatements.erase(it);
 	}

@@ -20,6 +20,8 @@
 #include <iostream>
 
 #include "SQLiteConnection.h"
+#include "SQLiteDataBase.h"
+#include "SQLiteStatement.h"
 
 SQLiteConnection::SQLiteConnection(const std::string &name)
 	: DBConnection() 
@@ -38,13 +40,15 @@ bool SQLiteConnection::open() {
 	if (myDatabase != 0) {
 		return true;
 	}
-	int res = sqlite3_open(myName.c_str(), &myDatabase);
-	if (res == SQLITE_OK) {
-		return true;
-	}
+	myDatabase = new Database();
+	if (!myDatabase) return false;
+
+	result r = myDatabase->Construct(myName.c_str(), true);
+	//result r = myDatabase->Construct("/Home/books.db", true);
+	if (!IsFailed(r)) return true;
 	dumpError();
 	if (myDatabase != 0) {
-		sqlite3_close(myDatabase);
+		  delete myDatabase;
 		myDatabase = 0;
 	}
 	return false;
@@ -53,7 +57,7 @@ bool SQLiteConnection::open() {
 void SQLiteConnection::finalizeOpenedStatements() {
 	size_t size = myStatements.size();
 	for (size_t i = 0; i < size; ++i) {
-		const int res = sqlite3_finalize(myStatements[i]);
+		const int res = myStatements[i]->finalize();
 		if (res != SQLITE_OK) {
 			dumpError();
 		}
@@ -65,22 +69,19 @@ bool SQLiteConnection::close() {
 	if (myDatabase == 0) {
 		return true;
 	}
-
 	finalizeOpenedStatements();
+	delete myDatabase;
+	myDatabase = 0;
+	return true;
 
-	int res = sqlite3_close(myDatabase);
-	if (res == SQLITE_OK) {
-		myDatabase = 0;
-		return true;
-	}
-	dumpError();
-	return false;
 }
 
 void SQLiteConnection::dumpError() const {
+	AppLog("dumpError");
 	if (myDatabase != 0) {
-		const std::string msg = sqlite3_errmsg(myDatabase); // TODO: error & message handling
-		const int code = sqlite3_errcode(myDatabase); // TODO: error & message handling
-		std::cerr << "SQLITE IMPLEMENTATION ERROR: (" << code << ") " << msg << std::endl;
+		AppLog("dumpError 2");
+	//	const std::string msg = sqlite3_errmsg(myDatabase); // TODO: error & message handling
+	//	const int code = sqlite3_errcode(myDatabase); // TODO: error & message handling
+	//	std::cerr << "SQLITE IMPLEMENTATION ERROR: (" << code << ") " << msg << std::endl;
 	}
 }

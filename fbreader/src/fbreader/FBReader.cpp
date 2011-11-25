@@ -106,8 +106,8 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 //	myNetworkLibraryView = new NetworkView(*context());
 //	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 //	myLibraryByTagView = new LibraryByTagView(*context());
-//	myRecentBooksPopupData = new RecentBooksPopupData();
-//	myPreferencesPopupData = new PreferencesPopupData();
+	myRecentBooksPopupData = new RecentBooksPopupData();
+	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
@@ -118,7 +118,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 //	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 //	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 //	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
-//	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
+	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
@@ -167,7 +167,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
 	AppLog("завершили создание addAction");
-//	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
+	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
 	AppLog("завершили создание addAction");
 	myOpenFileHandler = new OpenFileHandler();
 	AppLog("new OpenFileHandler()");
@@ -204,10 +204,12 @@ void FBReader::initWindow() {
 
 		if (book.isNull()) {
 			AppLog("book.isNull() пытаемся открыть последнюю книгу");
-		//	const BookList &books = Library::Instance().recentBooks();
-		//	if (!books.empty()) {
-		//		book = books[0];
-		//	}
+			const BookList &books = Library::Instance().recentBooks();
+			if (!books.empty()) {
+				AppLog("!books.empty()");
+				book = books[0];
+				AppLog("book = books[0];");
+			}
 		}
 		if (book.isNull()) {
 			AppLog("book.isNull() хелп на каком-нибудь языке");
@@ -228,8 +230,8 @@ void FBReader::initWindow() {
 
 void FBReader::refreshWindow() {
 	ZLApplication::refreshWindow();
-//	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
-//	((PreferencesPopupData&)*myPreferencesPopupData).updateId();
+	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
+	((PreferencesPopupData&)*myPreferencesPopupData).updateId();
 }
 
 bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
@@ -247,7 +249,7 @@ bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
 			book = BooksDBUtil::getBook(bookFile.path());
 			if (!book.isNull()) {
 				AppLog("BooksDB::Instance().insertIntoBookList(*book)");
-				//	BooksDB::Instance().insertIntoBookList(*book);
+					BooksDB::Instance().insertIntoBookList(*book);
 			}
 		}
 		return true;
@@ -301,7 +303,7 @@ void FBReader::openBook(shared_ptr<Book> book) {
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"), runnable);
 	AppLog("ZLDialogManager::Instance().wait");
 	resetWindowCaption();
-	AppLog("	resetWindowCaption();");
+	AppLog("resetWindowCaption();");
 }
 
 void FBReader::openBookInternal(shared_ptr<Book> book) {
@@ -311,7 +313,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		ContentsView &contentsView = (ContentsView&)*myContentsView;
 	//	FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
 		AppLog("bookTextView.saveState()");
-	//	bookTextView.saveState();
+		bookTextView.saveState();
 		bookTextView.setModel(0, 0);
 		bookTextView.setContentsModel(0);
 		contentsView.setModel(0);
@@ -333,9 +335,11 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(book->title());
 		AppLog("Library::Instance().addBook(book");
-	//	Library::Instance().addBook(book);
-	//	Library::Instance().addBookToRecentList(book);
-//		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
+		// отключение DB
+		Library::Instance().addBook(book);
+		AppLog("Library::Instance().addBookToRecentList");
+		Library::Instance().addBookToRecentList(book);
+		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 		AppLog("showBookTextView()");
 		showBookTextView();
 	}
@@ -379,6 +383,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			}
 		}
 	} else if (type == "book") {
+	// Это к сети относиться
 /*		DownloadBookRunnable downloader(id);
 		downloader.executeWithUI();
 		if (downloader.hasErrors()) {

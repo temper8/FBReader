@@ -145,8 +145,8 @@ private:
 	shared_ptr<ZLView> myNetworkLibraryView;
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
-//	shared_ptr<ZLPopupData> myRecentBooksPopupData;
-//	shared_ptr<ZLPopupData> myPreferencesPopupData;
+	shared_ptr<ZLPopupData> myRecentBooksPopupData;
+	shared_ptr<ZLPopupData> myPreferencesPopupData;
 
 	ZLTime myLastScrollingTime;
 

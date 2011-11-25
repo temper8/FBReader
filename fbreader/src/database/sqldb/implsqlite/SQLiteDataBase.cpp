@@ -21,7 +21,6 @@
 #include <ZLStringUtil.h>
 
 #include "SQLiteDataBase.h"
-
 #include "SQLiteConnection.h"
 #include "SQLiteCommand.h"
 
@@ -39,7 +38,8 @@ SQLiteDataBase::Transaction::~Transaction() {
 bool SQLiteDataBase::Transaction::start() {
 	myDepth = myDataBase.myTransactionDepth;
 	if (myDepth == 0) {
-		myStarted = myDataBase.myBeginTransaction->execute();
+		myStarted = ((SQLiteConnection&)myDataBase.connection()).database()->BeginTransaction()==E_SUCCESS;
+		//myStarted = myDataBase.myBeginTransaction->execute();
 	} else {
 		//((DBTextValue &) *myDataBase.myMakeSavePoint->parameter("@name").value()).setValue(name());
 		//myStarted = myDataBase.myMakeSavePoint->execute();
@@ -55,9 +55,11 @@ void SQLiteDataBase::Transaction::end(bool success) {
 	--myDataBase.myTransactionDepth;
 	if (myDepth == 0) {
 		if (success) {
-			myDataBase.myCommitTransaction->execute();
+			((SQLiteConnection&)myDataBase.connection()).database()->CommitTransaction();
+			//myDataBase.myCommitTransaction->execute();
 		} else {
-			myDataBase.myRollbackTransaction->execute();
+			((SQLiteConnection&)myDataBase.connection()).database()->RollbackTransaction();
+			//myDataBase.myRollbackTransaction->execute();
 		}
 	} else {
 		if (success) {

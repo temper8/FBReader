@@ -26,6 +26,16 @@
 
 #include "SQLiteFactory.h"
 
+#define SQLITE_OK           0   /* Successful result */
+#define SQLITE_ERROR        1   /* SQL error or missing database */
+#define SQLITE_ROW         100  /* sqlite3_step() has another row ready */
+#define SQLITE_DONE        101  /* sqlite3_step() has finished executing */
+#define SQLITE_INTEGER  1
+#define SQLITE_FLOAT    2
+#define SQLITE_BLOB     4
+#define SQLITE_NULL     5
+#define SQLITE_TEXT     3
+
 
 class SQLiteDataBase : public DataBase {
 

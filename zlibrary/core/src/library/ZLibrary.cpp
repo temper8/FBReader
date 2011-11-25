@@ -115,7 +115,7 @@ std::string ZLibrary::replaceRegExps(const std::string &pattern) {
 	AppLog("ZLibrary::replaceRegExps str =%s",str.c_str());
 	return str;
 }
-
+#define XMLCONFIGHOMEDIR 1
 void ZLibrary::initApplication(const std::string &name) {
 	AppLog("ZLibrary::initApplication %s",name.c_str() );
 	ourApplicationName = name;
@@ -125,7 +125,8 @@ void ZLibrary::initApplication(const std::string &name) {
 	ourApplicationWritableDirectory =
 #ifdef XMLCONFIGHOMEDIR
 		//XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
-		"Home" + FileNameDelimiter + "." + name;
+			//TODO где происходит создание папки .FBreader???
+		"Home" + FileNameDelimiter + name;
 #else
 		"~" + FileNameDelimiter + "." + name;
 #endif

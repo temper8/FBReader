@@ -35,8 +35,8 @@ class BooksDB : public SQLiteDataBase {
 
 public:
 	static const std::string DATABASE_NAME;
-	static const std::string STATE_DATABASE_NAME;
-	static const std::string NET_DATABASE_NAME;
+	//static const std::string STATE_DATABASE_NAME;
+	//static const std::string NET_DATABASE_NAME;
 
 	static BooksDB &Instance();
 

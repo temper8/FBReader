@@ -77,7 +77,7 @@ void BookTextView::readBookState(const Book &book) {
 		state.Character = ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, CHAR_OPTION_NAME, 0).value();
 	} else {
 		AppLog("BooksDB::Instance().loadBookState");
-		//BooksDB::Instance().loadBookState(book, state);
+		BooksDB::Instance().loadBookState(book, state);
 		state.Paragraph = state.Word = state.Character = 0;
 	}
 	AppLog("gotoPosition");
@@ -115,7 +115,7 @@ void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book
 	FBView::setModel(model);
 	if (!myBook.isNull()) {
 		AppLog("saveBookState(*myBook)");
-	//TODO	saveBookState(*myBook);
+		saveBookState(*myBook);
 	}
 	myBook = book;
 	if (book.isNull()) {
@@ -125,16 +125,15 @@ void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
 	AppLog("BooksDB::Instance().loadBookStateStack");
-//	BooksDB::Instance().loadBookStateStack(*book, myPositionStack);
-//	myPositionStack.push_back(ReadingState(0, 0, 0));
+	BooksDB::Instance().loadBookStateStack(*book, myPositionStack);
 	myStackChanged = false;
-/*
+
 	if (myPositionStack.size() > 0) {
 		AppLog("myPositionStack.size() > 0");
-		int stackPos;// = readStackPos(*book);
-		//if ((stackPos < 0) || (stackPos > (int) myPositionStack.size())) {
+		int stackPos = readStackPos(*book);
+		if ((stackPos < 0) || (stackPos > (int) myPositionStack.size())) {
 			stackPos = myPositionStack.size();
-		//}
+		}
 		myCurrentPointInStack = stackPos;
 		while (myPositionStack.size() > myMaxStackSize) {
 			myPositionStack.erase(myPositionStack.begin());
@@ -144,7 +143,6 @@ void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book
 			myStackChanged = true;
 		}
 	}
-	*/
 }
 
 void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {

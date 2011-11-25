@@ -18,16 +18,17 @@
  */
 
 #include "SQLiteDataReader.h"
+#include "SQLiteDataBase.h"
 
-shared_ptr<DBValue> SQLiteDataReader::makeDBValue(sqlite3_stmt *statement, size_t column) {
-	if (column >= (size_t) sqlite3_column_count(statement)) {
+shared_ptr<DBValue> SQLiteDataReader::makeDBValue(SQLiteStatement *statement, size_t column) {
+	if (column >= (size_t) statement->column_count()) {
 		return 0;
 	}
-	const int type = sqlite3_column_type(statement, column);
+	const int type = statement->column_type(column);
 	switch (type) {
-		case SQLITE_INTEGER: return new DBIntValue(sqlite3_column_int(statement, column));
-		case SQLITE_FLOAT:   return new DBRealValue(sqlite3_column_double(statement, column));
-		case SQLITE_TEXT:    return new DBTextValue((const char *) sqlite3_column_text(statement, column));
+		case SQLITE_INTEGER: return new DBIntValue(statement->column_int(column));
+		case SQLITE_FLOAT:   return new DBRealValue(statement->column_double(column));
+		case SQLITE_TEXT:    return new DBTextValue((const char *) statement->column_text(column));
 		case SQLITE_NULL:    return DBValue::create(DBValue::DBNULL);
 	}
 	return 0;
@@ -44,9 +45,9 @@ SQLiteDataReader::~SQLiteDataReader() {
 }
 
 bool SQLiteDataReader::next() {
-	const std::vector<sqlite3_stmt *> &statements = myCommand.statements();
+	const std::vector<SQLiteStatement *> &statements = myCommand.statements();
 	while (true) {
-		int res = sqlite3_step(statements[myCurrentStatement]);
+		int res = statements[myCurrentStatement]->step();
 		switch (res) {
 		case SQLITE_OK:
 			break;
@@ -61,7 +62,7 @@ bool SQLiteDataReader::next() {
 			myCommand.dumpError();
 			return false;
 		}
-	}	
+	}
 }
 
 bool SQLiteDataReader::reset() {
@@ -77,16 +78,16 @@ void SQLiteDataReader::close() {
 }
 
 size_t SQLiteDataReader::columnsNumber() const {
-	sqlite3_stmt *statement = currentStatement();
-	return sqlite3_column_count(statement);
+	SQLiteStatement *statement = currentStatement();
+	return statement->column_count();
 }
 
 DBValue::ValueType SQLiteDataReader::type(size_t column) const {
-	sqlite3_stmt *statement = currentStatement();
-	if (column >= (size_t) sqlite3_column_count(statement)) {
+	SQLiteStatement *statement = currentStatement();
+	if (column >= (size_t) statement->column_count()) {
 		return DBValue::DBNULL;
 	}
-	const int type = sqlite3_column_type(statement, column);
+	const int type = statement->column_type(column);
 	switch (type) {
 	case SQLITE_INTEGER: return DBValue::DBINT;
 	case SQLITE_FLOAT:   return DBValue::DBREAL;
@@ -98,35 +99,37 @@ DBValue::ValueType SQLiteDataReader::type(size_t column) const {
 }
 
 shared_ptr<DBValue> SQLiteDataReader::value(size_t column) const {
-	sqlite3_stmt *statement = currentStatement();
+	SQLiteStatement *statement = currentStatement();
 	return makeDBValue(statement, column);
 }
 
 int SQLiteDataReader::intValue(size_t column) const {
-	sqlite3_stmt *statement = currentStatement();
-	if (column >= (size_t)sqlite3_column_count(statement) ||
-			sqlite3_column_type(statement, column) != SQLITE_INTEGER) {
+	SQLiteStatement *statement = currentStatement();
+	if (column >= (size_t)statement->column_count() ||
+			statement->column_type(column) != SQLITE_INTEGER) {
 		return 0;
 	}
-	return sqlite3_column_int(statement, column);
+	return statement->column_int(column);
 }
 
 double SQLiteDataReader::realValue(size_t column) const {
-	sqlite3_stmt *statement = currentStatement();
-	if (column >= (size_t)sqlite3_column_count(statement) ||
-			sqlite3_column_type(statement, column) != SQLITE_FLOAT) {
+	SQLiteStatement *statement = currentStatement();
+	if (column >= (size_t)statement->column_count() ||
+			statement->column_type(column) != SQLITE_FLOAT) {
 		return 0;
 	}
-	return sqlite3_column_double(statement, column);
+	return statement->column_double(column);
 }
 
 std::string SQLiteDataReader::textValue(size_t column, const std::string &defaultValue) const {
-	sqlite3_stmt *statement = currentStatement();
-	if (column < (size_t)sqlite3_column_count(statement) &&
-			sqlite3_column_type(statement, column) == SQLITE_TEXT) {
-		const char *result = (const char*)sqlite3_column_text(statement, column);
+	SQLiteStatement *statement = currentStatement();
+	if (column < (size_t)statement->column_count() &&
+			statement->column_type(column) == SQLITE_TEXT) {
+	//	AppLog("SQLiteDataReader::textValue");
+		const char *result = (const char*)statement->column_text(column);
+	//	AppLog("SQLiteDataReader::textValue result=%s",result);
 		if (result != 0) {
-			return result;
+			return std::string(result);
 		}
 	}
 	return defaultValue;

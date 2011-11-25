@@ -38,11 +38,12 @@ shared_ptr<Book> BooksDBUtil::getBook(const std::string &filePath, bool checkFil
 		return 0;
 	}
 	AppLog("file.exists");
-/*
+
 	if (!checkFile || checkInfo(file)) {
 		AppLog("!checkFile || checkInfo(file)");
 		shared_ptr<Book> book = loadFromDB(filePath);
 		if (!book.isNull() && isBookFull(*book)) {
+			AppLog("return book;");
 			return book;
 		}
 	} else {
@@ -52,12 +53,12 @@ shared_ptr<Book> BooksDBUtil::getBook(const std::string &filePath, bool checkFil
 		}
 		saveInfo(file);
 	}
-*/
+
 	shared_ptr<Book> book = Book::loadFromFile(ZLFile(filePath));
 	if (book.isNull()) {
 		return 0;
 	}
-//TODO	BooksDB::Instance().saveBook(book);
+	BooksDB::Instance().saveBook(book);
 	return book;
 }
 

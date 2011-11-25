@@ -35,8 +35,8 @@
 shared_ptr<BooksDB> BooksDB::ourInstance = 0;
 
 const std::string BooksDB::DATABASE_NAME = "books.db";
-const std::string BooksDB::STATE_DATABASE_NAME = "state.db";
-const std::string BooksDB::NET_DATABASE_NAME = "network.db";
+//const std::string BooksDB::STATE_DATABASE_NAME = "state.db";
+//const std::string BooksDB::NET_DATABASE_NAME = "network.db";
 
 BooksDB &BooksDB::Instance() {
 	if (ourInstance.isNull()) {
@@ -48,6 +48,7 @@ BooksDB &BooksDB::Instance() {
 		AppLog("initDatabase");
 		ourInstance->initDatabase();
 	}
+	AppLog("initDatabase return *ourInstance");
 	return *ourInstance;
 }
 
@@ -69,7 +70,7 @@ bool BooksDB::initDatabase() {
 
 	myInitialized = true;
 
-	ZLFile stateFile(databaseDirName() + ZLibrary::FileNameDelimiter + STATE_DATABASE_NAME);
+	/*ZLFile stateFile(databaseDirName() + ZLibrary::FileNameDelimiter + STATE_DATABASE_NAME);
 	ZLFile netFile(databaseDirName() + ZLibrary::FileNameDelimiter + NET_DATABASE_NAME);
 	AppLog("SQLiteFactory::createCommand");
 	shared_ptr<DBCommand> cmd = SQLiteFactory::createCommand(BooksDBQuery::PREINIT_DATABASE, connection(), "@stateFile", DBValue::DBTEXT, "@netFile", DBValue::DBTEXT);
@@ -82,7 +83,7 @@ bool BooksDB::initDatabase() {
 		close();
 		return false;
 	}
-	AppLog("cmd->execute() удалось");
+	AppLog("cmd->execute() удалось");*/
 	shared_ptr<DBRunnable> runnable = new InitBooksDBRunnable(connection());
 	if (!executeAsTransaction(*runnable)) {
 		myInitialized = false;

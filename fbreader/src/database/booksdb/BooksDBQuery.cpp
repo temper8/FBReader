@@ -23,9 +23,9 @@
 
 const std::string BooksDBQuery::ArchiveEntryDelimiter = ":";
 
-const std::string BooksDBQuery::PREINIT_DATABASE = \
+/*const std::string BooksDBQuery::PREINIT_DATABASE = \
 	"ATTACH @stateFile AS State; " \
-	"ATTACH @netFile AS Net; ";
+	"ATTACH @netFile AS Net; ";*/
 
 const std::string BooksDBQuery::INIT_DATABASE = \
 	"CREATE TABLE IF NOT EXISTS Files ( " \
@@ -83,12 +83,12 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	CONSTRAINT BookTag_Unique UNIQUE (book_id, tag_id) " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS State.RecentBooks ( " \
+	"CREATE TABLE IF NOT EXISTS RecentBooks ( " \
 	"	book_index INTEGER PRIMARY KEY, " \
 	"	book_id INTEGER UNIQUE REFERENCES Books (book_id) " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS State.BookStateStack ( " \
+	"CREATE TABLE IF NOT EXISTS BookStateStack ( " \
 	"	book_id INTEGER NOT NULL REFERENCES Books (book_id), " \
 	"	position INTEGER NOT NULL, " \
 	"	paragraph INTEGER NOT NULL, " \
@@ -102,17 +102,17 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	type TEXT NOT NULL " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS Net.NetFiles ( " \
+	"CREATE TABLE IF NOT EXISTS NetFiles ( " \
 	"	url TEXT PRIMARY KEY,  " \
 	"	file_id INTEGER UNIQUE REFERENCES Files (file_id) " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS State.StackPosition ( " \
+	"CREATE TABLE IF NOT EXISTS StackPosition ( " \
 	"	book_id INTEGER UNIQUE NOT NULL REFERENCES Books (book_id), " \
 	"	stack_pos INTEGER NOT NULL " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS State.BookList ( " \
+	"CREATE TABLE IF NOT EXISTS BookList ( " \
 	"	book_id INTEGER UNIQUE NOT NULL REFERENCES Books (book_id) " \
 	"); ";
 
@@ -187,21 +187,21 @@ const std::string BooksDBQuery::SECOND_INIT_DATABASE = \
 	"END; ";
 
 const std::string BooksDBQuery::CLEAR_DATABASE = \
-	"DROP TRIGGER Books_Delete " \
-	"DROP TRIGGER Files_Delete " \
-	"DROP TRIGGER Files_Unique_Insert " \
-	"DROP TRIGGER Files_Directory_Insert " \
-	"DROP TRIGGER Files_ArchEntry_Insert " \
-	"DROP TRIGGER Files_Unique_Update " \
-	"DROP TRIGGER Files_Directory_Update " \
-	"DROP TRIGGER Files_ArchEntry_Update " \
+	"DROP TRIGGER Books_Delete; " \
+	"DROP TRIGGER Files_Delete; " \
+	"DROP TRIGGER Files_Unique_Insert; " \
+	"DROP TRIGGER Files_Directory_Insert; " \
+	"DROP TRIGGER Files_ArchEntry_Insert; " \
+	"DROP TRIGGER Files_Unique_Update; " \
+	"DROP TRIGGER Files_Directory_Update; " \
+	"DROP TRIGGER Files_ArchEntry_Update; " \
 	" " \
-	"DROP TABLE State.BookList; " \
-	"DROP TABLE State.StackPosition; " \
-	"DROP TABLE Net.NetFiles; " \
+	"DROP TABLE BookList; " \
+	"DROP TABLE StackPosition; " \
+	"DROP TABLE NetFiles; " \
 	"DROP TABLE PalmType; " \
-	"DROP TABLE State.BookStateStack; " \
-	"DROP TABLE State.RecentBooks; " \
+	"DROP TABLE BookStateStack; " \
+	"DROP TABLE RecentBooks; " \
 	"DROP TABLE BookTag; " \
 	"DROP TABLE BookSeries; " \
 	"DROP TABLE BookAuthor; " \

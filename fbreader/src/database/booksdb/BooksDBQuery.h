@@ -28,7 +28,7 @@ public:
 	static const std::string ArchiveEntryDelimiter;
 
 public:
-	static const std::string PREINIT_DATABASE;
+//	static const std::string PREINIT_DATABASE;
 	static const std::string INIT_DATABASE;
 	static const std::string SECOND_INIT_DATABASE;
 	static const std::string CLEAR_DATABASE;

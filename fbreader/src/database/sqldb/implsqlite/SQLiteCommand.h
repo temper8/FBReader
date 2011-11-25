@@ -21,11 +21,15 @@
 #ifndef __SQLITECOMMAND_H__
 #define __SQLITECOMMAND_H__
 
-#include <sqlite3.h>
+//#include <sqlite3.h>
+#include <FIo.h>
+using namespace Osp::Io;
 
 #include "../DBCommand.h"
 
+#include "SQLiteStatement.h"
 #include "SQLiteConnection.h"
+
 
 
 /*
@@ -52,8 +56,8 @@ public:
 	void unlock();
 
 	// TODO: hide sqlite3_stmt object inside
-	std::vector<sqlite3_stmt *> &statements();
-	const std::vector<sqlite3_stmt *> &statements() const;
+	std::vector<SQLiteStatement *> &statements();
+	const std::vector<SQLiteStatement *> &statements() const;
 
 	void dumpError() const;
 	void dumpError(const std::string &msg) const;
@@ -86,13 +90,13 @@ private:
 	bool bindParameters();
 	bool bindParameterByName(const std::string &name, shared_ptr<DBValue> value);
 	bool bindParameterByIndex(size_t index, shared_ptr<DBValue> value);
-	bool bindParameter(sqlite3_stmt *statement, int number, shared_ptr<DBValue> value);
+	bool bindParameter(SQLiteStatement *statement, int number, shared_ptr<DBValue> value);
 	bool prepareStatements(SQLiteConnection &conn);
 
 	void finalizeStatements();
 	
 private:
-	std::vector<sqlite3_stmt *> myStatements;
+	std::vector<SQLiteStatement *> myStatements;
 	std::vector<BindParameter> myBindContext;
 	bool myLocked;
 
@@ -106,8 +110,8 @@ inline SQLiteCommand::SQLiteCommand(const std::string &command, DBConnection &co
 	: DBCommand(SQLiteCommand::packCommand(command), connection), myStatements(), myLocked(false) {}
 
 inline void SQLiteCommand::unlock() { myLocked = false; }
-inline std::vector<sqlite3_stmt *> &SQLiteCommand::statements() { return myStatements; }
-inline const std::vector<sqlite3_stmt *> &SQLiteCommand::statements() const { return myStatements; }
+inline std::vector<SQLiteStatement *> &SQLiteCommand::statements() { return myStatements; }
+inline const std::vector<SQLiteStatement *> &SQLiteCommand::statements() const { return myStatements; }
 
 inline bool SQLiteCommand::BindParameter::hasName() const { return Name.size() > 0; }
 
