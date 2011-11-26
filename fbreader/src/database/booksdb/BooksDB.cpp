@@ -146,6 +146,7 @@ bool BooksDB::clearDatabase() {
 }
 
 shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
+	AppLog(" BooksDB::loadBook(const std::string &fileName)");
 	if (!isInitialized()) {
 		return 0;
 	}
@@ -171,8 +172,11 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	);
 
 	loadSeries(*book);
+	AppLog("loadSeries(*book);");
 	loadAuthors(*book);
+	AppLog("loadSeries(*book);");
 	loadTags(*book);
+	AppLog("loadSeries(*book);");
 
 	return book;
 }
@@ -327,6 +331,7 @@ std::string BooksDB::getFileName(int fileId) {
 }
 
 bool BooksDB::loadBooks(BookList &books) {
+	AppLog(" BooksDB::loadBooks(BookList &books)");
 	shared_ptr<DBDataReader> reader = myLoadBooks->executeReader();
 
 	books.clear();
@@ -353,9 +358,11 @@ bool BooksDB::loadBooks(BookList &books) {
 	}
 
 	loadSeries(bookMap);
+	AppLog("loadSeries(bookMap);");
 	loadAuthors(bookMap);
+	AppLog("loadAuthors(bookMap);");
 	loadTags(bookMap);
-
+	AppLog("loadTags(bookMap);");
 	return true;
 }
 

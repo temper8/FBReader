@@ -33,7 +33,7 @@ ZLEncodingCollectionReader::ZLEncodingCollectionReader(ZLEncodingCollection &col
 }
 
 void ZLEncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
-	AppLog("ZLEncodingCollectionReader::startElementHandler tag=%s",tag);
+//	AppLog("ZLEncodingCollectionReader::startElementHandler tag=%s",tag);
 	if (GROUP == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
 		if (name != 0) {
@@ -65,7 +65,7 @@ void ZLEncodingCollectionReader::startElementHandler(const char *tag, const char
 }
 
 void ZLEncodingCollectionReader::endElementHandler(const char *tag) {
-	AppLog("ZLEncodingCollectionReader::endElementHandler tag=%s",tag);
+//	AppLog("ZLEncodingCollectionReader::endElementHandler tag=%s",tag);
 	if (!myCurrentInfo.isNull() && (ENCODING == tag)) {
 		AppLog("ENCODING == tag");
 		if (myCurrentInfo->canCreateConverter()) {

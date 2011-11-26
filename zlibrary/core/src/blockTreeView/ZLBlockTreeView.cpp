@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include <ZLApplication.h>
@@ -35,17 +35,18 @@ ZLBlockTreeView::ZLBlockTreeView(ZLPaintContext &context) : ZLView(context), myR
 }
 
 void ZLBlockTreeView::paint() {
+	AppLog(" ZLBlockTreeView::paint()");
 	ZLPaintContext &context = this->context();
-//	context.clear(backgroundColor());
+	context.clear(backgroundColor());
 
 	bool firstNodeFound = false;
 	int vOffset = 0 - myNodePartToSkip;
 	const int maxY = context.height();
 
 	size_t before = myNodePartToSkip;
-
 	for (ZLBlockTreeNode *node = &myRootNode; node != 0; node = node->next()) {
 		size_t h = node->height(context);
+		AppLog("for (ZLBlockTreeNode *node %d", h );
 		if (!firstNodeFound) {
 			if (node == myFirstVisibleNode) {
 				firstNodeFound = true;
@@ -60,7 +61,6 @@ void ZLBlockTreeView::paint() {
 		}
 		vOffset += h;
 	}
-
 	if (!firstNodeFound ||
 			(((int) before) + vOffset <= maxY &&
 			 (myFirstVisibleNode != &myRootNode || myNodePartToSkip != 0)
@@ -71,19 +71,20 @@ void ZLBlockTreeView::paint() {
 		paint();
 		return;
 	}
-
 	const size_t after = (vOffset <= maxY) ? 0 : vOffset - maxY;
 
 	const bool showScrollbar = before > 0 || after > 0;
 	myCanScrollForward = after > 0;
-/*	setScrollbarEnabled(VERTICAL, showScrollbar);
+	AppLog("setScrollbarEnabled");
+	setScrollbarEnabled(VERTICAL, showScrollbar);
 	if (showScrollbar) {
 		setScrollbarParameters(VERTICAL,
 			before + maxY + after,
 			before,
 			before + maxY
 		);
-	}*/
+	}
+	AppLog(" ZLBlockTreeView::paint() end");
 }
 
 ZLBlockTreeNode *ZLBlockTreeView::findNode(int &y) {

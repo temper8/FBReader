@@ -24,7 +24,7 @@
 #include <ZLResource.h>
 
 class ZLResource;
-//struct ZLResourceKey;
+struct ZLResourceKey;
 
 class ZLRunnable {
 

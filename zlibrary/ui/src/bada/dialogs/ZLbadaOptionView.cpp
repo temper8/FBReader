@@ -266,8 +266,8 @@ void StringOptionView::_createItem() {
 		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 2, myToColumn);
 	} else {
 		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
-	}
-	reset();*/
+	}*/
+	reset();
 }
 
 void StringOptionView::_setActive(bool active) {
@@ -279,6 +279,7 @@ void StringOptionView::_onAccept() const {
 }
 
 void StringOptionView::reset() {
+	AppLog("StringOptionView::reset initialValue = %s",(((ZLStringOptionEntry&)*myOption).initialValue()).c_str());
 /*	if (myLineEdit == 0) {
 		return;
 	}

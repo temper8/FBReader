@@ -120,7 +120,7 @@ void ZLibrary::initApplication(const std::string &name) {
 	AppLog("ZLibrary::initApplication %s",name.c_str() );
 	ourApplicationName = name;
 	ourImageDirectory = replaceRegExps("/IMAGEDIR");
-	ourApplicationImageDirectory = replaceRegExps("/APPIMAGEDIR");
+	ourApplicationImageDirectory = replaceRegExps("/Res/icons");
 	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
 	ourApplicationWritableDirectory =
 #ifdef XMLCONFIGHOMEDIR

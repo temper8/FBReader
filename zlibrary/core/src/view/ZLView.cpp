@@ -208,7 +208,7 @@ void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, si
 			from = full - to;
 			to = tmp;
 		}
-//		myView->onScrollbarMoved(direction, full, from, to);
+		myView->onScrollbarMoved(direction, full, from, to);
 	}
 }
 
@@ -216,7 +216,7 @@ void ZLViewWidget::onScrollbarStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
 		bool invert = false;
 		correctDirection(direction, invert);
-//		myView->onScrollbarStep(direction, invert ? -steps : steps);
+		myView->onScrollbarStep(direction, invert ? -steps : steps);
 	}
 }
 
@@ -224,7 +224,7 @@ void ZLViewWidget::onScrollbarPageStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
 		bool invert = false;
 		correctDirection(direction, invert);
-//		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
+		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
 	}
 }
 

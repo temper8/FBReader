@@ -92,26 +92,22 @@ SQLiteStatement::SQLiteStatement(Database *db, const char *zSql, const char **pz
 	}
 }
 const char* SQLiteStatement::GetCString(const String& sBadaStr) const {
-   // if (sBadaStr.GetLength() == 0) return null;
-    ByteBuffer* bb = Osp::Base::Utility::StringUtil::StringToUtf8N(sBadaStr);
-    AppLog( "SQLiteStatement::GetCString %s",(char *)bb->GetPointer());
-    return (const char *)bb->GetPointer();
-  /*  Osp::Text::AsciiEncoding ascii;
+    if (sBadaStr.GetLength() == 0) return null;
+    ByteBuffer* pBuffer = Osp::Base::Utility::StringUtil::StringToUtf8N(sBadaStr);
+    AppLog( "SQLiteStatement::GetCString %s",(char *)pBuffer->GetPointer());
     int byteCount = 0;
-    string* cString = null;
-    ByteBuffer* pBuffer = ascii.GetBytesN(sBadaStr);
     if (pBuffer != null){
         byteCount = pBuffer->GetLimit();
         char* chPtrBuf = new char[byteCount + 1];
         if (chPtrBuf != null){
-            pBuffer->GetArray((byte*)chPtrBuf, 0, byteCount);
-            cString = new string(chPtrBuf);
-            if (chPtrBuf != null) delete [] chPtrBuf;
-        }
-        if (pBuffer != null) delete pBuffer;
-    }
-    if (cString != null) return cString;
-    return null;*/
+            	pBuffer->GetArray((byte*)chPtrBuf, 0, byteCount);
+            	delete pBuffer;
+            	return chPtrBuf;
+        		}
+        delete pBuffer;
+    	}
+
+    return null;
 }
 int SQLiteStatement::bind_parameter_index(const char *zName){
 	String parName = zName;
@@ -165,8 +161,7 @@ double SQLiteStatement::column_double(int iCol){
 const unsigned char *SQLiteStatement::column_text(int iCol){
 	String res;
 	pEnum->GetStringAt(iCol, res);
-	const unsigned char* ch = (unsigned char*)GetCString(res);
-	return ch;
+	return (unsigned char*)GetCString(res);
 }
 int SQLiteStatement::bind_parameter_count(){
 	return params.size();
@@ -227,7 +222,7 @@ int SQLiteStatement::reset(){
 }
 int SQLiteStatement::finalize(){
 	if (pStmt) delete pStmt;
-	if (pEnum) delete pStmt;
+	if (pEnum) delete pEnum;
 	return SQLITE_OK;
 }
 int SQLiteStatement::prepare(Database *db, const char *zSql, SQLiteStatement **ppStmt, const char **pzTail) {

@@ -52,7 +52,7 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 	}
 	myNameWithoutExtension = myNameWithExtension;
 
-	AppLog("myNameWithExtension %s", myNameWithExtension.c_str() );
+//	AppLog("myNameWithExtension %s", myNameWithExtension.c_str() );
 
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::Instance().myForcedFiles;
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
@@ -91,16 +91,16 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 		myExtension = ZLUnicodeUtil::toLower(myNameWithoutExtension.substr(index + 1));
 		myNameWithoutExtension = myNameWithoutExtension.substr(0, index);
 	}
-	AppLog(" end of ZLFile::ZLFile");
+//	AppLog(" end of ZLFile::ZLFile");
 }
 
 shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const {
 	if (base != 0) {
 		if (myArchiveType & GZIP) {
-		//	return new ZLGzipInputStream(base);
+			return new ZLGzipInputStream(base);
 		}
 		if (myArchiveType & BZIP2) {
-		//	return new ZLBzip2InputStream(base);
+			return new ZLBzip2InputStream(base);
 		}
 	}
 	return base;

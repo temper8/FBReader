@@ -36,7 +36,7 @@ friend class DummyEncodingConverterProvider;
 };
 
 bool DummyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	AppLog("DummyEncodingConverterProvider::providesConverter %s",encoding.c_str());
+//	AppLog("DummyEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	const std::string lowerCasedEncoding = ZLUnicodeUtil::toLower(encoding);
 	return (lowerCasedEncoding == "utf-8") || (lowerCasedEncoding == "us-ascii");
 }

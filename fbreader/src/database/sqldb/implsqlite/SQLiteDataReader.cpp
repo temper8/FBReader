@@ -129,7 +129,7 @@ std::string SQLiteDataReader::textValue(size_t column, const std::string &defaul
 		const char *result = (const char*)statement->column_text(column);
 	//	AppLog("SQLiteDataReader::textValue result=%s",result);
 		if (result != 0) {
-			return std::string(result);
+			return result;
 		}
 	}
 	return defaultValue;

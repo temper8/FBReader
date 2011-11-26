@@ -21,6 +21,11 @@ class DialogForm :
 public:
 	DialogForm();
 	virtual ~DialogForm();
+	bool Initialize(void);
+
+protected:
+	// Ui
+	Osp::Ui::Controls::Form*			pPreviousForm;
 
 public:
 
@@ -28,6 +33,7 @@ public:
 	result	OnTerminating(void);
 	void	OnActionPerformed(const Osp::Ui::Control& source, int actionId);
     void 	OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
+	void	SetPreviousForm(Osp::Ui::Controls::Form* preForm);
 
 };
 

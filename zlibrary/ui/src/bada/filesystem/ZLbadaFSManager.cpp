@@ -98,6 +98,10 @@ ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
 }
 
 std::string ZLbadaFSManager::resolveSymlink(const std::string &path) const {
+	AppLog("ZLbadaFSManager::resolveSymlink %s",path.c_str());
+	return path;
+}
+	/*
 	std::set<std::string> names;
 	std::string current = path;
 	for (int i = 0; i < 256; ++i) {
@@ -119,8 +123,9 @@ std::string ZLbadaFSManager::resolveSymlink(const std::string &path) const {
 		current = buffer;
 	}
 	return "";
-}
 
+}
+*/
 void ZLbadaFSManager::normalizeRealPath(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
@@ -232,6 +237,12 @@ std::string ZLbadaFSManager::parentPath(const std::string &path) const {
 }
 
 bool ZLbadaFSManager::canRemoveFile(const std::string &path) const {
-	return access(parentPath(path).c_str(), W_OK) == 0;
+	AppLog("ZLbadaFSManager::canRemoveFile %s",path.c_str());
+	result r = E_SUCCESS;
+	FileAttributes attr;
+    r = File::GetAttributes(path.c_str(), attr);
+	//TODO   if(IsFailed(r)) goto CATCH;
+   return !attr.IsReadOnly();
+//	return access(parentPath(path).c_str(), W_OK) == 0;
 }
 

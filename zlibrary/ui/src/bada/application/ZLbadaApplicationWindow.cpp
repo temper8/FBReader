@@ -65,7 +65,7 @@ void ZLbadaApplicationWindow::processAllEvents(){
 }
 
 void ZLbadaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	AppLog("setToolbarItemState ");
+//	AppLog("setToolbarItemState ");
 /*	QAction *action = myActions[&*item];
 	if (action != 0) {
 		action->setEnabled(enabled);

@@ -115,7 +115,7 @@ private:
 MyEncodingConverterProvider::MyEncodingConverterProvider() {
 	shared_ptr<ZLDir> dir =
 		ZLFile(ZLEncodingCollection::encodingDescriptionPath()).directory();
-	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
+//	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
 	if (!dir.isNull()) {
 		std::vector<std::string> files;
 		dir->collectFiles(files, false);
@@ -124,7 +124,7 @@ MyEncodingConverterProvider::MyEncodingConverterProvider() {
 }
 
 bool MyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
+//	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	return myProvidedEncodings.find(encoding) != myProvidedEncodings.end();
 }
 
@@ -161,7 +161,7 @@ MyOneByteEncodingConverter::~MyOneByteEncodingConverter() {
 }
 
 void MyOneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	AppLog("MyOneByteEncodingConverter::convert ");
+//	AppLog("MyOneByteEncodingConverter::convert ");
 
 	size_t oldLength = dst.length();
 	dst.append(3 * (srcEnd - srcStart), '\0');
@@ -197,7 +197,7 @@ MyTwoBytesEncodingConverter::~MyTwoBytesEncodingConverter() {
 }
 
 void MyTwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	AppLog("MyTwoBytesEncodingConverter::convert ");
+//	AppLog("MyTwoBytesEncodingConverter::convert ");
 	if (srcStart == srcEnd) {
 		return;
 	}

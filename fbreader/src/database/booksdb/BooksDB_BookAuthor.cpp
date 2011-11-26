@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <string>
 
 #include "BooksDB.h"
@@ -37,6 +37,7 @@ static const std::string LOAD_ALL_AUTHORS_QUERY =
 	" ORDER BY BookAuthor.author_index;";
 
 void BooksDB::loadAuthors(Book &book) {
+	AppLog("BooksDB::loadAuthors");
 	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_AUTHORS_QUERY, connection(), "@book_id", DBValue::DBINT
 	);

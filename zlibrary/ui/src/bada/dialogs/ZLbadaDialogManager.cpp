@@ -50,15 +50,18 @@ void ZLbadaDialogManager::createApplicationWindow(ZLApplication *application) co
 
 
 shared_ptr<ZLDialog> ZLbadaDialogManager::createDialog(const ZLResourceKey &key) const {
+	AppLog("ZLbadaDialogManager::createDialog");
 	return new ZLbadaDialog(resource()[key]);
 }
 
 shared_ptr<ZLOptionsDialog> ZLbadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	AppLog("ZLbadaDialogManager::createOptionsDialog");
 	return new ZLbadaOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
 
 
 shared_ptr<ZLOpenFileDialog> ZLbadaDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+//TODO корректно ли без shared_pt<>?
 	ZLbadaOpenFileDialog *b= new ZLbadaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 	AppLog("ZLbadaDialogManager::createOpenFileDialog");
 	b->pSearchResultInfo = myApplicationWindow->viewWidget().mybadaForm->pSearchResultInfo;

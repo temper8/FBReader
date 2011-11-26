@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <FBase.h>
 #include <string>
 
 #include "BooksDB.h"
@@ -52,13 +53,14 @@ void BooksDB::loadSeries(Book &book) {
 }
 
 void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
+	// static
 	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_ALL_SERIES_QUERY, connection()
 	);
 	shared_ptr<DBDataReader> reader = command->executeReader();
 
 	while (reader->next()) {
-		std::string seriesTitle = reader->textValue(0, std::string());
+			std::string seriesTitle =reader->textValue(0, std::string());
 		std::map<int,shared_ptr<Book> >::const_iterator it =
 			books.find((reader->type(2) == DBValue::DBINT) ? reader->intValue(2) : 0);
 		if (!seriesTitle.empty() && it != books.end()) {
@@ -67,5 +69,7 @@ void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
 				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
 			);
 		}
+
 	}
+	AppLog("BooksDB::loadSeries end");
 }

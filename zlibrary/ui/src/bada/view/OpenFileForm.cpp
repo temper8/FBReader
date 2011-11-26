@@ -265,7 +265,6 @@ void OpenFileForm::UpdateContent(){
 
 		r = __pLstSearchList->AddItem(&strName, null, null, null );
 		TryCatch(E_SUCCESS == r, popStr = "Search fail - Construct fail." , "Construct() is failed by %s.", GetErrorMessage(r));
-
 	}
 
 	__pLstSearchList->Draw();

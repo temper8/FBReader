@@ -62,7 +62,7 @@ void fStartElementHandler2(void *userData, const char *name, const char **attrib
 			//AppLog("int count = 0");
 			//AppLog("attr = %s::%s",(const char*)attributes[0],(const char*)attributes[1]);
 			for (const char **a = (const char**)attributes; (*a != 0) && (*(a + 1) != 0); a += 2) {
-				AppLog("*a=%s",*a);
+				//AppLog("*a=%s",*a);
 				if (strncmp(*a, "xmlns:", 6) == 0) {
 					if (count == 0) {
 						reader.myNamespaces.push_back(
@@ -344,7 +344,7 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 	MySaxhandler.error = fErrorSAXFunc;
 	MySaxhandler.fatalError = fFatalErrorSAXFunc;
 	ctxt = xmlCreatePushParserCtxt(&MySaxhandler,  &myReader, NULL, 0, NULL);
-	AppLog("xmlCreatePushParserCtxt");
+	//AppLog("xmlCreatePushParserCtxt");
 	 if (ctxt == NULL) {
 			AppLog("xmlCreatePushParserCtxt контекст создать не удалось");
 	     return;
@@ -358,7 +358,6 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 	AppLog("XML_ParserFree");
     xmlParseChunk(ctxt, 0, 0, 1);
     xmlFreeParserCtxt(ctxt);
-
 	xmlCleanupParser();
 //	XML_ParserFree(myParser);
 }

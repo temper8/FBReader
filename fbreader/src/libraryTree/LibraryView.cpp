@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <queue>
 
 #include <ZLResource.h>
@@ -32,12 +32,13 @@ LibraryView::LibraryView(ZLPaintContext &context) : ZLBlockTreeView(context), my
 }
 
 void LibraryView::paint() {
+	AppLog("LibraryView::paint()");
 	const size_t revision = Library::Instance().revision();
 	if (myCollectionRevision < revision) {
 		myCollectionRevision = revision;
 		makeUpToDate();
 	}
-
+	AppLog("ZLBlockTreeView::paint();");
 	ZLBlockTreeView::paint();
 }
 

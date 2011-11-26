@@ -101,11 +101,11 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 {
 	AppLog("Создаем FBReader");
 	myBookTextView = new BookTextView(*context());
-//	myFootnoteView = new FootnoteView(*context());
+	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
 //	myNetworkLibraryView = new NetworkView(*context());
-//	myLibraryByAuthorView = new LibraryByAuthorView(*context());
-//	myLibraryByTagView = new LibraryByTagView(*context());
+	myLibraryByAuthorView = new LibraryByAuthorView(*context());
+	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
 	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
@@ -122,11 +122,11 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
-//	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
-//	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
-//	addAction(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG, new ShowSystemOptionsDialogAction());
-//	addAction(ActionCode::SHOW_READING_OPTIONS_DIALOG, new ShowReadingOptionsDialogAction());
-//	addAction(ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG, new ShowLookAndFeelOptionsDialogAction());
+	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
+	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
+	addAction(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG, new ShowSystemOptionsDialogAction());
+	addAction(ActionCode::SHOW_READING_OPTIONS_DIALOG, new ShowReadingOptionsDialogAction());
+	addAction(ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG, new ShowLookAndFeelOptionsDialogAction());
 	addAction(ActionCode::ADD_BOOK, new AddBookAction(FBReader::BOOK_TEXT_MODE | FBReader::LIBRARY_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::UNDO, new UndoAction(FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::REDO, new RedoAction());
@@ -311,7 +311,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		AppLog("FBReader::openBookInternal");
 		BookTextView &bookTextView = (BookTextView&)*myBookTextView;
 		ContentsView &contentsView = (ContentsView&)*myContentsView;
-	//	FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
+		FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
 		AppLog("bookTextView.saveState()");
 		bookTextView.saveState();
 		bookTextView.setModel(0, 0);
@@ -330,8 +330,8 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		bookTextView.setCaption(book->title());
 		AppLog("bookTextView.setContentsModel");
 		bookTextView.setContentsModel(myModel->contentsModel());
-//		footnoteView.setModel(0);
-//		footnoteView.setCaption(book->title());
+		footnoteView.setModel(0);
+		footnoteView.setCaption(book->title());
 		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(book->title());
 		AppLog("Library::Instance().addBook(book");

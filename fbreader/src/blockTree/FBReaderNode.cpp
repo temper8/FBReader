@@ -94,20 +94,20 @@ void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
 	if (origWidth == 0 || origHeight == 0) {
 		return;
 	}
-	AppLog("origWidth = %d, origHeight =%d)",origWidth,origHeight);
+//	AppLog("origWidth = %d, origHeight =%d)",origWidth,origHeight);
 	int coeff = std::min(w / origWidth, h / origHeight);
 	if (coeff == 0) {
 		coeff = 1;
 	}
-	AppLog("coeff = %d",coeff);
+//	AppLog("coeff = %d",coeff);
 	int width = coeff * origWidth;
 	int height = coeff * origHeight;
-	AppLog("width = %d, height =%d)",width,height);
+//	AppLog("width = %d, height =%d)",width,height);
 	if (width > w || height > h) {
 		width = context.imageWidth(*coverData, w, h, ZLPaintContext::SCALE_REDUCE_SIZE);
 		height = context.imageHeight(*coverData, w, h, ZLPaintContext::SCALE_REDUCE_SIZE);
 	}
-	AppLog("width = %d, height =%d)",width,height);
+//	AppLog("width = %d, height =%d)",width,height);
 	context.drawImage(hOffset + (w - width) / 2, vOffset + (h + height) / 2, *coverData, width, height, ZLPaintContext::SCALE_FIT_TO_SIZE);
 }
 
@@ -153,18 +153,20 @@ void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOf
 	const int unit = unitSize(context, style);
 	const int h = auxiliary ? (unit * 11 / 2) : (unit * 9 / 2);
 	const int left = hOffset + level() * unit * 3 + unit * 2;
-
+//	AppLog("context.setColor");
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
+//	AppLog("context.setFont");
 	context.setFont(
 		style.fontFamily(), 
 		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
 		style.bold(), 
 		style.italic()
 	);
-
+//	AppLog("context.setFont 2");
 	const std::string text = action->text(resource());
 	const int stringW = context.stringWidth(text.data(), text.size(), false);
 	const int stringH = context.stringHeight();
+//	AppLog("context.drawString");
 	context.drawString(left, vOffset + h, text.data(), text.size(), false);
 	addHyperlink(left, h - stringH, left + stringW, h, action);
 	hOffset += stringW + 4 * context.spaceWidth();
@@ -254,19 +256,20 @@ std::string FBReaderNode::summary() const {
 }
 
 void FBReaderNode::paint(ZLPaintContext &context, int vOffset) {
+	AppLog("FBReaderNode::paint");
 	if (!myIsInitialized) {
 		init();
 		myIsInitialized = true;
 	}
-
 	removeAllHyperlinks();
-
 	drawCover(context, vOffset);
 	drawTitle(context, vOffset);
 	drawSummary(context, vOffset);
 
 	int left = 0;
 	int auxLeft = 0;
+
+
 	for (std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> >::const_iterator it = myActions.begin(); it != myActions.end(); ++it) {
 		if (it->first->makesSense()) {
 			if (it->second) {
@@ -276,4 +279,5 @@ void FBReaderNode::paint(ZLPaintContext &context, int vOffset) {
 			}
 		}
 	}
+	AppLog("FBReaderNode::paint end");
 }

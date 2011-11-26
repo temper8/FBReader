@@ -147,9 +147,12 @@ void BooksDBUtil::resetZipInfo(const ZLFile &zipFile) {
 }
 
 bool BooksDBUtil::canRemoveFile(const std::string &filePath) {
+	AppLog("BooksDBUtil::canRemoveFile");
 	ZLFile bookFile(filePath);
+	AppLog("bookFile(filePath);");
 	std::string physicalPath = bookFile.physicalFilePath();
 	if (filePath != physicalPath) {
+		AppLog("это архив");
 		ZLFile zipFile(physicalPath);
 		shared_ptr<ZLDir> zipDir = zipFile.directory();
 		if (zipDir.isNull()) {
@@ -163,6 +166,7 @@ bool BooksDBUtil::canRemoveFile(const std::string &filePath) {
 		if (zipDir->itemPath(entries[0]) != filePath) {
 			return false;
 		}
+
 	}
 	return ZLFile(physicalPath).canRemove();
 }

@@ -36,6 +36,7 @@ protected:
 	Osp::Content::ContentType					__ContentType;
 
 	void    _ClearContentInfoList();
+
 public:
 
 
