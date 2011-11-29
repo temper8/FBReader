@@ -4,6 +4,8 @@
 #include "ZLbadaPaintContext.h"
 #include "badaForm.h"
 #include "OpenFileForm.h"
+#include "../dialogs/DialogForm.h"
+#include "badaForm.h"
 
 using namespace Osp::App;
 using namespace Osp::Base;
@@ -28,49 +30,49 @@ result badaForm::OnDraw(void)
 	return E_SUCCESS;
 }
 
-void
-badaForm::
-OnTouchDoublePressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+//virtual bool onStylusPress(int x, int y);
+//virtual bool onStylusRelease(int x, int y);
+//virtual bool onStylusMove(int x, int y);
+//virtual bool onStylusMovePressed(int x, int y);
+//virtual bool onFingerTap(int x, int y);
+
+void badaForm::OnTouchDoublePressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchDoublePressed");
+}
+
+void badaForm::OnTouchFocusIn(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+{
+	AppLog("OnTouchFocusIn");
+}
+
+void badaForm::OnTouchFocusOut(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+{
+	AppLog("OnTouchFocusOut");
+}
+
+void badaForm::OnTouchLongPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+{
+	AppLog("OnTouchLongPressed");
+
 	// Display the OptionMenu
 	if (__pOptionMenu != null){
 		__pOptionMenu->SetShowState(true);
 		__pOptionMenu->Show();
 	}
-}
-
-void
-badaForm::OnTouchFocusIn(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
-{
-	AppLog("OnTouchFocusIn");
-}
-
-void
-badaForm::OnTouchFocusOut(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
-{
-	AppLog("OnTouchFocusOut");
-}
-
-void
-badaForm::OnTouchLongPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
-{
-	AppLog("OnTouchLongPressed");
 
 }
 
-void
-badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchMoved");
-
+	myHolder.view()->onStylusMove(currentPosition.x, currentPosition.y);
 }
 
-void
-badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
+void badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchPressed");
-
+	myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
 }
 
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
@@ -215,6 +217,24 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 	}
 }
 
+DialogForm* badaForm::CreateDalogForm(void){
+	result r = E_SUCCESS;
+	//AppLog("CreateDalogForm %s",name);
+	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	DialogForm* pDialogForm = new DialogForm;
+//	pDialogForm->Initialize();
+	AppLog("pDialogForm->Initialize()");
+	r = pFrame->AddControl(*pDialogForm);
+	r = pFrame->SetCurrentForm(*pDialogForm);
+	AppLog("r = pFrame->SetCurrentForm(*pDialogForm);");
+	pDialogForm->SetPreviousForm(this);
+//	r = pFrame->Draw();
+//	AppLog("pFrame->Draw();");
+//	r = pFrame->Show();
+//	AppLog("pFrame->Show()");
+	return pDialogForm;
+}
+
 void badaForm::goOpenFileForm()
 {
 	result r = E_SUCCESS;
@@ -224,10 +244,7 @@ void badaForm::goOpenFileForm()
 
 		if(pOpenFileForm->Initialize()){
 			r = pFrame->AddControl(*pOpenFileForm);
-			if(IsFailed(r)){
-				AppLog("pOpenFileForm->Initialize() is failed by %s.", GetErrorMessage(r));
-				return;
-			}
+			if(IsFailed(r)){AppLog("Initialize() is failed by %s.", GetErrorMessage(r));return;}
 
 			r = pFrame->SetCurrentForm(*pOpenFileForm);
 			if(IsFailed(r)){

@@ -80,7 +80,6 @@ void BookTextView::readBookState(const Book &book) {
 		BooksDB::Instance().loadBookState(book, state);
 		state.Paragraph = state.Word = state.Character = 0;
 	}
-	AppLog("gotoPosition");
 	gotoPosition(state.Paragraph, state.Word, state.Character);
 	AppLog("end readBookState");
 }
@@ -112,9 +111,9 @@ void BookTextView::saveBookState(const Book &book) {
 }
 
 void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book) {
+	AppLog("BookTextView::setModel");
 	FBView::setModel(model);
 	if (!myBook.isNull()) {
-		AppLog("saveBookState(*myBook)");
 		saveBookState(*myBook);
 	}
 	myBook = book;
@@ -124,10 +123,8 @@ void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book
 	readBookState(*book);
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
-	AppLog("BooksDB::Instance().loadBookStateStack");
 	BooksDB::Instance().loadBookStateStack(*book, myPositionStack);
 	myStackChanged = false;
-
 	if (myPositionStack.size() > 0) {
 		AppLog("myPositionStack.size() > 0");
 		int stackPos = readStackPos(*book);

@@ -8,21 +8,22 @@
 #ifndef ZLBADAOPTIONSDIALOG_H_
 #define ZLBADAOPTIONSDIALOG_H_
 
+#include <FBase.h>
 #include "DialogForm.h"
 #include "ZLOptionsDialog.h"
 
 
 class ZLbadaOptionsDialog: public ZLOptionsDialog {
 public:
-	ZLbadaOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
+	ZLbadaOptionsDialog(Osp::Ui::Controls::Form   *PreviousForm, const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	virtual ~ZLbadaOptionsDialog();
 
 public:
 	virtual ZLDialogContent &createTab(const ZLResourceKey &key);
 	virtual bool run();
-
-protected:
 	DialogForm *myDialogForm;
+protected:
+//	Osp::Ui::Controls::Form   &myPreviousForm;
 	virtual const std::string &selectedTabKey() const;
 	virtual void selectTab(const ZLResourceKey &key);
 	virtual bool runInternal();

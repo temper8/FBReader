@@ -41,6 +41,7 @@
 #include "../optionsDialog/reading/ReadingOptionsDialog.h"
 #include "../optionsDialog/lookAndFeel/OptionsPage.h"
 #include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
+#include "../optionsDialog/mainOptionsDialog/MainOptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -85,11 +86,15 @@ void ShowHelpAction::run() {
 }
 
 void ShowOptionsDialogAction::run() {
-	std::string actionId = FBReader::Instance().LastOpenedPreferencesDialog.value();
+	AppLog("ShowOptionsDialogAction::run() SystemOptionsDialog");
+	//FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
+	MainOptionsDialog().dialog().run();
+/*	std::string actionId = FBReader::Instance().LastOpenedPreferencesDialog.value();
 	if (actionId.empty()) {
 		return;
 	}
-	FBReader::Instance().doAction(actionId);
+	AppLog("doAction %s",actionId.c_str());
+	FBReader::Instance().doAction(actionId);*/
 }
 
 void ShowLibraryOptionsDialogAction::run() {
@@ -178,8 +183,8 @@ void ShowBookInfoAction::run() {
 	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	shared_ptr<Book> book = fbreader.myModel->book();
 	if (BookInfoDialog(book).dialog().run()) {
-		fbreader.openBook(book);
-		fbreader.refreshWindow();
+	//	fbreader.openBook(book);
+	//	fbreader.refreshWindow();
 	}
 }
 

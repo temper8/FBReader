@@ -165,7 +165,7 @@ void ZLApplication::refreshWindow() {
 
 void ZLApplication::presentWindow() {
 	if (!myWindow.isNull()) {
-//		myWindow->present();
+		myWindow->present();
 	}
 }
 

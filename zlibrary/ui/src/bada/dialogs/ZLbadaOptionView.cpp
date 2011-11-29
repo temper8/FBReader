@@ -36,7 +36,18 @@
 
 #include "ZLbadaOptionView.h"
 #include "ZLbadaDialogContent.h"
-//#include "ZLQtUtil.h"
+#include "DialogForm.h"
+
+#include <FIo.h>
+
+using namespace Osp::App;
+using namespace Osp::Base;
+using namespace Osp::Base::Collection;
+using namespace Osp::Ui;
+using namespace Osp::Ui::Controls;
+using namespace Osp::Content;
+using namespace Osp::Graphics;
+using namespace Osp::Base::Runtime;
 
 void ZLbadaOptionView::_show() {
 //	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
@@ -153,8 +164,21 @@ void ChoiceOptionView::_onAccept() const {
 		}
 	}
 }
-
+*/
 void ComboOptionView::_createItem() {
+	AppLog("ComboOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
+	//myTab->form();
+	myEditField = new EditField();
+	myEditField->Construct(Rectangle(10, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
+    EDIT_FIELD_STYLE_NORMAL, INPUT_STYLE_FULLSCREEN,
+    true, 100, GROUP_STYLE_SINGLE );
+	myEditField->SetGuideText("GuideText1");
+  //  const char *titleText = ZLOptionView::name().c_str();
+	myEditField->SetTitleText(String(ZLOptionView::name().c_str()));
+	//myEditField->SetText("Просто Text1");
+	myTab->form()->pScrollPanel->AddControl(*myEditField);
+	myTab->form()->YPos+=120;
+	/*
 	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
 	QLabel *label = 0;
 	const std::string &name = ZLOptionView::name();
@@ -179,11 +203,15 @@ void ComboOptionView::_createItem() {
 	} else {
 		myTab->addItem(myComboBox, myRow, myFromColumn, myToColumn);
 	}
-
+*/
 	reset();
 }
 
 void ComboOptionView::reset() {
+	AppLog("ComboOptionView::reset initialValue = %s",(((ZLComboOptionEntry&)*myOption).initialValue()).c_str());
+	const char *text = (((ZLComboOptionEntry&)*myOption).initialValue()).c_str();
+	myEditField->SetText(String(text));
+/*
 	if (myComboBox == 0) {
 		return;
 	}
@@ -207,30 +235,32 @@ void ComboOptionView::reset() {
 	if (selectedIndex >= 0) {
 		myComboBox->setCurrentIndex(selectedIndex);
 	}
+	*/
 }
 
 void ComboOptionView::_setActive(bool active) {
-	myComboBox->setEnabled(active);
+//	myComboBox->setEnabled(active);
 }
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry&)*myOption).onAccept((const char*)myComboBox->currentText().toUtf8());
+//	((ZLComboOptionEntry&)*myOption).onAccept((const char*)myComboBox->currentText().toUtf8());
 }
 
-void ComboOptionView::onValueSelected(int index) {
-	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
-	if ((index >= 0) && (index < (int)o.values().size())) {
-		o.onValueSelected(index);
-	}
-}
+//void ComboOptionView::onValueSelected(int index) {
+//	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+//	if ((index >= 0) && (index < (int)o.values().size())) {
+//		o.onValueSelected(index);
+//	}
+//}
 
-void ComboOptionView::onValueEdited(const QString &value) {
-	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
-	if (o.useOnValueEdited()) {
-		o.onValueEdited((const char*)value.toUtf8());
-	}
-}
+//void ComboOptionView::onValueEdited(const QString &value) {
+//	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+//	if (o.useOnValueEdited()) {
+//		o.onValueEdited((const char*)value.toUtf8());
+//	}
+//}
 
+/*
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry &entry = (ZLSpinOptionEntry&)*myOption;
 	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
@@ -253,7 +283,18 @@ void SpinOptionView::_onAccept() const {
 }
 */
 void StringOptionView::_createItem() {
-	AppLog("_createItem() name = %s",(ZLOptionView::name()).c_str());
+	AppLog("StringOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
+	//myTab->form();
+	myEditField = new EditField();
+	myEditField->Construct(Rectangle(10, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
+    EDIT_FIELD_STYLE_NORMAL, INPUT_STYLE_FULLSCREEN,
+    true, 100, GROUP_STYLE_SINGLE );
+	myEditField->SetGuideText("GuideText1");
+  //  const char *titleText = ZLOptionView::name().c_str();
+	myEditField->SetTitleText(String(ZLOptionView::name().c_str()));
+	//myEditField->SetText("Просто Text1");
+	myTab->form()->pScrollPanel->AddControl(*myEditField);
+	myTab->form()->YPos+=120;
 /*	myLineEdit = new QLineEdit(myTab->widget());
 	myLineEdit->setEchoMode(myPasswordMode ? QLineEdit::Password : QLineEdit::Normal);
 	myWidgets.push_back(myLineEdit);
@@ -280,6 +321,8 @@ void StringOptionView::_onAccept() const {
 
 void StringOptionView::reset() {
 	AppLog("StringOptionView::reset initialValue = %s",(((ZLStringOptionEntry&)*myOption).initialValue()).c_str());
+	const char *text = (((ZLStringOptionEntry&)*myOption).initialValue()).c_str();
+	myEditField->SetText(String(text));
 /*	if (myLineEdit == 0) {
 		return;
 	}

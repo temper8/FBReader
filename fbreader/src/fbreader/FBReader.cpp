@@ -166,7 +166,6 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_AUTHOR, booksOrderAction);
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
-	AppLog("завершили создание addAction");
 	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
 	AppLog("завершили создание addAction");
 	myOpenFileHandler = new OpenFileHandler();
@@ -312,32 +311,26 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		BookTextView &bookTextView = (BookTextView&)*myBookTextView;
 		ContentsView &contentsView = (ContentsView&)*myContentsView;
 		FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
-		AppLog("bookTextView.saveState()");
 		bookTextView.saveState();
 		bookTextView.setModel(0, 0);
 		bookTextView.setContentsModel(0);
 		contentsView.setModel(0);
 
 		myModel.reset();
-		AppLog("new BookModel(book)");
 		myModel = new BookModel(book);
 		AppLog("bookTextView.setCaption %s", book->title().c_str());
 		AppLog("ZLTextHyphenator::Instance().load l=%s",book->language().c_str());
 		ZLTextHyphenator::Instance().load(book->language());
-		AppLog("bookTextView.setModel");
 		bookTextView.setModel(myModel->bookTextModel(), book);
 		AppLog("bookTextView.setCaption %s", book->title().c_str());
 		bookTextView.setCaption(book->title());
-		AppLog("bookTextView.setContentsModel");
 		bookTextView.setContentsModel(myModel->contentsModel());
 		footnoteView.setModel(0);
 		footnoteView.setCaption(book->title());
 		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(book->title());
-		AppLog("Library::Instance().addBook(book");
 		// отключение DB
 		Library::Instance().addBook(book);
-		AppLog("Library::Instance().addBookToRecentList");
 		Library::Instance().addBookToRecentList(book);
 		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 		AppLog("showBookTextView()");

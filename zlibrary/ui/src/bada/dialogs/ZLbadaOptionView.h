@@ -24,6 +24,10 @@
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
 #include "../../../../core/src/dialogs/ZLOptionView.h"
+#include <FApp.h>
+#include <FBase.h>
+#include <FUi.h>
+#include <FContent.h>
 
 class ZLbadaDialogContent;
 
@@ -111,7 +115,7 @@ class StringOptionView :  public ZLbadaOptionView {
 //Q_OBJECT
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLbadaDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLineEdit(0), myPasswordMode(passwordMode) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLbadaDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myEditField(0), myPasswordMode(passwordMode) {}
 
 private:
 	void _createItem();
@@ -123,7 +127,8 @@ private:
 //	void onValueEdited(const QString &value);
 
 private:
-	char *myLineEdit;
+	Osp::Ui::Controls::EditField* myEditField;
+	//char *myLineEdit;
 	const bool myPasswordMode;
 };
 /*
@@ -139,13 +144,13 @@ protected:
 private:
 	QSpinBox *mySpinBox;
 };
+*/
+class ComboOptionView : public  ZLbadaOptionView {
 
-class ComboOptionView : public QObject, public ZLQtOptionView {
-
-Q_OBJECT
+//Q_OBJECT
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myComboBox(0) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myEditField(0) {}
 
 private:
 	void _createItem();
@@ -153,14 +158,15 @@ private:
 	void _onAccept() const;
 	void reset();
 
-private Q_SLOTS:
-	void onValueSelected(int index);
-	void onValueEdited(const QString &value);
+//private Q_SLOTS:
+//	void onValueSelected(int index);
+//	void onValueEdited(const QString &value);
 	
 private:
-	QComboBox *myComboBox;
+	Osp::Ui::Controls::EditField* myEditField;
+	//QComboBox *myComboBox;
 };
-
+/*
 class KeyOptionView : public QObject, public ZLQtOptionView {
 
 Q_OBJECT

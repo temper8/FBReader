@@ -178,14 +178,14 @@ void ZLTextArea::paint() {
 	labels.push_back(0);
 
 	ZLTextArea::Style style(*this, myProperties.baseStyle());
-	AppLog("myLineInfos.size() = %d",myLineInfos.size());
+//	AppLog("myLineInfos.size() = %d",myLineInfos.size());
 	int y = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
 	//	AppLog("prepareTextLine");
 		prepareTextLine(style, info, y);
 		y += info.Height + info.Descent + info.VSpaceAfter;
-		AppLog("prepareTextLine y = %d",y);
+//		AppLog("prepareTextLine y = %d",y);
 		labels.push_back(myTextElementMap.size());
 	}
 

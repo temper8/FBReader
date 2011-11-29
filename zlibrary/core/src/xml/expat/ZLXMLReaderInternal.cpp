@@ -285,7 +285,7 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	myInitialized = true;
 	//XML_UseForeignDTD(myParser, XML_TRUE);
 	MySaxhandler.initialized = 1;//XML_PARSER_DTD;//XML_PARSER_START;
-	AppLog("XML_UseForeignDTD %d",xmlSubstituteEntitiesDefault(0));
+//	AppLog("XML_UseForeignDTD %d",xmlSubstituteEntitiesDefault(0));
 	const std::vector<std::string> &dtds = myReader.externalDTDs();
 	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
 	//	myDTDStreamLocks.insert(ZLFile(*it).inputStream());
@@ -298,7 +298,7 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	}
 
 //	XML_SetUserData(myParser, &myReader);
-	AppLog("XML_SetUserData");
+//	AppLog("XML_SetUserData");
 	if (encoding != 0) {
 		AppLog("encoding %s",encoding);}
 	//if (encoding != 0) {
@@ -309,7 +309,7 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	//xmlInitCharEncodingHandlers	();
 	xmlNewCharEncodingHandler("windows-1251",fxmlCharEncodingInputFunc,fxmlCharEncodingOutputFunc);
 
-	AppLog("XML_SetEncoding");
+//	AppLog("XML_SetEncoding");
 
 
 	//pMySaxhandler->startElement = fStartElementHandler;
@@ -326,12 +326,12 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 	int r = xmlParseChunk(ctxt, buffer, len, 0);
-	AppLog("xmlParseChunk 2 len = %d, r=%d", len,r);
+//	AppLog("xmlParseChunk 2 len = %d, r=%d", len,r);
 	return true;
 }
 
 ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
-	AppLog("XML_ParserCreate");
+//	AppLog("XML_ParserCreate");
 	MySaxhandler.startElement = fStartElementHandler;
 	MySaxhandler.endElement = fEndElementHandler;
 	MySaxhandler.characters = fCharacterDataHandler;
@@ -355,7 +355,7 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 }
 
 ZLXMLReaderInternal::~ZLXMLReaderInternal() {
-	AppLog("XML_ParserFree");
+	//AppLog("XML_ParserFree");
     xmlParseChunk(ctxt, 0, 0, 1);
     xmlFreeParserCtxt(ctxt);
 	xmlCleanupParser();

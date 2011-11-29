@@ -44,8 +44,8 @@ std::string ZLbadaFSManager::convertFilenameToUtf8(const std::string &name) cons
 	if (name.empty()) {
 		return name;
 	}
-	 AppLog("ZLbadaFSManager::convertFilenameToUtf8");
-	 AppLog("name = %s",name.c_str());
+	// AppLog("ZLbadaFSManager::convertFilenameToUtf8");
+	// AppLog("name = %s",name.c_str());
 
 	 return name;
 	//QString qString = QString::fromLocal8Bit(name.c_str());
@@ -82,7 +82,7 @@ ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
     r = File::GetAttributes(path.c_str(), attr);
    //TODO if(IsFailed(r)) goto CATCH;
 
-	//info.Exists = stat(path.c_str(), &fileStat) == 0;
+	//info.Exists = stat(path.c_str(), &fileStat) == 0; stat - не работает
     info.Exists = (r==E_SUCCESS);
 
 	AppLog("ZLbadaFSManager::fileInfo");
@@ -98,7 +98,7 @@ ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
 }
 
 std::string ZLbadaFSManager::resolveSymlink(const std::string &path) const {
-	AppLog("ZLbadaFSManager::resolveSymlink %s",path.c_str());
+//	AppLog("ZLbadaFSManager::resolveSymlink %s",path.c_str());
 	return path;
 }
 	/*
@@ -237,7 +237,7 @@ std::string ZLbadaFSManager::parentPath(const std::string &path) const {
 }
 
 bool ZLbadaFSManager::canRemoveFile(const std::string &path) const {
-	AppLog("ZLbadaFSManager::canRemoveFile %s",path.c_str());
+//	AppLog("ZLbadaFSManager::canRemoveFile %s",path.c_str());
 	result r = E_SUCCESS;
 	FileAttributes attr;
     r = File::GetAttributes(path.c_str(), attr);

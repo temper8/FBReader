@@ -21,11 +21,16 @@ class DialogForm :
 public:
 	DialogForm();
 	virtual ~DialogForm();
-	bool Initialize(void);
-
-protected:
+	bool Initialize(const char *title);
+	void SetPreviousForm(Osp::Ui::Controls::Form* preForm);
+	result  AddControls();
+	result  AddTab(const char *title);
+//protected:
 	// Ui
-	Osp::Ui::Controls::Form*			pPreviousForm;
+	int YPos;
+	Osp::Ui::Controls::ScrollPanel* pScrollPanel;
+	Osp::Ui::Controls::Form*	pPreviousForm;
+	Osp::Graphics::Rectangle clientArea;
 
 public:
 
@@ -33,7 +38,7 @@ public:
 	result	OnTerminating(void);
 	void	OnActionPerformed(const Osp::Ui::Control& source, int actionId);
     void 	OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
-	void	SetPreviousForm(Osp::Ui::Controls::Form* preForm);
+
 
 };
 

@@ -10,7 +10,7 @@
 #include <FContent.h>
 
 class ZLbadaViewWidget;
-
+class DialogForm;
 
 class badaForm :
 	public Osp::Ui::Controls::Form,
@@ -40,6 +40,8 @@ protected:
 	std::string ActionIdList[10];
 
 public:
+//	DialogForm* CreateDalogForm(const char* name);
+	DialogForm* CreateDalogForm(void);
     void AddMenuItem(const std::string &name,const  std::string &id);
     Osp::Content::ContentSearchResult* pSearchResultInfo;
 	void goOpenFileForm();

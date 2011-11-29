@@ -56,7 +56,9 @@ shared_ptr<ZLDialog> ZLbadaDialogManager::createDialog(const ZLResourceKey &key)
 
 shared_ptr<ZLOptionsDialog> ZLbadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	AppLog("ZLbadaDialogManager::createOptionsDialog");
-	return new ZLbadaOptionsDialog(resource()[key], applyAction, showApplyButton);
+	ZLbadaOptionsDialog* b= new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	//b->myDialogForm = myApplicationWindow->viewWidget().mybadaForm->CreateDalogForm();
+	return b;
 }
 
 

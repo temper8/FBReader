@@ -92,7 +92,7 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
 			break;
 		case ZLOptionEntry::COMBO:
 			AppLog("ZLOptionEntry::COMBO:");
-			//view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COLOR:
 			AppLog("ZLOptionEntry::COLOR:");
