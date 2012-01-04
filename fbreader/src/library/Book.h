@@ -25,11 +25,32 @@
 #include <shared_ptr.h>
 
 #include <ZLFile.h>
+#include <ZLImage.h>
 
 #include "Lists.h"
 
 class Author;
 class Tag;
+
+class AbstractBookInfo {
+public:
+	virtual ~AbstractBookInfo() {}
+	
+	virtual std::string title() const = 0;
+	virtual std::string file() const = 0;
+	virtual std::string language() const = 0;
+	virtual std::string encoding() const = 0;
+	virtual std::string seriesTitle() const = 0;
+        //TODO may be there should be link to:
+        //1) book-id:///45 (for cover)
+        //2) file:/// for file
+        //3) http:/// for url
+        // all of it instead of ZLImage
+        virtual shared_ptr<ZLImage> image() const { return 0; }
+
+	virtual std::vector<std::string> tags() const = 0;
+	virtual std::vector<std::string> authors() const = 0;
+};
 
 class Book {
 
@@ -105,6 +126,24 @@ private:
 private: // disable copying
 	Book(const Book &);
 	const Book &operator = (const Book &);
+};
+
+class LocalBookInfo : public AbstractBookInfo {
+public:
+	LocalBookInfo(shared_ptr<Book> book);
+	
+	virtual std::string title() const;
+	virtual std::string file() const;
+	virtual std::string language() const;
+	virtual std::string encoding() const;
+	virtual std::string seriesTitle() const;
+        virtual shared_ptr<ZLImage> image() const;
+
+	virtual std::vector<std::string> tags() const;
+	virtual std::vector<std::string> authors() const;
+	
+private:
+	shared_ptr<Book> myBook;
 };
 
 class BookComparator {

@@ -41,6 +41,7 @@
 #include "ZLbadaDialogManager.h"
 #include "ZLbadaOpenFileDialog.h"
 #include "ZLbadaOptionsDialog.h"
+#include "ZLbadaTreeDialog.h"
 
 using namespace Osp::Ui::Controls;
 
@@ -56,9 +57,10 @@ shared_ptr<ZLDialog> ZLbadaDialogManager::createDialog(const ZLResourceKey &key)
 
 shared_ptr<ZLOptionsDialog> ZLbadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	AppLog("ZLbadaDialogManager::createOptionsDialog");
-	ZLbadaOptionsDialog* b= new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	//ZLbadaOptionsDialog* b= new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	mybadaOptionsDialog = new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
 	//b->myDialogForm = myApplicationWindow->viewWidget().mybadaForm->CreateDalogForm();
-	return b;
+	return mybadaOptionsDialog;
 }
 
 
@@ -124,3 +126,26 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 	);
 }
 */
+
+
+shared_ptr<ZLTreeDialog> ZLbadaDialogManager::createTreeDialog(const ZLResourceKey &key) const {
+	AppLog("ZLbadaDialogManager::createTreeDialog");
+
+	//myTreeDialog = new ZLbadaTreeDialog(myApplicationWindow->viewWidget().mybadaForm);
+	myTreeDialog = new ZLbadaTreeDialog(resource()[key]);
+	//new Event(dialog, this, &ZLQmlDialogManager::treeDialogRequested);
+	return myTreeDialog;
+}
+
+shared_ptr<ZLTreeDialog> ZLbadaDialogManager::myTreeDialog = 0;
+
+void 	ZLbadaDialogManager::deleteTreeDialog(){
+	//delete myTreeDialog;
+	myTreeDialog = 0;
+}
+
+shared_ptr<ZLDialogContent> ZLbadaDialogManager::createContent(const ZLResourceKey &key) const {
+	AppLog("ZLbadaDialogManager::createTreeDialog");
+	//return new ZLbadaDialogContent(resource()[key]);
+}
+

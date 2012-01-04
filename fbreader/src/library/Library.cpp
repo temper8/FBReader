@@ -16,20 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <queue>
 #include <algorithm>
+#include <ZLLogger.h>
 
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLDialogManager.h>
+#include <ZLInputStream.h>
 
 #include "Library.h"
 #include "Book.h"
 #include "Author.h"
 #include "Tag.h"
+#include "../fbreader/FBReader.h"
 
 #include "../formats/FormatPlugin.h"
 
@@ -52,13 +56,37 @@ Library::Library() :
 	PathOption(ZLCategoryKey::CONFIG, OPTIONS, "BookPath", ""),
 	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", false),
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
+    myWatcher(new Watcher(*this)),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
 	BooksDBUtil::getRecentBooks(myRecentBooks);
 }
+/*
+#include <ctime>
+#include <iostream>
 
-void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
+struct FunctionTimer
+{
+	FunctionTimer(const char *f) : funcName(f), start(clock()) {
+		std::cerr << "Entered " << funcName << std::endl;
+		std::cerr.flush();
+	}
+	~FunctionTimer() {
+		std::cerr << funcName << " finished at "
+		          << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms"
+		          << std::endl;
+		std::cerr.flush();
+	}
+
+	const char *funcName;
+	clock_t start;
+};
+*/
+void Library::collectBookFileNames(std::set<std::string> &bookFileNames, std::vector<shared_ptr<ZLInputStream> > &inputStreamCache) const {
+	AppLog("Library::collectBookFileNames()");
+//	FunctionTimer timer(__PRETTY_FUNCTION__);
 	std::set<std::string> dirs;
+	AppLog("collectDirNames");
 	collectDirNames(dirs);
 
 	while (!dirs.empty()) {
@@ -73,6 +101,9 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 		if (dir.isNull()) {
 			continue;
 		}
+		
+		if (!dirfile.isDirectory())
+			inputStreamCache.push_back(dirfile.inputStream());
 
 		if (dirfile.extension() == "zip") {
 			ZLFile phys(dirfile.physicalFilePath());
@@ -85,11 +116,15 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 		} else {
 			dir->collectFiles(files, true);
 		}
+		//std::cerr.precision(5);
 		if (!files.empty()) {
 			const bool collectBookWithoutMetaInfo = CollectAllBooksOption.value();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
 				const std::string fileName = (inZip) ? (*jt) : (dir->itemPath(*jt));
 				ZLFile file(fileName);
+//				std::cerr << "Check file \"" << fileName << "\" ... ";
+//				std::cerr.flush();
+//				clock_t start = clock();
 				if (PluginCollection::Instance().plugin(file, !collectBookWithoutMetaInfo) != 0) {
 					bookFileNames.insert(fileName);
 				// TODO: zip -> any archive
@@ -98,26 +133,38 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 						dirs.insert(fileName);
 					}
 				}
+//				std::cerr << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms" << std::endl;
+//				std::cerr.flush();
 			}
 		}
 	}
 }
 
 void Library::rebuildBookSet() const {
+	AppLog("Library::rebuildBookSet()");
+//	FunctionTimer timer(__PRETTY_FUNCTION__);
 	myBooks.clear();
 	myExternalBooks.clear();
 	
 	std::map<std::string, shared_ptr<Book> > booksMap;
+	AppLog("BooksDBUtil::getBooks(booksMap)");
 	BooksDBUtil::getBooks(booksMap);
 
 	std::set<std::string> fileNamesSet;
-	collectBookFileNames(fileNamesSet);
+	std::vector<shared_ptr<ZLInputStream> > inputStreamCache;
+	AppLog("collectBookFileNames(fileNamesSet, inputStreamCache);");
+	collectBookFileNames(fileNamesSet, inputStreamCache);
 
 	// collect books from book path
 	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); ++it) {
 		std::map<std::string, shared_ptr<Book> >::iterator jt = booksMap.find(*it);
 		if (jt == booksMap.end()) {
+		//	std::cerr << "Check file \"" << (*it) << "\" ... ";
+		//	std::cerr.flush();
+		//	clock_t start = clock();
 			insertIntoBookSet(BooksDBUtil::getBook(*it));
+		//	std::cerr << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms" << std::endl;
+		//	std::cerr.flush();
 		} else {
 			insertIntoBookSet(jt->second);
 			booksMap.erase(jt);
@@ -134,6 +181,13 @@ void Library::rebuildBookSet() const {
 			}
 		}
 	}
+	
+	// help file
+	shared_ptr<Book> help = FBReader::Instance().helpFile();
+	if (!help.isNull()) {
+		insertIntoBookSet(help);
+		myExternalBooks.insert(help);
+	}
 }
 
 size_t Library::revision() const {
@@ -146,6 +200,13 @@ size_t Library::revision() const {
 	}
 
 	return (myBuildMode == BUILD_NOTHING) ? myRevision : myRevision + 1;
+}
+
+Library::Watcher::Watcher(Library &library) : myLibrary(library) {
+}
+
+void Library::Watcher::onPathChanged(const std::string &) {
+	myLibrary.myBuildMode = Library::BUILD_ALL;
 }
 
 class LibrarySynchronizer : public ZLRunnable {
@@ -164,6 +225,7 @@ LibrarySynchronizer::LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(
 }
 
 void LibrarySynchronizer::run() {
+	//FunctionTimer timer(__PRETTY_FUNCTION__);
 	Library &library = Library::Instance();
 
 	if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
@@ -178,8 +240,18 @@ void LibrarySynchronizer::run() {
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||
 			myPath != PathOption.value()) {
+                std::vector<std::string> oldPathes;
+                ZLStringUtil::split(myPath, oldPathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < oldPathes.size(); ++i) {
+                    ZLFSWatcher::removeWatcher(oldPathes.at(i), myWatcher);
+                }
 		myPath = PathOption.value();
 		myScanSubdirs = ScanSubdirsOption.value();
+                std::vector<std::string> pathes;
+                ZLStringUtil::split(myPath, pathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < pathes.size(); ++i) {
+                    ZLFSWatcher::addWatcher(pathes.at(i), myWatcher);
+                }
 		myBuildMode = BUILD_ALL;
 	}
 
@@ -195,10 +267,13 @@ void Library::synchronize() const {
 }
 
 void Library::rebuildMaps() const {
+	//FunctionTimer timer(__PRETTY_FUNCTION__);
 	myAuthors.clear();
 	myBooksByAuthor.clear();
 	myTags.clear();
 	myBooksByTag.clear();
+        myFirstLetters.clear();
+        myBooksByFirstLetter.clear();
 
 	for (BookSet::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		if ((*it).isNull()) {
@@ -222,6 +297,12 @@ void Library::rebuildMaps() const {
 				myBooksByTag[*kt].push_back(*it);
 			}
 		}
+
+                std::string firstLetter = getFirstTitleLetter((*it)->title());
+                if (!firstLetter.empty()) {
+                    myBooksByFirstLetter[firstLetter].push_back(*it);
+                }
+
 	}
 	for (BooksByAuthor::iterator mit = myBooksByAuthor.begin(); mit != myBooksByAuthor.end(); ++mit) {
 		myAuthors.push_back(mit->first);
@@ -231,9 +312,15 @@ void Library::rebuildMaps() const {
 		myTags.push_back(mjt->first);
 		std::sort(mjt->second.begin(), mjt->second.end(), BookComparator());
 	}
+        for (BooksByFirstLetter::iterator mit = myBooksByFirstLetter.begin(); mit != myBooksByFirstLetter.end(); ++mit) {
+                myFirstLetters.push_back(mit->first);
+                std::sort(mit->second.begin(), mit->second.end(), BookComparator());
+        }
 }
 
 void Library::collectDirNames(std::set<std::string> &nameSet) const {
+	AppLog("Library::collectDirNames()");
+//	FunctionTimer timer(__PRETTY_FUNCTION__);
 	std::queue<std::string> nameQueue;
 
 	std::string path = myPath;
@@ -316,6 +403,11 @@ const TagList &Library::tags() const {
 	return myTags;
 }
 
+const FirstLetterList &Library::firstLetterTitles() const {
+        synchronize();
+        return myFirstLetters;
+}
+
 const BookList &Library::books(shared_ptr<Author> author) const {
 	synchronize();
 	return myBooksByAuthor[author];
@@ -324,6 +416,39 @@ const BookList &Library::books(shared_ptr<Author> author) const {
 const BookList &Library::books(shared_ptr<Tag> tag) const {
 	synchronize();
 	return myBooksByTag[tag];
+}
+
+const BookList &Library::books(std::string firstLetter) const {
+        synchronize();
+        return myBooksByFirstLetter[firstLetter];
+}
+
+std::string Library::getFirstTitleLetter(std::string bookTitle) {
+    const static std::string EMPTY_STRING = "";
+    ZLStringUtil::stripWhiteSpaces(bookTitle);
+    if (bookTitle.empty()) {
+        return EMPTY_STRING;
+    }
+    if (!ZLUnicodeUtil::isUtf8String(bookTitle)) {
+        ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "Library::getFirstTitleLetter   Warning! bookTitle is not in UTF-8");
+        return EMPTY_STRING;
+    }
+    ZLUnicodeUtil::Ucs4String ucs4Title;
+    ZLUnicodeUtil::utf8ToUcs4(ucs4Title,bookTitle);
+    if (ucs4Title.empty()) {
+        return EMPTY_STRING;
+    }
+
+    std::string result = EMPTY_STRING;
+    for (size_t i=0; i < ucs4Title.size(); ++i) {
+        ZLUnicodeUtil::Ucs4Char ch = ucs4Title.at(i);
+        if (ZLUnicodeUtil::isLetter(ch) || ZLUnicodeUtil::isDigit(ch)) {
+            ZLUnicodeUtil::ucs4ToUtf8(result, ZLUnicodeUtil::Ucs4String(1,ZLUnicodeUtil::toUpper(ch)));
+            return result;
+        }
+    }
+    ZLUnicodeUtil::ucs4ToUtf8(result, ZLUnicodeUtil::Ucs4String(1,ZLUnicodeUtil::toUpper(ucs4Title.at(0))));
+    return result;
 }
 
 void Library::collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const {

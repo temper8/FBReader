@@ -85,7 +85,9 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	KeyScrollingDelayOption(ZLCategoryKey::CONFIG, "Scrollings", "Delay", 0, 2000, 100),
 	LinesToScrollOption(ZLCategoryKey::CONFIG, "SmallScrolling", "LinesToScroll", 1, 20, 1),
 	LinesToKeepOption(ZLCategoryKey::CONFIG, "LargeScrolling", "LinesToKeepOption", 0, 20, 0),
+		TapScrollingZonesOption(ZLCategoryKey::CONFIG, "TapScrolling", "Zones", 0,1,0),
 	EnableTapScrollingOption(ZLCategoryKey::CONFIG, "TapScrolling", "Enabled", true),
+    	EnableTapScrollingByVolumeKeysOption(ZLCategoryKey::CONFIG, "TapScrolling", "VolumeKeys", true),
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", true),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	LastOpenedPreferencesDialog(ZLCategoryKey::CONFIG, "PreferencesDialog", "LastOpened", ""),
@@ -113,14 +115,15 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	setMode(BOOK_TEXT_MODE);
 	AppLog("Создаем addAction");
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	AppLog("Создали new UndoAction");
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryTreeAction);
 //	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 //	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 //	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
-	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
+	//addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
+	addAction(ActionCode::SHOW_TOC, new ShowTOCTreeAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
 	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
@@ -485,6 +488,19 @@ bool FBReader::closeView() {
 std::string FBReader::helpFileName(const std::string &language) const {
 	return ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
 }
+
+
+shared_ptr<Book> FBReader::helpFile(const std::string &language) const {
+	return BooksDBUtil::getBook(helpFileName(language));
+}
+
+shared_ptr<Book> FBReader::helpFile() const {
+	shared_ptr<Book> book = helpFile(ZLibrary::Language());
+	if (book.isNull())
+		book = helpFile("en");
+	return book;
+}
+
 
 void FBReader::openFile(const ZLFile &file) {
 	shared_ptr<Book> book;

@@ -70,18 +70,18 @@ private:
 	ZLBoolean3Option &myOption;
 };
 
-/*
+
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
 	ZLSimpleColorOptionEntry(ZLColorOption &option);
 	const ZLColor color() const;
 	void onAccept(ZLColor color);
-
+	const ZLColor initialColor() const;
 private:
 	ZLColorOption &myOption; 
 };
-*/
+
 
 class ZLSimpleStaticTextOptionEntry : public ZLStaticTextOptionEntry {
 

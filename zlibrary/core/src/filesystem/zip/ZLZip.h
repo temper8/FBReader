@@ -78,7 +78,8 @@ private:
 	size_t myAvailableSize;
 	size_t myOffset;
 
-	shared_ptr<ZLZDecompressor> myDecompressor;
+	//shared_ptr<ZLZDecompressor> myDecompressor;
+	ZLZDecompressor *myDecompressor;
 
 friend class ZLFile;
 };

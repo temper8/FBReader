@@ -18,19 +18,25 @@ using namespace Osp::Ui::Controls;
 using namespace Osp::Base::Collection;
 
 ZLbadaOptionsDialog::ZLbadaOptionsDialog(Form   *PreviousForm, const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) :  ZLOptionsDialog(resource, applyAction){
-	AppLog("ZLbadaOptionsDialog resource = %s",resource.name().c_str());
+	AppLog("ZLbadaOptionsDialog resource name = %s",resource.name().c_str());
 	result r = E_SUCCESS;
+	AppLog("ZLbadaOptionsDialog caption() = %s",caption().c_str());
+
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	myDialogForm = new DialogForm;
-	myDialogForm->Initialize(resource.name().c_str());
-	AppLog("myDialogForm->Initialize()");
+	myDialogForm->showApplyButton = true;
+	myDialogForm->__badaOptionsDialog = this;
+	myDialogForm->Initialize(caption().c_str());
+
+	myDialogForm->SetPreviousForm(pFrame->GetCurrentForm());
 	r = pFrame->AddControl(*myDialogForm);
 	r = pFrame->SetCurrentForm(*myDialogForm);
 	AppLog("pFrame->SetCurrentForm(*myDialogForm);");
-	myDialogForm->SetPreviousForm(PreviousForm);
+
 }
 
 ZLbadaOptionsDialog::~ZLbadaOptionsDialog() {
+	AppLog("ZLbadaOptionsDialog::~ZLbadaOptionsDialog()");
 	// TODO Auto-generated destructor stub
 }
 
@@ -66,3 +72,7 @@ void ZLbadaOptionsDialog::selectTab(const ZLResourceKey &key){
 	 AppLog("&ZLbadaOptionsDialog::selectTab()= %s",key.Name.c_str());
 }
 
+
+void ZLbadaOptionsDialog::apply() {
+	ZLOptionsDialog::accept();
+}

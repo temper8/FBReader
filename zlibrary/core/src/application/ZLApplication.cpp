@@ -134,15 +134,11 @@ void ZLApplication::setView(shared_ptr<ZLView> view) {
 	if (view.isNull()) {
 		return;
 	}
-	AppLog("View not isNull");
-
 	if (!myViewWidget.isNull()) {
-		AppLog("myViewWidget not isNull");
 		myViewWidget->setView(view);
 		resetWindowCaption();
 		refreshWindow();
 	} else {
-		AppLog("myViewWidget  isNull");
 		myInitialView = view;
 	}
 }

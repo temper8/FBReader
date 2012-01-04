@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include "ZLZip.h"
@@ -32,21 +32,22 @@ ZLZipInputStream::~ZLZipInputStream() {
 }
 
 bool ZLZipInputStream::open() {
+//	AppLog("ZLZipInputStream::open();");
 	close();
-
+//	AppLog("ZLZipInputStream::open() 1");
 	const ZLZipEntryCache &cache = ZLZipEntryCache::cache(*myBaseStream);
 	ZLZipEntryCache::Info info = cache.info(myEntryName);
-
+//	AppLog("ZLZipInputStream::open() 2");
 	if (!myBaseStream->open()) {
 		return false;
 	}
-
+	//AppLog("ZLZipInputStream::open() 3");
 	if (info.Offset == -1) {
 		close();
 		return false;
 	}
 	myBaseStream->seek(info.Offset, true);
-
+	//AppLog("ZLZipInputStream::open() 4");
 	if (info.CompressionMethod == 0) {
 		myIsDeflated = false;
 	} else if (info.CompressionMethod == 8) {
@@ -70,6 +71,7 @@ bool ZLZipInputStream::open() {
 }
 
 size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
+	if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
 	size_t realSize = 0;
 	if (myIsDeflated) {
 		realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
@@ -79,20 +81,29 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 		myAvailableSize -= realSize;
 		myOffset += realSize;
 	}
+	if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
+	AppLog("ZLZipInputStream::read 4");
 	return realSize;
 }
 
 void ZLZipInputStream::close() {
+	AppLog(" ZLZipInputStream::close()");
+	if (myDecompressor) delete myDecompressor;
+	AppLog(" delete myDecompressor;");
 	myDecompressor = 0;
+	//AppLog(" myDecompressor = 0;");
 	if (!myBaseStream.isNull()) {
+		//AppLog(" ZLZipInputStream::close() 2");
 		myBaseStream->close();
 	}
 }
 
 void ZLZipInputStream::seek(int offset, bool absoluteOffset) {
+//	AppLog("ZLZipInputStream::seek offset %d",offset);
+//	AppLog("ZLZipInputStream::seek absoluteOffset %d",absoluteOffset);
 	if (absoluteOffset) {
 		offset -= this->offset();
-	}
+		}
 	if (offset > 0) {
 		read(0, offset);
 	} else if (offset < 0) {
@@ -101,6 +112,7 @@ void ZLZipInputStream::seek(int offset, bool absoluteOffset) {
 		if (offset >= 0) {
 			read(0, offset);
 		}
+
 	}
 }
 

@@ -86,7 +86,8 @@ void RotationTypeEntry::onAccept(const std::string &value) {
 
 
 
-ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("ReadingOptionsDialog"), true) {
+//ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("ReadingOptionsDialog"), true) {
+ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();
@@ -121,5 +122,5 @@ ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 	ZLResourceKey directionKey("direction");
 	rotationTab.addOption(directionKey, new RotationTypeEntry(rotationTab.resource(directionKey), fbreader.RotationAngleOption));
 
-	createKeyBindingsTab();
+	//createKeyBindingsTab();
 }

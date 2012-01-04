@@ -33,6 +33,7 @@
 #include "Author.h"
 #include "Tag.h"
 #include "Lists.h"
+#include <ZLFSWatcher.h>
 
 class Library {
 
@@ -54,8 +55,10 @@ private:
 public:
 	const AuthorList &authors() const;
 	const TagList &tags() const;
+      const FirstLetterList &firstLetterTitles() const;
 	const BookList &books(shared_ptr<Author> author) const;
 	const BookList &books(shared_ptr<Tag> tag) const;
+        const BookList &books(std::string firstLetter) const;
 	const BookList &recentBooks() const;
 
 	enum RemoveType {
@@ -86,7 +89,7 @@ public:
 
 private:
 	void collectDirNames(std::set<std::string> &names) const;
-	void collectBookFileNames(std::set<std::string> &bookFileNames) const;
+	void collectBookFileNames(std::set<std::string> &bookFileNames, std::vector<shared_ptr<ZLInputStream> > &inputStreamCache) const;
 
 	void synchronize() const;
 
@@ -95,20 +98,36 @@ private:
 
 	void insertIntoBookSet(shared_ptr<Book> book) const;
 
+        static std::string getFirstTitleLetter(std::string bookTitle);
+
 private:
+	class Watcher : public ZLFSWatcher {
+	public:
+		Watcher(Library &library);
+		void onPathChanged(const std::string &path);
+		
+	private:
+		Library &myLibrary;
+	};
+	friend class Watcher;
+	
 	mutable BookSet myBooks;
 	mutable BookSet myExternalBooks;
 
 	mutable AuthorList myAuthors;
 	mutable TagList myTags;
+        mutable FirstLetterList myFirstLetters;
 	typedef std::map<shared_ptr<Author>,BookList,AuthorComparator> BooksByAuthor;
 	mutable BooksByAuthor myBooksByAuthor;
 	typedef std::map<shared_ptr<Tag>,BookList,TagComparator> BooksByTag;
 	mutable BooksByTag myBooksByTag;
 	mutable BookList myRecentBooks;
+        typedef std::map<std::string,BookList/*,TitleComparator*/> BooksByFirstLetter;
+        mutable BooksByFirstLetter myBooksByFirstLetter;
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;
+	shared_ptr<ZLFSWatcher> myWatcher;
 
 	enum BuildMode {
 		BUILD_NOTHING = 0,

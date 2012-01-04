@@ -42,7 +42,7 @@ ZLFile::ZLFile() : myMimeTypeIsUpToDate(true), myInfoIsFilled(true) {
 ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(!mimeType.empty()), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
 	{
-	//	AppLog("ZLFile::ZLFile myPath %s", myPath.c_str());
+		AppLog("ZLFile::ZLFile myPath %s", myPath.c_str());
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
 		if (index < myPath.length() - 1) {
 			myNameWithExtension = myPath.substr(index + 1);
@@ -52,7 +52,7 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 	}
 	myNameWithoutExtension = myNameWithExtension;
 
-//	AppLog("myNameWithExtension %s", myNameWithExtension.c_str() );
+	AppLog("myNameWithExtension %s", myNameWithExtension.c_str() );
 
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::Instance().myForcedFiles;
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
@@ -91,7 +91,7 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 		myExtension = ZLUnicodeUtil::toLower(myNameWithoutExtension.substr(index + 1));
 		myNameWithoutExtension = myNameWithoutExtension.substr(0, index);
 	}
-//	AppLog(" end of ZLFile::ZLFile");
+	AppLog(" end of ZLFile::ZLFile");
 }
 
 shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const {
@@ -108,13 +108,13 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 
-	AppLog("ZLFile::inputStream()");
+	AppLog("ZLFile::inputStream() myPath=%s",myPath.c_str());
 
 	shared_ptr<ZLInputStream> stream;
 	
 	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
-		AppLog("это не архив :)");
+		AppLog("название файла без :");
 		stream = ourPlainStreamCache[myPath];
 		if (stream.isNull()) {
 			if (isDirectory()) {
@@ -127,18 +127,23 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 			ourPlainStreamCache[myPath] = stream;
 		}
 	} else {
+		AppLog("название файла содержит :");
 		ZLFile baseFile(myPath.substr(0, index));
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
 		if (!base.isNull()) {
 			if (baseFile.myArchiveType & ZIP) {
+				AppLog("new ZLZipInputStream");
 				stream = new ZLZipInputStream(base, myPath.substr(index + 1));
 			} else if (baseFile.myArchiveType & TAR) {
+				AppLog("new ZLTarInputStream");
 				stream = new ZLTarInputStream(base, myPath.substr(index + 1));
 			}
 		}
+		AppLog("envelopeCompressedStream");
 		stream = envelopeCompressedStream(stream);
+		AppLog("envelopeCompressedStream end");
 	}
-
+	AppLog("ZLFile::inputStream return");
 	return stream;
 }
 

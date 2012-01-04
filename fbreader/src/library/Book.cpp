@@ -64,6 +64,10 @@ shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
 		return 0;	
 	}
 
+        std::string bookTitle = book->title();
+        ZLStringUtil::stripWhiteSpaces(bookTitle);
+        book->setTitle(bookTitle);
+
 	if (book->title().empty()) {
 		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));
 	}
@@ -276,4 +280,51 @@ void Book::addAuthor(shared_ptr<Author> author) {
 
 void Book::removeAllAuthors() {
 	myAuthors.clear();
+}
+
+LocalBookInfo::LocalBookInfo(shared_ptr<Book> book) : myBook(book) {
+}
+
+std::string LocalBookInfo::title() const {
+	return myBook->title();
+}
+
+std::string LocalBookInfo::file() const {
+	return ZLFile::fileNameToUtf8(myBook->file().path());
+}
+
+std::string LocalBookInfo::language() const {
+	return myBook->language();
+}
+
+std::string LocalBookInfo::encoding() const {
+	return myBook->encoding();
+}
+
+std::string LocalBookInfo::seriesTitle() const {
+	return myBook->seriesTitle();
+}
+
+shared_ptr<ZLImage> LocalBookInfo::image() const {
+    shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
+    if (plugin.isNull()) {
+        return 0;
+    }
+    return plugin->coverImage(myBook->file());
+}
+
+std::vector<std::string> LocalBookInfo::tags() const {
+	std::vector<std::string> result;
+	TagList::const_iterator it;
+	for (it = myBook->tags().begin(); it != myBook->tags().end(); ++it)
+		result.push_back((*it)->fullName());
+	return result;
+}
+
+std::vector<std::string> LocalBookInfo::authors() const {
+	std::vector<std::string> result;
+	AuthorList::const_iterator it;
+	for (it = myBook->authors().begin(); it != myBook->authors().end(); ++it)
+		result.push_back((*it)->name());
+	return result;
 }

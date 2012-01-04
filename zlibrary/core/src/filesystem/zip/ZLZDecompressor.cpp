@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <string.h>
 
 #include <algorithm>
@@ -28,23 +28,28 @@ const size_t IN_BUFFER_SIZE = 2048;
 const size_t OUT_BUFFER_SIZE = 32768;
 
 ZLZDecompressor::ZLZDecompressor(size_t size) : myAvailableSize(size) {
+	AppLog("ZLZDecompressor::ZLZDecompressor size=%d",size);
 	myZStream = new z_stream;
 	memset(myZStream, 0, sizeof(z_stream));
 	inflateInit2(myZStream, -MAX_WBITS);
-
+	AppLog("ZLZDecompressor::inflateInit2");
 	myInBuffer = new char[IN_BUFFER_SIZE];
 	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	AppLog("ZLZDecompressor::ZLZDecompressor end");
+
 }
 
 ZLZDecompressor::~ZLZDecompressor() {
 	delete[] myInBuffer;
 	delete[] myOutBuffer;
-
-	inflateEnd(myZStream);
+	//inflateEnd
+    inflateEnd(myZStream);
+	// вылетает на мобильнике с bada 1.0
 	delete myZStream;
 }
 
 size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t maxSize) {
+	AppLog("ZLZDecompressor::decompress myBuffer.length()=%d",myBuffer.length());
 	while ((myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
 		size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
 
@@ -61,6 +66,7 @@ size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t m
 		while (myZStream->avail_in > 0) {
 			myZStream->avail_out = OUT_BUFFER_SIZE;
 			myZStream->next_out = (Bytef*)myOutBuffer;
+
 			int code = ::inflate(myZStream, Z_SYNC_FLUSH);
 			if ((code != Z_OK) && (code != Z_STREAM_END)) {
 				break;
@@ -76,7 +82,6 @@ size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t m
 			}
 		}
 	}
-
 	size_t realSize = std::min(maxSize, myBuffer.length());
 	if (buffer != 0) {
 		memcpy(buffer, myBuffer.data(), realSize);

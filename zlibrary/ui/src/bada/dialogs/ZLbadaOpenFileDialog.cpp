@@ -44,23 +44,24 @@ bool ZLbadaOpenFileDialog::run(){
 	String tmpContentPath;
 	ByteBuffer* bb;
 
-	MessageBox *pMessageBox = new MessageBox();
+
 	if (pSearchResultInfo) {
 		tmpContentPath = ((ContentInfo*)pSearchResultInfo->GetContentInfo())->GetContentPath();
 		bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);
 		AppLog("tmpContentPath %s",(char*)bb->GetPointer());
 		selectedFile =   std::string((const char*)bb->GetPointer());
 
-		pMessageBox->Construct(L"Открыть файл?", tmpContentPath , MSGBOX_STYLE_OKCANCEL ,3000);
+		//pMessageBox->Construct(L"Открыть файл?", tmpContentPath , MSGBOX_STYLE_OKCANCEL ,3000);
 	}
 	else
 	{
+		MessageBox *pMessageBox = new MessageBox();
 		pMessageBox->Construct(L"Открыть файл?", L"А нечего открывать :)" , MSGBOX_STYLE_OKCANCEL ,3000);
+		int ModalResult;
+		pMessageBox->ShowAndWait(ModalResult);
+		delete pMessageBox;
 		}
-	int ModalResult;
-	pMessageBox->ShowAndWait(ModalResult);
 
-	delete pMessageBox;
 
 /*	AppLog("ZLbadaOpenFileDialog::run()");
 

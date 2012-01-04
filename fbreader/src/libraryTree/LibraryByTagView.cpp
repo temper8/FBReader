@@ -29,7 +29,7 @@ LibraryByTagView::LibraryByTagView(ZLPaintContext &context) : LibraryView(contex
 }
 
 void LibraryByTagView::collectTagNodes(const ZLBlockTreeNode &root, std::map<shared_ptr<Tag>,TagNode*,TagComparator> &nodeMap) {
-	const ZLBlockTreeNode::List &children = root.children();
+/*	const ZLBlockTreeNode::List &children = root.children();
 	for (ZLBlockTreeNode::List::const_iterator it = children.begin(); it != children.end(); ++it) {
 		if ((*it)->isInstanceOf(TagNode::TYPE_ID)) {
 			TagNode *tagNode = (TagNode*)*it;
@@ -37,9 +37,11 @@ void LibraryByTagView::collectTagNodes(const ZLBlockTreeNode &root, std::map<sha
 			collectTagNodes(*tagNode, nodeMap);
 		}
 	}
+/*
 }
 
 void LibraryByTagView::updateBookList(TagNode *tagNode) {
+/*
 	const BookList &books = Library::Instance().books(tagNode->tag());
 	const ZLBlockTreeNode::List &subNodes = tagNode->children();
 	BookList::const_iterator jt = books.begin();
@@ -65,9 +67,11 @@ void LibraryByTagView::updateBookList(TagNode *tagNode) {
 	for (; jt != books.end(); ++jt) {
 		new BookNode(tagNode, index++, *jt);
 	}
+	*/
 }
 
 void LibraryByTagView::makeUpToDate() {
+	/*
 	TagList tags;
 	BooksUtil::collectTagsFromLibrary(tags);
 
@@ -94,4 +98,5 @@ void LibraryByTagView::makeUpToDate() {
 	for (std::map<shared_ptr<Tag>,TagNode*,TagComparator>::reverse_iterator it = nodeMap.rbegin(); it != nodeMap.rend(); ++it) {
 		delete it->second;
 	}
+	*/
 }

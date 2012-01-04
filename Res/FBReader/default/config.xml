@@ -5,6 +5,6 @@
     <option name="DownloadDirectory" value="~/FBooks"/>
   </group>
   <group name="TapScrolling">
-    <option name="Enabled" value="false"/>
+    <option name="Enabled" value="true"/>
   </group>
 </config>

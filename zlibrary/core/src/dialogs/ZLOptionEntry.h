@@ -24,6 +24,8 @@
 #include <string>
 
 #include <ZLOptions.h>
+#include <ZLImageManager.h>
+#include <ZLImage.h>
 
 class ZLOptionView;
 
@@ -43,6 +45,8 @@ public:
 		ORDER,
 		MULTILINE,
 		STATIC,
+		PATH,
+                PICTURE,
 	};
 
 public:
@@ -58,9 +62,9 @@ public:
 
 	virtual void setActive(bool active);
 	bool isActive() const;
-	ZLOptionView *myView;//TODO сделал пабликом для отладки
-private:
 
+private:
+	ZLOptionView *myView;
 	bool myIsVisible;
 	bool myIsActive;
 };
@@ -236,6 +240,34 @@ public:
 	virtual const std::string &initialValue() const = 0;
 };
 
+class ZLPathOptionEntry : public ZLTextOptionEntry {
+
+public:
+	ZLPathOptionEntry(ZLStringOption &option);
+	ZLOptionKind kind() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	ZLStringOption &myOption;
+};
+
+class ZLPictureOptionEntry : public ZLOptionEntry {
+
+public:
+        ZLPictureOptionEntry(shared_ptr<ZLImage> image);
+        ZLOptionKind kind() const;
+        //TODO may be there should be link to:
+        //1) book-id:///45 (for cover)
+        //2) file:/// for file
+        //3) http:/// for url
+        // all of it instead of ZLImage
+        const shared_ptr<ZLImage> image() const;
+
+private:
+        shared_ptr<ZLImage> myImage;
+};
+
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
@@ -290,5 +322,14 @@ inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORD
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 
 inline ZLOptionEntry::ZLOptionKind ZLStaticTextOptionEntry::kind() const { return STATIC; }
+
+inline ZLPathOptionEntry::ZLPathOptionEntry(ZLStringOption &option): myOption(option) { }
+inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH; }
+inline const std::string &ZLPathOptionEntry::initialValue() const { return myOption.value(); }
+inline void ZLPathOptionEntry::onAccept(const std::string &value) {	myOption.setValue(value); }
+
+inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image): myImage(image) { }
+inline ZLOptionEntry::ZLOptionKind ZLPictureOptionEntry::kind() const { return PICTURE; }
+inline const shared_ptr<ZLImage> ZLPictureOptionEntry::image() const { return myImage; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

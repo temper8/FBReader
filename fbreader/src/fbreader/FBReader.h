@@ -68,7 +68,9 @@ public:
 	ZLIntegerRangeOption KeyScrollingDelayOption;
 	ZLIntegerRangeOption LinesToScrollOption;
 	ZLIntegerRangeOption LinesToKeepOption;
-	ZLBooleanOption EnableTapScrollingOption;
+    	ZLIntegerRangeOption TapScrollingZonesOption;
+    ZLBooleanOption EnableTapScrollingOption;
+    	ZLBooleanOption EnableTapScrollingByVolumeKeysOption;
 	ZLBooleanOption TapScrollingOnFingerOnlyOption;
 
 	ZLBooleanOption UseSeparateBindingsOption;
@@ -87,6 +89,7 @@ public:
 	ViewMode mode() const;
 
 	shared_ptr<Book> currentBook() const;
+	shared_ptr<Book> helpFile() const;
 
 	void refreshWindow();
 
@@ -99,6 +102,7 @@ private:
 
 	bool closeView();
 	std::string helpFileName(const std::string &language) const;
+	shared_ptr<Book> helpFile(const std::string &language) const;
 
 	void openFile(const ZLFile &file);
 	bool canDragFiles(const std::vector<std::string> &filePaths) const;
@@ -126,6 +130,10 @@ public:
 	void invalidateNetworkView();
 	void invalidateAccountDependents();
 
+// private
+	shared_ptr<BookModel> myModel;
+
+
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;
 
@@ -149,8 +157,6 @@ private:
 	shared_ptr<ZLPopupData> myPreferencesPopupData;
 
 	ZLTime myLastScrollingTime;
-
-	shared_ptr<BookModel> myModel;
 
 	shared_ptr<ZLKeyBindings> myBindings0;
 	shared_ptr<ZLKeyBindings> myBindings90;

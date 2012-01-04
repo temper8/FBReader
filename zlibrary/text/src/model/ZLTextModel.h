@@ -108,6 +108,7 @@ public:
 
 	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
 	void selectParagraph(size_t index) const;
+	const ZLTextTreeParagraph& getRootParagraph() const;
 
 private:
 	ZLTextTreeParagraph *myRoot;

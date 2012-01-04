@@ -126,7 +126,7 @@ void OpenFileForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 	pPreviousForm->Draw();
 	pPreviousForm->Show();
 	((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
-	pPreviousForm->SendUserEvent(0, null);
+	pPreviousForm->SendUserEvent(1, null);
 
     switch (itemId)
     {

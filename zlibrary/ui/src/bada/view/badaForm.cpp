@@ -2,6 +2,7 @@
 
 #include "ZLBadaViewWidget.h"
 #include "ZLbadaPaintContext.h"
+#include "../dialogs/ZLbadaDialogManager.h"
 #include "badaForm.h"
 #include "OpenFileForm.h"
 #include "../dialogs/DialogForm.h"
@@ -273,23 +274,34 @@ void badaForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::
 {
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	AppLog("badaForm::OnUserEventReceivedN");
-
+	Form* prevForm = pFrame->GetCurrentForm();
 	switch(requestId)
 	{
 	case 0:
+		{
+			AppLog("badaForm::OnUserEventReceivedN requestId = 0 ");
+			pFrame->SetCurrentForm(*this);
+			pFrame->RequestRedraw();
+			//myHolder.doAction(ActionIdList[2]);
+			//DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
+			//badaForm* pbadaForm = (badaForm*)(pFrame->GetControl("badaForm"));
+			if (prevForm != null)
+			{
+				AppLog("prevForm != null");
+				pFrame->RemoveControl(*prevForm);
+				AppLog("RemoveControl(*prevForm);");
+				//ZLbadaDialogManager::deleteTreeDialog();
+				AppLog("deleteTreeDialog");
+			}
+
+		}
+		break;
+	case 1:
 		{
 			AppLog("badaForm::а теперь Акшен открываем файл");
 			pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
 			myHolder.doAction(ActionIdList[2]);
-			//DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
-			//badaForm* pbadaForm = (badaForm*)(pFrame->GetControl("badaForm"));
-			//if (pDetailForm != null)
-			//	pFrame->RemoveControl(*pDetailForm);
-		}
-		break;
-	case 1:
-		{
 		/*	pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
 			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));

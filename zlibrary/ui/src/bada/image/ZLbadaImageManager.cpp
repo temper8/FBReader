@@ -124,6 +124,7 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
     	AppLog("iformat = IMG_FORMAT_JPG" );
     }
     ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
+ //   ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_RGB565);
     r = GetLastResult();
     imageWidth = ((ZLbadaImageData&)data).pBitmap->GetWidth();
     imageHeight = ((ZLbadaImageData&)data).pBitmap->GetHeight();

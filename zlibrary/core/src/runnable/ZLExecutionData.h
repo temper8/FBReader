@@ -60,6 +60,8 @@ public:
 
 		void cancelProcess();
 		virtual void showPercent(int ready, int full) = 0;
+		// if variable named 'error' is empty there is no error
+		virtual void finished(const std::string &error = std::string()) { (void)error; }
 
 	private:
 		ZLExecutionData *myProcess;
@@ -84,8 +86,15 @@ public:
 	virtual void onCancel();
 	void setPercent(int ready, int full);
 
+protected:
+	void finished(const std::string &error);
+	shared_ptr<Listener> listener() const;
+
 private:
 	shared_ptr<Listener> myListener;
+
+
+
 };
 
 #endif /* __ZLEXECUTIONDATA_H__ */

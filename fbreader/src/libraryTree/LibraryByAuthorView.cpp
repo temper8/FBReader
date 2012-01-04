@@ -29,11 +29,11 @@ LibraryByAuthorView::LibraryByAuthorView(ZLPaintContext &context) : LibraryView(
 
 void LibraryByAuthorView::addAuthorSubtree(shared_ptr<Author> author, size_t atPosition) {
 	static const std::set<shared_ptr<Book> > emptySet;
-	fillAuthorSubtree(new AuthorNode(&rootNode(), atPosition, author), emptySet);
+//	fillAuthorSubtree(new AuthorNode(&rootNode(), atPosition, author), emptySet);
 }
 
 void LibraryByAuthorView::fillAuthorSubtree(AuthorNode *authorNode, const std::set<shared_ptr<Book> > &visibleBooks) {
-	const BookList &books = Library::Instance().books(authorNode->author());
+/*	const BookList &books = Library::Instance().books(authorNode->author());
 	SeriesNode *seriesNode = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
 		std::string series = (*it)->seriesTitle();
@@ -58,10 +58,11 @@ void LibraryByAuthorView::fillAuthorSubtree(AuthorNode *authorNode, const std::s
 			}
 		}
 	}
+*/
 }
 
 bool LibraryByAuthorView::isSubtreeUpToDate(AuthorNode *authorNode) {
-	const BookList &books = Library::Instance().books(authorNode->author());
+/*	const BookList &books = Library::Instance().books(authorNode->author());
 	BookList::const_iterator it = books.begin();
 
 	const ZLBlockTreeNode::List &nodes = authorNode->children();
@@ -73,7 +74,7 @@ bool LibraryByAuthorView::isSubtreeUpToDate(AuthorNode *authorNode) {
 				return false;
 			}
 			++it;
-		} else /* if (node.isInstanceOf(SeriesNode::TYPE_ID)) */ {
+		} else /* if (node.isInstanceOf(SeriesNode::TYPE_ID)) */ /*{
 			const ZLBlockTreeNode::List &bNodes = node.children();
 			for (ZLBlockTreeNode::List::const_iterator bookIt = bNodes.begin(); bookIt != bNodes.end(); ++bookIt) {
 				shared_ptr<Book> book = ((BookNode*)*bookIt)->book();
@@ -84,12 +85,14 @@ bool LibraryByAuthorView::isSubtreeUpToDate(AuthorNode *authorNode) {
 			}
 		}
 	}
-	return it == books.end();
+  return it == books.end();
+*/
+ return false;
 }
 
 void LibraryByAuthorView::updateAuthorSubtree(AuthorNode *authorNode) {
 	std::set<shared_ptr<Book> > visibleBooks;
-
+/*
 	const ZLBlockTreeNode::List &nodes = authorNode->children();
 	for (ZLBlockTreeNode::List::const_iterator nIt = nodes.begin(); nIt != nodes.end(); ++nIt) {
 		FBReaderNode &node = *(FBReaderNode*)*nIt;
@@ -102,12 +105,13 @@ void LibraryByAuthorView::updateAuthorSubtree(AuthorNode *authorNode) {
 			}
 		}
 	}
-
+*/
 	authorNode->clear();
 	fillAuthorSubtree(authorNode, visibleBooks);
 }
 
 void LibraryByAuthorView::makeUpToDate() {
+/*
 	ZLBlockTreeNode *topNode = firstVisibleNode();
 	AuthorNode *topAuthorNode = 0;
 	if (topNode != &rootNode()) {
@@ -170,4 +174,5 @@ void LibraryByAuthorView::makeUpToDate() {
 	for (std::set<ZLBlockTreeNode*>::iterator it = nodesToDelete.begin(); it != nodesToDelete.end(); ++it) {
 		delete *it;
 	}
+*/
 }

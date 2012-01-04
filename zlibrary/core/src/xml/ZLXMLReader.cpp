@@ -97,23 +97,45 @@ bool ZLXMLReader::readDocument(const ZLFile &file) {
 }
 
 bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
+	AppLog(" ZLXMLReader::readDocument");
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
-
+	AppLog(" ZLXMLReader::readDocument 1");
 	bool useWindows1252 = false;
+
 	stream->read(myParserBuffer, 256);
-	std::string stringBuffer(myParserBuffer, 256);
+	AppLog(" ZLXMLReader::readDocument 2");
+	//std::string stringBuffer(myParserBuffer, 256);
 	stream->seek(0, true);
+	AppLog(" ZLXMLReader::readDocument 3");
+	std::string stringBuffer(512,' ');
+	stringBuffer.assign(myParserBuffer, 256);
+		AppLog(" ZLXMLReader::readDocument stringBuffer =%s",stringBuffer.c_str());
+	AppLog(" ZLXMLReader::readDocument 4");
 	int index = stringBuffer.find('>');
+	char *encoding = 0;
 	if (index > 0) {
 		stringBuffer = ZLUnicodeUtil::toLower(stringBuffer.substr(0, index));
 		int index = stringBuffer.find("\"iso-8859-1\"");
 		if (index > 0) {
 			useWindows1252 = true;
+			encoding ="windows-1252";
+		}
+		index = stringBuffer.find("\"windows-1251\"");
+		if (index > 0) {
+			//useWindows1252 = true;
+			encoding ="windows-1251";
+		}
+		index = stringBuffer.find("\"koi8-r\"");
+		if (index > 0) {
+			//useWindows1252 = true;
+			encoding ="KOI8-R";
 		}
 	}
-	initialize(useWindows1252 ? "windows-1252" : 0);
+	//initialize(useWindows1252 ? "windows-1252" : 0);
+	if (encoding != 0) {AppLog("init encoding %s",encoding);}
+	initialize(encoding);
 	size_t length;
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
@@ -121,7 +143,7 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 			AppLog(" ZLXMLReader::readDocument break");
 			break;
 		}
-		AppLog(" ZLXMLReader::readDocument length = %d", length);
+	//	AppLog(" ZLXMLReader::readDocument length = %d", length);
 	} while ((length == BUFFER_SIZE) && !myInterrupted);
 
 	stream->close();

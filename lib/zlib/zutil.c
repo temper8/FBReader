@@ -296,22 +296,24 @@ extern voidp  malloc OF((uInt size));
 extern voidp  calloc OF((uInt items, uInt size));
 extern void   free   OF((voidpf ptr));
 #endif
-
+#include "mem.h"
 voidpf ZLIB_INTERNAL zcalloc (opaque, items, size)
     voidpf opaque;
     unsigned items;
     unsigned size;
 {
     if (opaque) items += size - size; /* make compiler happy */
-    return sizeof(uInt) > 2 ? (voidpf)malloc(items * size) :
-                              (voidpf)calloc(items, size);
+    return (voidpf)newMem(items * size);
+    //return sizeof(uInt) > 2 ? (voidpf)malloc(items * size) :
+      //                       (voidpf)calloc(items, size);
 }
 
 void ZLIB_INTERNAL zcfree (opaque, ptr)
     voidpf opaque;
     voidpf ptr;
 {
-    free(ptr);
+    	freeMem(ptr);
+   // free(ptr);
     if (opaque) return; /* make compiler happy */
 }
 

@@ -48,8 +48,8 @@ void ZLbadaDialogContent::addOption(const std::string &name, const std::string &
 void ZLbadaDialogContent::addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0, const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) {
 	AppLog("addOptions0 %s %s",name0.c_str(), tooltip0.c_str());
 	AppLog("addOptions1 %s %s",name1.c_str(), tooltip1.c_str());
-	//	createViewByEntry(name0, tooltip0, option0, 0, 5);
-//	createViewByEntry(name1, tooltip1, option1, 7, 12);
+	createViewByEntry(name0, tooltip0, option0, 0, 5);
+	createViewByEntry(name1, tooltip1, option1, 7, 12);
 //	++myRowCounter;
 }
 
@@ -68,11 +68,11 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
 			AppLog("ZLOptionEntry::BOOLEAN:");
-			//view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::BOOLEAN3:
 			AppLog("ZLOptionEntry::BOOLEAN3:");
-			//view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::STRING:
 			AppLog("ZLOptionEntry::STRING:");
@@ -84,11 +84,11 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
 			break;
 		case ZLOptionEntry::CHOICE:
 			AppLog("ZLOptionEntry::CHOICE:");
-			//view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::SPIN:
 			AppLog("ZLOptionEntry::SPIN:");
-			//view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COMBO:
 			AppLog("ZLOptionEntry::COMBO:");
@@ -96,7 +96,7 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
 			break;
 		case ZLOptionEntry::COLOR:
 			AppLog("ZLOptionEntry::COLOR:");
-			//view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::KEY:
 			AppLog("ZLOptionEntry::KEY:");

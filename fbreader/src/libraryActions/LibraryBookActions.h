@@ -26,6 +26,20 @@
 
 class Book;
 
+
+class GotoParagraphAction : public ZLRunnableWithKey {
+
+public:
+	GotoParagraphAction(int reference);
+	void run();
+	ZLResourceKey key() const;
+
+private:
+	int paragraphReference;
+
+};
+
+
 class BookReadAction : public ZLRunnableWithKey {
 
 public:

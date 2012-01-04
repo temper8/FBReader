@@ -36,7 +36,8 @@
 #include "../../options/FBOptions.h"
 
 
-LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LookAndFeelOptionsDialog"), true) {
+//LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LookAndFeelOptionsDialog"), true) {
+LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 	FBOptions &options = FBOptions::Instance();
 
@@ -63,9 +64,9 @@ LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLR
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
 	const std::string BACKGROUND = resource["background"].value();
-	builder.addOption(BACKGROUND, options.BackgroundColorOption);
+//TODO	builder.addOption(BACKGROUND, options.BackgroundColorOption);
 	builder.addOption(resource["selectionBackground"].value(), options.colorOption(ZLTextStyle::SELECTION_BACKGROUND));
-	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
+//TODO	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
 	builder.addOption(resource["internalLink"].value(), options.colorOption("internal"));
 	builder.addOption(resource["externalLink"].value(), options.colorOption("external"));
 	builder.addOption(resource["bookLink"].value(), options.colorOption("book"));
@@ -73,6 +74,16 @@ LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLR
 	builder.addOption(resource["treeLines"].value(), options.colorOption(ZLTextStyle::TREE_LINES));
 	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
 	builder.setInitial(BACKGROUND);
-	colorsTab.addOption(colorKey, builder.comboEntry());
-	colorsTab.addOption("", "", builder.colorEntry());
+//	colorsTab.addOption(colorKey, builder.comboEntry());
+//	colorsTab.addOption("", "", builder.colorEntry());
+
+	colorsTab.addOption(resource["background"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption("background")));
+	colorsTab.addOption(resource["selectionBackground"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption(ZLTextStyle::SELECTION_BACKGROUND)));
+	colorsTab.addOption(resource["internalLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("internal")));
+	colorsTab.addOption(resource["externalLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("external")));
+	colorsTab.addOption(resource["bookLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("book")));
+	colorsTab.addOption(resource["highlighted"].value(),"",new ZLSimpleColorOptionEntry( options.colorOption(ZLTextStyle::HIGHLIGHTED_TEXT)));
+	colorsTab.addOption(resource["treeLines"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption(ZLTextStyle::TREE_LINES)));
+	colorsTab.addOption(resource["indicator"].value(),"", new ZLSimpleColorOptionEntry((FBView::commonIndicatorInfo().ColorOption)));
+
 }

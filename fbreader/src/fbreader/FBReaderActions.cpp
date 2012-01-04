@@ -41,7 +41,8 @@
 #include "../optionsDialog/reading/ReadingOptionsDialog.h"
 #include "../optionsDialog/lookAndFeel/OptionsPage.h"
 #include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
-#include "../optionsDialog/mainOptionsDialog/MainOptionsDialog.h"
+//#include "../optionsDialog/mainOptionsDialog/MainOptionsDialog.h"
+#include "../optionsDialog/OptionsDialogTreeNodes.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -50,6 +51,10 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Library.h"
 #include "../library/Book.h"
+
+#include "../libraryTree/LibraryTreeNodes.h"
+#include "../bookmodel/TOCTreeNodes.h"
+
 #include <FBase.h>
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
@@ -88,7 +93,24 @@ void ShowHelpAction::run() {
 void ShowOptionsDialogAction::run() {
 	AppLog("ShowOptionsDialogAction::run() SystemOptionsDialog");
 	//FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
-	MainOptionsDialog().dialog().run();
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("PreferencesTreeDialog"));
+	size_t index = 0;
+
+	dialog->rootNode().insert(new ReadingOptionsDialogNode, index++);
+
+	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
+
+	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
+
+	dialog->rootNode().insert(new LibraryOptionsDialogNode, index++);
+
+	dialog->rootNode().insert(new ColorOptionsDialogNode, index++);
+
+	dialog->rootNode().insert(new TextStylesTreeNode, index++);
+
+	dialog->run();
+
+	//	MainOptionsDialog().dialog().run();
 /*	std::string actionId = FBReader::Instance().LastOpenedPreferencesDialog.value();
 	if (actionId.empty()) {
 		return;
@@ -96,6 +118,61 @@ void ShowOptionsDialogAction::run() {
 	AppLog("doAction %s",actionId.c_str());
 	FBReader::Instance().doAction(actionId);*/
 }
+
+
+
+void ShowLibraryTreeAction::run() {
+	AppLog("ShowLibraryTreeAction::run() ");
+	//TODO maybe use call LibraryView().showDialog here?
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("LibraryTreeDialog"));
+	size_t index = 0;
+	AppLog("ShowLibraryTreeAction::run() new AuthorTreeNode");
+	dialog->rootNode().insert(new AuthorTreeNode, index++);
+
+	AppLog("ShowLibraryTreeAction::run() new TagTreeNode");
+	dialog->rootNode().insert(new TagTreeNode, index++);
+
+	AppLog("ShowLibraryTreeAction::run() new TitleTreeNode");
+    dialog->rootNode().insert(new TitleTreeNode, index++);
+	AppLog("children().size() = %d ",dialog->rootNode().children().size());
+
+	AppLog("ShowLibraryTreeAction::run() new RecentBooksTreeNode");
+	dialog->rootNode().insert(new RecentBooksTreeNode, index++);
+
+	AppLog("ShowLibraryTreeAction::run()  new OpenFileSystemNode");
+	dialog->rootNode().insert(new OpenFileSystemNode, index++);
+	AppLog("children().size() = %d ",dialog->rootNode().children().size());
+
+	AppLog("dialog->run()");
+	dialog->run();
+}
+
+void ShowTOCTreeAction::run() {
+	AppLog("ShowTOCTreeAction::run() ");
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("TOCTreeDialog"));
+	AppLog("ShowTOCTreeAction::createTreeDialog() ");
+	shared_ptr<ZLTextModel> contentsModel = FBReader::Instance().myModel->contentsModel();
+	AppLog("ShowTOCTreeAction::contentsModel() ");
+	const ZLTextTreeParagraph& rootParagraph = ((ContentsModel&)*contentsModel).getRootParagraph();
+	AppLog("ShowTOCTreeAction::getRootParagraph() ");
+	const std::vector<ZLTextTreeParagraph*>& children = rootParagraph.children();
+	AppLog("ShowTOCTreeAction::children() ");
+	for (size_t index=0; index<children.size(); ++index) {
+		const ZLTextTreeParagraph& paragraph = *children.at(index);
+		if (paragraph.children().size() == 0) {
+			//dialog->rootNode().insert(new ReferenceNode(paragraph), index);
+		} else {
+			//dialog->rootNode().insert(new ReferenceTreeNode(paragraph), index);
+		}
+	}
+	dialog->run();
+}
+
+bool ShowTOCTreeAction::isVisible() const {
+	shared_ptr<BookModel> model = FBReader::Instance().myModel;
+	return !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
+}
+
 
 void ShowLibraryOptionsDialogAction::run() {
 	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);

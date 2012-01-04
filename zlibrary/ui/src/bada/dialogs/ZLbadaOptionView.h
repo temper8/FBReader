@@ -28,19 +28,13 @@
 #include <FBase.h>
 #include <FUi.h>
 #include <FContent.h>
+#include "DialogForm.h"
+#include "ZLbadaDialogContent.h"
+//class ZLbadaDialogContent;
 
-class ZLbadaDialogContent;
 
-//class QLabel;
-//class QSpinBox;
-//class QCheckBox;
-//class QLineEdit;
-//class QGroupBox;
-//class QRadioButton;
-//class QComboBox;
-//class QSlider;
-//class QWidget;
-//class QGridLayout;
+class ComboOptionView;
+class ColorOptionView;
 
 class ZLbadaOptionView : public ZLOptionView {
 
@@ -53,14 +47,16 @@ protected:
 protected:
 	ZLbadaDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;
+public :
+	virtual void OnActionPerformed(int actionId) = 0;
 	//std::vector<QWidget*> myWidgets;
 };
-/*
-class ChoiceOptionView : public ZLQtOptionView {
+
+class ChoiceOptionView : public ZLbadaOptionView {
 
 public:
-	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myButtons(0) {}
-	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
+	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	~ChoiceOptionView() { }
 
 protected:
 	void _createItem();
@@ -68,102 +64,150 @@ protected:
 	void _onAccept() const;
 
 private:
-	QGroupBox *myGroupBox;
-	QRadioButton **myButtons;
+	virtual void OnActionPerformed(int actionId);
+//	QGroupBox *myGroupBox;
+//	QRadioButton **myButtons;
 };
 
-class BooleanOptionView : public QObject, public ZLQtOptionView {
-
-Q_OBJECT
+class BooleanOptionView : public ZLbadaOptionView {
 
 public:
-	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+
+
 
 protected:
 	void _createItem();
 	void _setActive(bool active);
 	void _onAccept() const;
-
-private Q_SLOTS:
-	void onStateChanged(bool) const;
+    bool checkState;
+private:
+	virtual void OnActionPerformed(int actionId);
+//	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+	void onStateChanged(bool);
 
 private:
-	QCheckBox *myCheckBox;
+//	Osp::Ui::Controls::CheckButton *myCheckButton;
 };
 
-class Boolean3OptionView : public QObject, public ZLQtOptionView {
-
-Q_OBJECT
+class Boolean3OptionView : public ZLbadaOptionView {
 
 public:
-	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
 	void _setActive(bool active);
 	void _onAccept() const;
-
-private Q_SLOTS:
-	void onStateChanged(int) const;
+	virtual void OnActionPerformed(int actionId);
+//private Q_SLOTS:
+//	void onStateChanged(int) const;
 
 private:
-	QCheckBox *myCheckBox;
+//	Osp::Ui::Controls::CheckButton *myCheckButton;
 };
-*/
+
 class StringOptionView :  public ZLbadaOptionView {
 
-//Q_OBJECT
-
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLbadaDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myEditField(0), myPasswordMode(passwordMode) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLbadaDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myPasswordMode(passwordMode) {}
 
 private:
 	void _createItem();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
-
+	virtual void OnActionPerformed(int actionId);
 //private Q_SLOTS:
 //	void onValueEdited(const QString &value);
 
 private:
-	Osp::Ui::Controls::EditField* myEditField;
+//	Osp::Ui::Controls::EditField* myEditField;
 	//char *myLineEdit;
+	OptionListItem* pItem;
 	const bool myPasswordMode;
 };
-/*
-class SpinOptionView : public ZLQtOptionView {
+
+class SpinOptionView : public ZLbadaOptionView, public Osp::Ui::IAdjustmentEventListener  {
 
 public:
-	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), mySpinBox(0) {}
+	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
 	void _onAccept() const;
-
+    void OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment);
+    virtual void OnActionPerformed(int actionId);
 private:
-	QSpinBox *mySpinBox;
+//	Osp::Ui::Controls::EditField* myEditField;
+//	Osp::Ui::Controls::Slider* pSlider;
+	OptionListItem* pItem;
+	//QSpinBox *mySpinBox;
 };
-*/
-class ComboOptionView : public  ZLbadaOptionView {
 
-//Q_OBJECT
+
+
+class ComboOptionPopup	: public Osp::Ui::Controls::Popup, public Osp::Ui::IActionEventListener{
+public:
+	ComboOptionPopup(void);
+	virtual ~ComboOptionPopup(void);
+	result Construct(const Osp::Ui::Controls::Form* pParentForm, ComboOptionView* parentComboOptionView);
+
+protected:
+	static const int ID_BUTTON_CREATE = 100;
+	static const int ID_BUTTON_CANCEL = 101;
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myEditField(0) {}
+	static const int categoryNameMaxLength = 100;	// The maximum length of category name is 100 characters.
+
+public:
+	Osp::Ui::Controls::Form* 		__pParentForm;
+	ComboOptionView* 		__parentComboOptionView;
+	Osp::Ui::Controls::List*		__pComboList;
+
+private:
+
+	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+
+};
+
+//public Osp::Ui::Controls::Panel,
+class ComboOptionView : public ZLbadaOptionView,
+						public Osp::Ui::IActionEventListener,
+						public Osp::Ui::IItemEventListener  {
+
+public:
+	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn){}
+
+	const std::string &title() const {return ZLOptionView::name();};
+	shared_ptr<ZLOptionEntry> option() const 	{ return  myOption;};
 
 private:
 	void _createItem();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
-
-//private Q_SLOTS:
-//	void onValueSelected(int index);
-//	void onValueEdited(const QString &value);
-	
+	OptionListItem* pItem;
+    int selected;
+    std::string comboValue;
 private:
-	Osp::Ui::Controls::EditField* myEditField;
+	virtual void OnActionPerformed(int actionId);
+	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+    void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
+
+ //   void 	OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
+
+	//void onStateChanged(bool) const;
+private :
+	void onValueSelected(int index);
+//	void onValueEdited(const QString &value);
+
+private:
+
+//	Osp::Ui::Controls::EditField* myEditField;
+//	Osp::Ui::Controls::CheckButton *myCheckButton;
+//	ComboOptionPopup*	__pComboOptionPopup;
+
 	//QComboBox *myComboBox;
 };
 /*
@@ -191,29 +235,63 @@ private:
 
 friend class KeyLineEdit;
 };
+*/
+class ColorComboOptionPopup	: public Osp::Ui::Controls::Popup, public Osp::Ui::IActionEventListener{
+public:
+	ColorComboOptionPopup(void);
+	virtual ~ColorComboOptionPopup(void);
+	result Construct(const Osp::Ui::Controls::Form* pParentForm, ColorOptionView* parentColorOptionView);
 
-class ColorOptionView : public QObject, public ZLQtOptionView {
-
-Q_OBJECT
+protected:
+	static const int ID_BUTTON_CREATE = 100;
+	static const int ID_BUTTON_CANCEL = 101;
 
 public:
-	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
+	static const int categoryNameMaxLength = 100;	// The maximum length of category name is 100 characters.
+
+public:
+	Osp::Ui::Controls::Form* 		__pParentForm;
+	ColorOptionView* 		__parentColorOptionView;
+	Osp::Ui::Controls::List*		__pComboList;
+
+private:
+
+	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+
+};
+
+
+
+class ColorOptionView : public ZLbadaOptionView,
+						public Osp::Ui::IActionEventListener,
+						public Osp::Ui::IItemEventListener  {
+
+public:
+	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
 
 private:
 	void _createItem();
 	void _onAccept() const;
 	void reset();
+	OptionListItem* pItem;
+//	QSlider *createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value);
 
-	QSlider *createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value);
-
-private Q_SLOTS:
-	void onSliderMove(int);
+//private Q_SLOTS:
+//	void onSliderMove(int);
+	virtual void OnActionPerformed(int actionId);
+	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+    void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
 
 private:
-	QSlider *myRSlider, *myGSlider, *myBSlider;
-	QLabel *myColorBar;
+	static std::vector<std::string> ourStrings;
+	static std::vector<ZLColor> ourColors;
+	static void addColor(const std::string &name, ZLColor color);
+	static void initVectors();
+//	QSlider *myRSlider, *myGSlider, *myBSlider;
+//	QLabel *myColorBar;
+	friend class ColorComboOptionPopup;
 };
-
+/*
 class StaticTextOptionView : public ZLQtOptionView {
 
 public:

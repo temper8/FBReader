@@ -22,11 +22,14 @@ public:
 	virtual ZLDialogContent &createTab(const ZLResourceKey &key);
 	virtual bool run();
 	DialogForm *myDialogForm;
+	void apply();
+
 protected:
 //	Osp::Ui::Controls::Form   &myPreviousForm;
 	virtual const std::string &selectedTabKey() const;
 	virtual void selectTab(const ZLResourceKey &key);
 	virtual bool runInternal();
+
 
 };
 

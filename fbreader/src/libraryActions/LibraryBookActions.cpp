@@ -27,6 +27,26 @@
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../fbreader/BookTextView.h"
+#include <FBase.h>
+
+
+GotoParagraphAction::GotoParagraphAction(int reference) : paragraphReference(reference) {
+
+}
+
+void GotoParagraphAction::run() {
+	FBReader &fbreader = FBReader::Instance();
+	if (paragraphReference >= 0) {
+		fbreader.bookTextView().gotoParagraph(paragraphReference);
+		fbreader.showBookTextView();
+	}
+}
+
+ZLResourceKey GotoParagraphAction::key() const {
+	return ZLResourceKey("gotoParagraph");
+}
+
 
 BookReadAction::BookReadAction(shared_ptr<Book> book) : myBook(book) {
 }

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLLogger.h>
 
 #include "ZLZipHeader.h"
@@ -27,12 +27,14 @@ const int ZLZipHeader::SignatureLocalFile = 0x04034B50;
 const int ZLZipHeader::SignatureData = 0x08074B50;
 
 bool ZLZipHeader::readFrom(ZLInputStream &stream) {
+	AppLog("ZLZipHeader::readFrom 1");
 	size_t startOffset = stream.offset();
 	Signature = readLong(stream);
 	switch (Signature) {
 		default:
 			return false;
 		case SignatureLocalFile:
+			AppLog("ZLZipHeader::readFrom SignatureLocalFile");
 			Version = readShort(stream);
 			Flags = readShort(stream);
 			CompressionMethod = readShort(stream);
@@ -49,6 +51,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			ExtraLength = readShort(stream);
 			return stream.offset() == startOffset + 30 && NameLength != 0;
 		case SignatureData:
+			AppLog("ZLZipHeader::readFrom SignatureData");
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
 			UncompressedSize = readLong(stream);
@@ -68,9 +71,12 @@ void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 				ZLZDecompressor decompressor((size_t)-1);
 				size_t size;
 				do {
+					AppLog("ZLZipHeader::skipEntry 1");
 					size = decompressor.decompress(stream, 0, 2048);
+					AppLog("ZLZipHeader::skipEntry 1");
 					header.UncompressedSize += size;
 				} while (size == 2048);
+				AppLog("ZLZipHeader::skipEntry 1");
 				//stream.seek(16, false);
 			} else {
 				stream.seek(header.ExtraLength + header.CompressedSize, false);

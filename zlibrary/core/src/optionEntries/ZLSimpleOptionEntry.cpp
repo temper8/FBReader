@@ -75,7 +75,7 @@ void ZLSimpleSpinOptionEntry::onAccept(int value) {
 	myOption.setValue(value);
 }
 
-/*
+
 ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(ZLColorOption &option) : myOption(option) {
 }
 
@@ -86,7 +86,10 @@ const ZLColor ZLSimpleColorOptionEntry::color() const {
 void ZLSimpleColorOptionEntry::onAccept(ZLColor color) {
 	myOption.setValue(color);
 }
-*/
+
+const ZLColor ZLSimpleColorOptionEntry::initialColor() const {
+	return myOption.value();
+}
 
 ZLSimpleStaticTextOptionEntry::ZLSimpleStaticTextOptionEntry(const std::string &text) : myText(text) {
 }

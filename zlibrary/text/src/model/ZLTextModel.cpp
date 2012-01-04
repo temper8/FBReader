@@ -267,3 +267,8 @@ void ZLTextModel::addBidiReset() {
 	*myLastEntryStart = ZLTextParagraphEntry::RESET_BIDI_ENTRY;
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
+
+const ZLTextTreeParagraph& ZLTextTreeModel::getRootParagraph() const {
+	return *myRoot;
+}
+

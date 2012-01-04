@@ -119,6 +119,13 @@ public:
 	void run();
 };
 
+class ShowLibraryTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
+
 class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
 
 public:
@@ -155,6 +162,14 @@ public:
 	ShowContentsAction();
 	bool isVisible() const;
 };
+
+class ShowTOCTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+	bool isVisible() const;
+};
+
 
 class ShowNetworkLibraryAction : public SetModeAction {
 

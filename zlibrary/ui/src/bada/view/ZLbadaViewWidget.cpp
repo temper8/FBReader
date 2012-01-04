@@ -24,12 +24,11 @@ ZLbadaViewWidget::~ZLbadaViewWidget() {
 //}
 
 void ZLbadaViewWidget::repaint() {
-	AppLog("ZLbadaViewWidget::repaint()");
+
 	// Draw and Show the form
 	mybadaForm->Draw();
-	AppLog("mybadaForm->Draw()");
 	mybadaForm->Show();
-	AppLog("mybadaForm->Show()");
+	AppLog("ZLbadaViewWidget::repaint()");
 
 }
 

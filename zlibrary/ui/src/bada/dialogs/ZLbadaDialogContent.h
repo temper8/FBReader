@@ -21,9 +21,9 @@
 #define __ZLBADADIALOGCONTENT_H__
 
 #include "../../../../core/src/dialogs/ZLOptionsDialog.h"
-#include "DialogForm.h"
+
 //class QWidget;
-//class QGridLayout;
+class DialogForm;
 
 class ZLbadaDialogContent : public ZLDialogContent {
 

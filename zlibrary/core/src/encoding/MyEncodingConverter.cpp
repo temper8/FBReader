@@ -115,7 +115,7 @@ private:
 MyEncodingConverterProvider::MyEncodingConverterProvider() {
 	shared_ptr<ZLDir> dir =
 		ZLFile(ZLEncodingCollection::encodingDescriptionPath()).directory();
-//	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
+	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
 	if (!dir.isNull()) {
 		std::vector<std::string> files;
 		dir->collectFiles(files, false);
@@ -124,7 +124,7 @@ MyEncodingConverterProvider::MyEncodingConverterProvider() {
 }
 
 bool MyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-//	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
+	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	return myProvidedEncodings.find(encoding) != myProvidedEncodings.end();
 }
 

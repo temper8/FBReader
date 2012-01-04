@@ -18,6 +18,7 @@
  */
 
 #include "ZLInputStream.h"
+#include <FBase.h>
 
 ZLInputStreamDecorator::ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee) : myBaseStream(decoratee), myBaseOffset(0) {
 }
@@ -29,6 +30,7 @@ bool ZLInputStreamDecorator::open() {
 }
 
 size_t ZLInputStreamDecorator::read(char *buffer, size_t maxSize) {
+	AppLog("  ZLInputStreamDecorator::read");
 	myBaseStream->seek(myBaseOffset, true);
 	size_t result = myBaseStream->read(buffer, maxSize);
 	myBaseOffset = myBaseStream->offset();
@@ -40,9 +42,12 @@ void ZLInputStreamDecorator::close() {
 }
 
 void ZLInputStreamDecorator::seek(int offset, bool absoluteOffset) {
+	AppLog("  ZLInputStreamDecorator::seek %d",offset);
 	if (absoluteOffset) {
+		AppLog("  ZLInputStreamDecorator::seek 1");
 		myBaseStream->seek(offset, true);
 	} else {
+		AppLog("  ZLInputStreamDecorator::seek 2");
 		myBaseStream->seek(myBaseOffset + offset, true);
 	}
 	myBaseOffset = myBaseStream->offset();
