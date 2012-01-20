@@ -171,10 +171,10 @@ public:
 };
 
 
-class ShowNetworkLibraryAction : public SetModeAction {
+class ShowNetworkLibraryAction : public ZLApplication::Action {
 
 public:
-	ShowNetworkLibraryAction();
+	void run();
 	bool isVisible() const;
 };
 

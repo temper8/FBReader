@@ -201,15 +201,11 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 	case ID_OPTIONMENU_ITEM5:
 		indx = __pOptionMenu->GetItemIndexFromActionId(actionId);
     	AppLog("OPTIONMENU %d",indx);
-        if (indx==2) {
-
-        	AppLog("go open file");
-     		goOpenFileForm();
-    	  }
-        else {
+        //if (indx==2) { 	AppLog("go open file");		goOpenFileForm();  }
+        //else {
         	AppLog("делаем что-то другое");
         	myHolder.doAction(ActionIdList[indx]);
-        };
+        //};
 
 		break;
 

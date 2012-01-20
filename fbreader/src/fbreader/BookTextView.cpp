@@ -93,6 +93,7 @@ int BookTextView::readStackPos(const Book &book) {
 }
 
 void BookTextView::saveBookState(const Book &book) {
+	AppLog("saveBookState");
 	const ReadingState state(
 		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, PARAGRAPH_OPTION_NAME, 0).value(), 
 		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, WORD_OPTION_NAME, 0).value(), 
@@ -147,6 +148,7 @@ void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {
 }
 
 void BookTextView::saveState() {
+	AppLog("saveState");
 	const ZLTextWordCursor &cursor = textArea().startCursor();
 
 	if (myBook.isNull()) {

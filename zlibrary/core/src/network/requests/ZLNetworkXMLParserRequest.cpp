@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 
@@ -30,10 +30,10 @@
 
 static const std::string CONTENT_ENCODING = "content-encoding:";
 
-
 ZLNetworkXMLParserRequest::ZLNetworkXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) :
 	ZLNetworkGetRequest(url, sslCertificate),
 	myReader(reader) {
+	AppLog("ZLNetworkXMLParserRequest");
 }
 
 ZLNetworkXMLParserRequest::~ZLNetworkXMLParserRequest() {
@@ -47,7 +47,11 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::doAfter(bool) {
+bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
+	if (error.empty())
+		finished(myReader->errorMessage());
+	else
+		finished(error);
 	return true;
 }
 
@@ -63,7 +67,7 @@ bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::handleContent(void *ptr, size_t size) {
+bool ZLNetworkXMLParserRequest::handleContent(const void *ptr, size_t size) {
 	if (myInputStream.isNull()) {
 		if (myHttpEncoding == "gzip") {
 			myInputStream = new ZLGzipAsynchronousInputStream();

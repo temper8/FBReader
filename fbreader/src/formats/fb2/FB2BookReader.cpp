@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <cstdlib>
 #include <cstring>
 
@@ -46,12 +46,9 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 void FB2BookReader::characterDataHandler(const char *text, size_t len) {
 	if ((len > 0) && (myProcessingImage || myModelReader.paragraphIsOpen())) {
 		std::string str(text, len);
-		//AppLog("characterDataHandler");
 		if (myProcessingImage) {
-			AppLog("myImageBuffer.push_back(str)");
 			myImageBuffer.push_back(str);
 		} else {
-		//	AppLog("addData str= %s",str.c_str());
 			myModelReader.addData(str);
 			if (myInsideTitle) {
 				myModelReader.addContentsData(str);
@@ -202,9 +199,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _BINARY:
 		{
-			static const std::string STRANGE_MIME_TYPE = "text/xml";
-			const char *contentType = attributeValue(xmlattributes, "content-type");
-			if ((contentType != 0) && (id != 0) && (STRANGE_MIME_TYPE != contentType)) {
+			shared_ptr<ZLMimeType> contentType = ZLMimeType::get(attributeValue(xmlattributes, "content-type"));
+			if ((contentType != 0) && (id != 0) && (*ZLMimeType::TEXT_XML != *contentType)) {
 				myCurrentImage = new ZLBase64EncodedImage(contentType);
 				myModelReader.addImage(id, myCurrentImage);
 				myProcessingImage = true;

@@ -20,6 +20,6 @@
     </Icons>
     <AutoScaling>
         <Enabled>true</Enabled>
-        <BaseResolution/>
+        <BaseResolution>480x800</BaseResolution>
     </AutoScaling>
 </Application>

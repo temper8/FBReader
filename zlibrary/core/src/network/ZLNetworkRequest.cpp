@@ -16,8 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLLogger.h>
+#include <ZLResource.h>
+#include <ZLStringUtil.h>
+#include <ZLNetworkUtil.h>
 
 #include "ZLNetworkRequest.h"
 
@@ -31,6 +34,7 @@ ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCer
 	mySSLCertificate(sslCertificate),
 	myAuthenticationMethod(NO_AUTH),
 	myRedirectionSupported(true) {
+	AppLog("ZLNetworkRequest");
 	ZLLogger::Instance().println("URL", url);
 }
 
@@ -50,7 +54,13 @@ void ZLNetworkRequest::setErrorMessage(const std::string &message) {
 	myErrorMessage = message;
 }
 
-bool ZLNetworkRequest::handleHeader(void *, size_t) {
+std::string ZLNetworkRequest::unknownNetworkError() const {
+	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+	return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(),
+	                            ZLNetworkUtil::hostFromUrl(url()));
+}
+
+bool ZLNetworkRequest::handleHeader(void *ptr, size_t) {
 	return true;
 }
 
@@ -69,13 +79,24 @@ const ZLTypeId &ZLNetworkGetRequest::typeId() const {
 ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		const std::vector<std::pair<std::string, std::string> > &postData) :
 	ZLNetworkRequest(url, sslCertificate),
-	myData(postData) {
+	myParameters(postData) {
+}
+
+ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
+	const std::string &postData) :
+    ZLNetworkRequest(url, sslCertificate),
+    myData(postData) {
+	
 }
 
 const ZLTypeId &ZLNetworkPostRequest::typeId() const {
 	return TYPE_ID;
 }
 
-const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postData() const {
+const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postParameters() const {
+	return myParameters;
+}
+
+const std::string &ZLNetworkPostRequest::postData() const {
 	return myData;
 }

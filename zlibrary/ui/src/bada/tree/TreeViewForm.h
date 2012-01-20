@@ -24,14 +24,20 @@ class TreeViewForm :
     //public Osp::Ui::IItemEventListener,
     public Osp::Ui::ICustomItemEventListener,
 	public Osp::Ui::IOrientationEventListener
+	//public Osp::Base::Runtime::Thread
 {
 public:
 	TreeViewForm();
 	~TreeViewForm();
 	bool Initialize(const char *title);
+	Osp::Base::Runtime::Monitor* myMonitor;
 
 protected:
 	// Ui
+//	bool OnStart(void);
+	// Called after the Run() method is called.
+//	void OnStop(void);
+
 
 	static const int ID_CONTEXT_ITEM = 200;
 	static const int ID_CONTEXT_ITEM1 = 201;

@@ -45,6 +45,7 @@ void ZLApplication::createToolbar(int index) {
 	std::string fileName = ZLibrary::DefaultFilesPathPrefix();
 	const bool isWindowToolbar = index == ZLApplicationWindow::WINDOW_TOOLBAR;
 	fileName += isWindowToolbar ? "toolbar.xml" : "fullscreen_toolbar.xml";
+	//ZLToolbarCreator(isWindowToolbar ? *myToolbar : *myFullscreenToolbar).readDocument(ZLFile(fileName,ZLMimeType::EMPTY));
 	ZLToolbarCreator(isWindowToolbar ? *myToolbar : *myFullscreenToolbar).readDocument(ZLFile(fileName));
 }
 
@@ -75,6 +76,7 @@ ZLToolbarCreator::ZLToolbarCreator(ZLToolbar &toolbar) : myToolbar(toolbar) {
 }
 
 void ZLToolbarCreator::startElementHandler(const char *tag, const char **attributes) {
+	AppLog("tag = %s",tag);
 	static const std::string BUTTON = "button";
 	static const std::string MENU_BUTTON = "menuButton";
 	static const std::string TOGGLE_BUTTON = "toggleButton";
@@ -85,7 +87,7 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 	static const std::string FILL_SEPARATOR = "fillSeparator";
 
 	const char *id = attributeValue(attributes, "id");
-
+	AppLog("id = %s",id);
 	if (SEPARATOR == tag) {
 		new ZLToolbar::SeparatorItem(myToolbar, ZLToolbar::Item::SEPARATOR);
 	} else if (FILL_SEPARATOR == tag) {
@@ -93,6 +95,7 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 	} else if (id == 0) {
 		return;
 	} else if (BUTTON == tag) {
+		AppLog("BUTTON == tag");
 		new ZLToolbar::PlainButtonItem(myToolbar, id);
 	} else if (MENU_BUTTON == tag) {
 		new ZLToolbar::MenuButtonItem(myToolbar, id);
@@ -183,10 +186,14 @@ const std::string &ZLToolbar::ActionItem::tooltip() const {
 }
 
 ZLToolbar::AbstractButtonItem::AbstractButtonItem(ZLToolbar &toolbar, Type type, const std::string &actionId) : ActionItem(toolbar, type, actionId) {
+//	AppLog("AbstractButtonItem");
+	//AppLog("actionId = %s",actionId.c_str());
 }
 
 ZLToolbar::PlainButtonItem::PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId) :
 	AbstractButtonItem(toolbar, PLAIN_BUTTON, actionId) {
+//	AppLog("PlainButtonItem");
+	//AppLog("actionId = %s",actionId.c_str());
 }
 
 ZLToolbar::MenuButtonItem::MenuButtonItem(ZLToolbar &toolbar, const std::string &actionId) :

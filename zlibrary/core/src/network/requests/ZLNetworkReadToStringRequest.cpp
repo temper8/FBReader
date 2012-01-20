@@ -35,7 +35,8 @@ bool ZLNetworkReadToStringRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkReadToStringRequest::doAfter(bool) {
+bool ZLNetworkReadToStringRequest::doAfter(const std::string &error) {
+	finished(error);
 	return true;
 }
 
@@ -52,7 +53,7 @@ bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool ZLNetworkReadToStringRequest::handleContent(void *ptr, size_t size) {
+bool ZLNetworkReadToStringRequest::handleContent(const void *ptr, size_t size) {
 	myBuffer.append((const char *) ptr, size);
 	// TODO: call setPercent(...)
 	return true;

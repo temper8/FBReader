@@ -22,14 +22,16 @@
 
 #include <map>
 
+
 //#include <QtCore/QObject>
 //#include <QtCore/QTimerEvent>
 
 #include "../../../../core/src/unix/time/ZLUnixTime.h"
 //#include "../../core/unix/time/ZLUnixTime.h"
- #include <FBase.h>
+#include <FBase.h>
 
-class ZLbadaTimeManager : public ZLUnixTimeManager {
+class ZLbadaTimeManager : public ZLUnixTimeManager,
+						  public Osp::Base::Runtime::ITimerEventListener {
 
 public:
 	static void createInstance() { ourInstance = new ZLbadaTimeManager(); }
@@ -39,13 +41,14 @@ public:
 
 private:
 	//void timerEvent(QTimerEvent *event);
+	void OnTimerExpired(Osp::Base::Runtime::Timer& timer);
 
 protected:
 	ZLbadaTimeManager();
 
 private:
-	std::map<shared_ptr<ZLRunnable>,int> myTimers;
-	std::map<int,shared_ptr<ZLRunnable> > myTasks;
+	std::map<shared_ptr<ZLRunnable>,Osp::Base::Runtime::Timer*> myTimers;
+	std::map<Osp::Base::Runtime::Timer*,shared_ptr<ZLRunnable> > myTasks;
 };
 
 #endif /* __ZLQTTIME_H__ */

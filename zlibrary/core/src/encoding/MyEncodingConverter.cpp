@@ -113,13 +113,19 @@ private:
 };
 
 MyEncodingConverterProvider::MyEncodingConverterProvider() {
+	AppLog("MyEncodingConverterProvider()");
+	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
+
 	shared_ptr<ZLDir> dir =
 		ZLFile(ZLEncodingCollection::encodingDescriptionPath()).directory();
-	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
+	//ZLFile(ZLEncodingCollection::encodingDescriptionPath(), ZLMimeType::EMPTY).directory();
+	AppLog("shared_ptr<ZLDir> dir");
 	if (!dir.isNull()) {
 		std::vector<std::string> files;
 		dir->collectFiles(files, false);
+		AppLog("dir->collectFiles");
 		myProvidedEncodings.insert(files.begin(), files.end());
+		AppLog("myProvidedEncodings.insert");
 	}
 }
 

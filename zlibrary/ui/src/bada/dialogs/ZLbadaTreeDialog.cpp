@@ -52,6 +52,7 @@ ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog()
    	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	myForm = new TreeViewForm;
 
+
 	AppLog("new ZLbadaTreeModel");
 	ZLbadaTreeModel* myModel = new ZLbadaTreeModel(rootNode(), myWaitWidgetListener);
 	myForm->setModel(myModel);
@@ -79,6 +80,9 @@ bool ZLbadaTreeDialog::isAlive(ZLbadaTreeDialog *dialog) {
 
 void ZLbadaTreeDialog::run() {
 	AppLog("ZLbadaTreeDialog::run");
+//	Osp::Base::Runtime::Monitor* pMonitor = new Osp::Base::Runtime::Monitor;
+//	pMonitor->Construct();
+//	myForm->myMonitor = pMonitor;
 
 	result r = E_SUCCESS;
 	myForm->UpdateContent();
@@ -87,6 +91,12 @@ void ZLbadaTreeDialog::run() {
 	AppLog("pFrame->Draw();");
 	r = pFrame->Show();
 	AppLog("pFrame->Show()");
+	//myForm->Start();
+	//pMonitor->Enter();
+	//AppLog("Enter");
+	//pMonitor->Wait();
+	//AppLog("doAfter");
+	//pMonitor->Exit();
 
 }
 

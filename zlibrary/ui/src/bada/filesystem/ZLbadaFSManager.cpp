@@ -39,6 +39,14 @@ using namespace Osp::Io;
 
 
 //--------------
+ZLbadaFSManager::ZLbadaFSManager():ZLFSManager() {
+	AppLog("ZLbadaFSManager::ZLbadaFSManager");
+	//connect(&myWatcher, SIGNAL(directoryChanged(QString)), SLOT(onPathChanged(QString)));
+	//connect(&myWatcher, SIGNAL(fileChanged(QString)), SLOT(onPathChanged(QString)));
+}
+
+
+
 
 std::string ZLbadaFSManager::convertFilenameToUtf8(const std::string &name) const {
 	if (name.empty()) {
@@ -51,15 +59,20 @@ std::string ZLbadaFSManager::convertFilenameToUtf8(const std::string &name) cons
 	//QString qString = QString::fromLocal8Bit(name.c_str());
 	//return (qString == QString::null) ? "" : (const char*)qString.toUtf8();
 }
-
+/*
 std::string ZLbadaFSManager::mimeType(const std::string &path) const {
 	// TODO: implement
 	 AppLog("ZLbadaFSManager::mimeType");
 	return std::string();
 }
 
+*/
 
-
+shared_ptr<ZLMimeType> ZLbadaFSManager::mimeType(const std::string &path) const {
+	// TODO: implement
+	 AppLog("ZLbadaFSManager::mimeType");
+	return ZLMimeType::EMPTY;
+}
 
 //---------------
 
@@ -85,7 +98,7 @@ ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
 	//info.Exists = stat(path.c_str(), &fileStat) == 0; stat - не работает
     info.Exists = (r==E_SUCCESS);
 
-	AppLog("ZLbadaFSManager::fileInfo");
+	AppLog("ZLbadaFSManager::fileInfo %s",path.c_str());
 	if (info.Exists) {
 		info.Size = attr.GetFileSize();//fileStat.st_size;
 		//AppLog("ZLbadaFSManager::fileInfo.Size %d",fileStat.st_size);

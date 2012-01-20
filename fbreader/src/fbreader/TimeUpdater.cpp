@@ -24,11 +24,13 @@
 
 #include "FBView.h"
 #include "TimeUpdater.h"
+#include <FBase.h>
 
 TimeUpdater::TimeUpdater() : myTime(-1) {
 }
 
 void TimeUpdater::run() {
+	AppLog("TimeUpdater::run");
 	if (FBView::commonIndicatorInfo().ShowTimeOption.value()) {
 		ZLTime time;
 		short minutes = time.hours() * 60 + time.minutes();

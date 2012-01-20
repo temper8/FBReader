@@ -43,12 +43,23 @@ TreeViewForm::~TreeViewForm() {
 //    delete __pCustomListItemFormat;
 	AppLog("delete __pCustomListItemFormat;");
 }
+/*
+bool TreeViewForm::OnStart(void){
+	AppLog("TreeViewForm::OnStart()");
+}
 
+// Called after the Run() method is called.
+void TreeViewForm::OnStop(void){
+	AppLog("TreeViewForm::OnStop()");
+	if(myMonitor != null) 	myMonitor->Notify();
+}
+*/
 bool TreeViewForm::Initialize(const char *title)
 {
 	AppLog("TreeViewForm::Initialize \n");
 	// Construct an XML form FORM_STYLE_INDICATOR|
-	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
+	Form::Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
+//	Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
 	SetTitleText(String(title));
 	if (String(title).EndsWith("Content") ) {
 		exitFlag = true;
@@ -96,17 +107,6 @@ result TreeViewForm::OnInitializing(void)
 
 
 
-    // Creates List
-//    List* pList = new List();
-//    __pLstSearchList = pList;
-//	Osp::Graphics::Rectangle rect = GetBounds();
-   // pList->Construct(Rectangle(0, 100, 480, 500), LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 100, 0, 480, 0);
-//	pList->Construct(rect, LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 100, 0, rect.width, 0);
-	//pList->Construct(rect, LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_IMAGE_TEXT_IMAGE, 100, 0, 240, 240);
-//	pList->Construct(rect, LIST_STYLE_NORMAL, LIST_ITEM_DOUBLE_IMAGE_TEXT_TEXT, 50, 50, 100, 380);
-    //pList->AddItemEventListener(*this);
-  //  pList->AddTouchEventListener(*this);
-    // Adds a List to the Form
 
     AddControl(*__pCustomList);
     UpdateContent();
@@ -430,19 +430,23 @@ void TreeViewForm::UpdateContent(){
 				strName = String(TitledNode->title().c_str());
 				strSub = String(TitledNode->subtitle().c_str());
 
+				Bitmap *pBmp = new Bitmap;
+				pBmp->Construct(Dimension(70,90), BITMAP_PIXEL_FORMAT_ARGB8888);
 				shared_ptr<ZLImage> cover =TitledNode->image();
 				if (cover.isNull()) {	AppLog("cover.isNull()");}
-
-				shared_ptr<ZLImageData> coverData = ZLImageManager::Instance().imageData(*cover);
-				if (coverData.isNull()) {	AppLog("coverData.isNull()");}
-				//pBitmapLeftIcon = 	((ZLbadaImageData&)coverData).pBitmap;
-				Bitmap *pBmp;
-				ZLImageData &image = *coverData;
-				pBmp = 	((ZLbadaImageData&)image).pBitmap;
-			    int imageWidth = pBmp->GetWidth();
-			    int imageHeight = pBmp->GetHeight();
-				AppLog("image w = %d, h = %d", imageWidth, imageHeight);
-
+				else
+						{
+						shared_ptr<ZLImageData> coverData = ZLImageManager::Instance().imageData(*cover);
+						if (coverData.isNull()) {	AppLog("coverData.isNull()");}
+						//pBitmapLeftIcon = 	((ZLbadaImageData&)coverData).pBitmap;
+						//Bitmap *pBmp;
+						ZLImageData &image = *coverData;
+						Bitmap *tmpBmp = 	((ZLbadaImageData&)image).pBitmap;
+						int imageWidth = tmpBmp->GetWidth();
+						int imageHeight = tmpBmp->GetHeight();
+						AppLog("image w = %d, h = %d", imageWidth, imageHeight);
+						pBmp->Merge(Point(0,0), *tmpBmp, Rectangle(0,0,imageWidth,imageHeight));
+						}
 				AppLog("AddListItem");
 				AddListItem(*__pCustomList, strName, strSub, pBmp);
 				}

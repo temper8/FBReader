@@ -22,6 +22,8 @@
 #include "../image/ZLbadaImageManager.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
+//#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
+#include "../network/ZLbadaNetworkManager.h"
 //#include "IConvEncodingConverter.h"
 
 void ZLibraryImplementation::initLibrary() {
@@ -56,13 +58,19 @@ void ZLbadaLibraryImplementation::init(int &argc, char **&argv) {
 
 	XMLConfigManager::createInstance();
 	ZLbadaTimeManager::createInstance();
+	AppLog("ZLbadaTimeManager::createInstance();");
 	ZLbadaFSManager::createInstance();
+	AppLog("ZLbadaFSManager::createInstance();");
 	ZLbadaDialogManager::createInstance();
+	AppLog("ZLbadaDialogManager::createInstance();");
 	ZLUnixCommunicationManager::createInstance();
+	AppLog("ZLUnixCommunicationManager::createInstance();");
 	ZLbadaImageManager::createInstance();
+	AppLog("ZLbadaImageManager::createInstance();");
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
-	//ZLCurlNetworkManager::createInstance();
-
+	AppLog("ZLEncodingCollection::Instance().registerProvider");
+	ZLbadaNetworkManager::createInstance();
+	AppLog("ZLbadaNetworkManager::Instance()");
 	ZLKeyUtil::setKeyNamesFileName("keynames.xml");
 }
 

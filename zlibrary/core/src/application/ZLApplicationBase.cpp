@@ -19,7 +19,7 @@
 
 #include <FBase.h>
 
-//#include <ZLDialogManager.h>
+#include <ZLDialogManager.h>
 #include <ZLRunnable.h>
 #include <ZLibrary.h>
 #include <ZLOptions.h>
@@ -44,5 +44,5 @@ ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 
 ZLApplicationBase::~ZLApplicationBase() {
 	ConfigSaverRunnable configSaver;
-//	ZLDialogManager::Instance().wait(ZLResourceKey("savingConfig"), configSaver);
+	ZLDialogManager::Instance().wait(ZLResourceKey("savingConfig"), configSaver);
 }

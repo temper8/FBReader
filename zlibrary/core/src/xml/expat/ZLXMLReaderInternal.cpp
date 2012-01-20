@@ -115,7 +115,7 @@ void fStartElementHandler(void *userData, const xmlChar *name, const xmlChar **a
 //typedef void(* endElementSAXFunc)(void *ctx, const xmlChar *name)
 //void fEndElementHandler(void *userData, const char *name) {
 void fEndElementHandler(void *userData, const xmlChar *name) {
-//	AppLog("fEndElementHandler name = %s",(const char*)name );
+	//AppLog("fEndElementHandler name = %s",(const char*)name );
 	ZLXMLReader &reader = *(ZLXMLReader*)userData;
 	if (!reader.isInterrupted()) {
 	//	AppLog("reader.endElementHandler");
@@ -281,11 +281,14 @@ int	fxmlCharEncodingOutputFunc(unsigned char * out, int * outlen,
 }
 
 void ZLXMLReaderInternal::init(const char *encoding) {
+
 	if (myInitialized) {
 	//	xmlCleanupParser();
 //		XML_ParserReset(myParser, encoding);
 	}
+
 	AppLog("ZLXMLReaderInternal::init");
+
 	myInitialized = true;
 	//XML_UseForeignDTD(myParser, XML_TRUE);
 	MySaxhandler.initialized = 1;//XML_PARSER_DTD;//XML_PARSER_START;
@@ -302,7 +305,7 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	}
 
 //	XML_SetUserData(myParser, &myReader);
-//	AppLog("XML_SetUserData");
+	AppLog("XML_SetUserData");
 	if (encoding != 0) {
 		AppLog("encoding %s",encoding);
 		encodingInfo = ZLEncodingCollection::Instance().info(encoding);
@@ -318,7 +321,7 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	//xmlInitCharEncodingHandlers	();
 
 
-//	AppLog("XML_SetEncoding");
+	AppLog("XML_SetEncoding");
 
 
 	//pMySaxhandler->startElement = fStartElementHandler;
@@ -334,13 +337,14 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 }
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
+	AppLog("xmlParseChunk len = %d",len);
 	int r = xmlParseChunk(ctxt, buffer, len, 0);
-//	AppLog("xmlParseChunk 2 len = %d, r=%d", len,r);
+//	AppLog("xmlParseChunk r=%d", r);
 	return true;
 }
 
 ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
-//	AppLog("XML_ParserCreate");
+	AppLog("XML_ParserCreate");
 	MySaxhandler.startElement = fStartElementHandler;
 	MySaxhandler.endElement = fEndElementHandler;
 	MySaxhandler.characters = fCharacterDataHandler;
@@ -352,12 +356,15 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 	MySaxhandler.getEntity = fgetEntity;
 	MySaxhandler.error = fErrorSAXFunc;
 	MySaxhandler.fatalError = fFatalErrorSAXFunc;
-	ctxt = xmlCreatePushParserCtxt(&MySaxhandler,  &myReader, NULL, 0, NULL);
+
 	//AppLog("xmlCreatePushParserCtxt");
-	 if (ctxt == NULL) {
+
+	ctxt = xmlCreatePushParserCtxt(&MySaxhandler,  &myReader, NULL, 0, NULL);
+	if (ctxt == NULL) {
 			AppLog("xmlCreatePushParserCtxt контекст создать не удалось");
 	     return;
 	 }
+
 	// int r = xmlCtxtUseOptions(ctxt, XML_PARSE_SAX1);
 	// AppLog("xmlCtxtUseOptions  r=%d",r);
 	myInitialized = false;

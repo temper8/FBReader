@@ -30,10 +30,10 @@ public:
 
 private:
 	bool handleHeader(void *ptr, size_t size);
-	bool handleContent(void *ptr, size_t size);
+	bool handleContent(const void *ptr, size_t size);
 
 	bool doBefore();
-	bool doAfter(bool success);
+	bool doAfter(const std::string &error);
 
 private:
 	std::string &myBuffer;

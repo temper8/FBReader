@@ -28,6 +28,8 @@
 #include "XMLConfigReader.h"
 #include "XMLConfigWriter.h"
 #include "XMLConfigDeltaWriter.h"
+#include <FBase.h>
+
 
 const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
 
@@ -66,17 +68,20 @@ void XMLConfig::load() {
 }
 
 void XMLConfig::saveAll() {
+	AppLog("XMLConfig::saveAll(); ");
 	saveDelta();
 
 	shared_ptr<ZLDir> configDir = ZLFile(ZLibrary::ApplicationWritableDirectory()).directory(true);
-
+	//AppLog("shared_ptr<ZLDir> configDir");
 	if (myDelta != 0) {
+		AppLog("myDelta != 0");
 		if (!configDir.isNull()) {
 			std::set<std::string> &categories = myDelta->myCategories;
 			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 				if (!it->empty()) {
 					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(*it + ".xml")).outputStream();
-					if (!stream.isNull() && stream->open()) {
+					if (!stream.isNull()
+							&& stream->open()) {
 						XMLConfigWriter(*this, *stream, *it).write();
 						stream->close();
 					}
@@ -85,8 +90,10 @@ void XMLConfig::saveAll() {
 		}
 		myDelta->clear();
 	} // TODO: show error message if config was not saved
-	ZLFile changesFile(ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + CHANGES_FILE);
+	ZLFile changesFile(ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + CHANGES_FILE, ZLMimeType::EMPTY);
+	//AppLog("ZLFile changesFile");
 	changesFile.remove();
+	//AppLog("changesFile.remove()");
 }
 
 void XMLConfig::saveDelta() {
@@ -94,10 +101,15 @@ void XMLConfig::saveDelta() {
 		return;
 	}
 	shared_ptr<ZLDir> configDir = ZLFile(ZLibrary::ApplicationWritableDirectory()).directory(true);
+//	AppLog("configDir");
 	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(CHANGES_FILE)).outputStream();
+//	AppLog("ZLOutputStream");
 	if (!stream.isNull() && stream->open()) {
+		//AppLog("f (!stream.isNull() && stream->open())");
 		XMLConfigDeltaWriter(*myDelta, *stream).write();
+		//AppLog("XMLConfigDeltaWriter");
 		stream->close();
+		//AppLog("stream->close();");
 	}
 	myDelta->myIsUpToDate = true;
 }

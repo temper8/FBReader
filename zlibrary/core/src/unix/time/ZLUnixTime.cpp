@@ -25,14 +25,15 @@
 #include "ZLUnixTime.h"
 #include <FBase.h>
 ZLUnixTimeManager::ZLUnixTimeManager(): ZLTimeManager(){
+	//AppLog("ZLUnixTimeManager::ZLUnixTimeManager()" );
 }
 
 ZLTime ZLUnixTimeManager::currentTime() const {
-	AppLog("ZLUnixTimeManager::currentTime()" );
+	//AppLog("ZLUnixTimeManager::currentTime()" );
 	//struct timeb timeB;
 	//ftime(&timeB);
 	time_t t;
-	AppLog("ftime(&timeB)" );
+	//AppLog("ftime(&timeB)" );
 	time(&t);
 	//TODO как жить без миллисекунд??
 //	return ZLTime((long)timeB.time, timeB.millitm);

@@ -34,6 +34,7 @@ using namespace Osp::Io;
 #include "ZLbadaFSManager.h"
 
 void ZLbadaFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+	 AppLog("ZLbadaFSDir::collectSubDirs") ;
 /*	DIR *dir = opendir(path().c_str());
 	if (dir != 0) {
 		const std::string namePrefix = path() + delimiter();

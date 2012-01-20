@@ -89,6 +89,7 @@ ConfigSaveTask::ConfigSaveTask(XMLConfig &config) : myConfig(config) {
 }
 
 void ConfigSaveTask::run() {
+	AppLog("ConfigSaveTask::run ");
 	if (myConfig.changesCounter() >= 500) {
 		myConfig.saveAll();
 	} else {
@@ -98,13 +99,16 @@ void ConfigSaveTask::run() {
 
 XMLConfig::XMLConfig() : myDelta(0) {
 	AppLog("XMLConfig load(); ");
-//	load();
-//	mySaver = new ConfigSaveTask(*this);
+	load();
+	mySaver = new ConfigSaveTask(*this);
 }
 
 XMLConfig::~XMLConfig() {
+	AppLog("XMLConfig::~XMLConfig() ");
 	ZLTimeManager::Instance().removeTask(mySaver);
+	//AppLog("removeTask");
 	saveAll();
+	//AppLog("saveAll()");
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
 	}

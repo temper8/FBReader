@@ -21,12 +21,12 @@
 #include "ZLTimeManager.h"
 
 ZLTime::ZLTime() {
-	AppLog("ZLTime::ZLTime()" );
+	//AppLog("ZLTime::ZLTime()" );
 	*this = ZLTimeManager::Instance().currentTime();
 }
 
 ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {
-	AppLog("ZLTime::ZLTime(long seconds, long milliseconds)" );
+	//AppLog("ZLTime::ZLTime(long seconds, long milliseconds)" );
 }
 
 ZLTime::~ZLTime() {

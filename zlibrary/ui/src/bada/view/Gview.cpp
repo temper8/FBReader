@@ -19,7 +19,7 @@
 	 const std::string ext = file.extension();
 	//if (ext == "gif" || ext == "jpeg" || ext == "jpg") {
 		 AppLog("file.ext = %s", ext.c_str());
-		 AppLog("file.mime %s", file.mimeType().c_str());
+	//	 AppLog("file.mime %s", file.mimeType().c_str());
 	 	 testImage = new ZLFileImage(file, 0);
 //		}
 	 	//shared_ptr<ZLImage> cover = coverImage();

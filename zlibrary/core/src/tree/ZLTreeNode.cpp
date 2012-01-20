@@ -124,6 +124,13 @@ const ZLResource &ZLTreeNode::resource() const {
 	return emptyResource;
 }
 
+
+void ZLTreeNode::registerTreeAction(shared_ptr<ZLTreeAction> action) {
+	if (!action.isNull()) {
+		myTreeActions.push_back(action);
+	}
+}
+
 void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
 	if (!action.isNull()) {
 		myActions.push_back(action);

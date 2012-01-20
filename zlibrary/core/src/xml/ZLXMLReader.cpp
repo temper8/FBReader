@@ -32,6 +32,10 @@
 
 #include "expat/ZLXMLReaderInternal.h"
 
+
+//static const size_t BUFFER_SIZE = 2048;
+static const size_t BUFFER_SIZE = 4096;
+
 class ZLXMLReaderHandler : public ZLAsynchronousInputStream::Handler {
 
 public:
@@ -57,14 +61,25 @@ void ZLXMLReaderHandler::shutdown() {
 }
 
 bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
+	AppLog(" ZLXMLReader::handleBuffer %d", len);
 	return myReader.readFromBuffer(data, len);
+	//myReader.myInternalReader->parseBuffer(data, len);
+/*	size_t length, start = 0, BUFFER_SIZE = 512;
+	do {
+		length = len - start;
+		if (length>BUFFER_SIZE) length=BUFFER_SIZE;
+		AppLog(" handleBuffer length = %d", length);
+		myReader.myInternalReader->parseBuffer(data + start, length);
+		start += length;
+
+	} while ((start < len) && !myReader.myInterrupted);
+	AppLog(" ZLXMLReader::handleBuffer end");
+	return true;*/
 }
 
 
 
 
-//static const size_t BUFFER_SIZE = 2048;
-static const size_t BUFFER_SIZE = 4096;
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }
@@ -101,14 +116,14 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
-	AppLog(" ZLXMLReader::readDocument 1");
+//	AppLog(" ZLXMLReader::readDocument 1");
 	bool useWindows1252 = false;
 
 	stream->read(myParserBuffer, 256);
-	AppLog(" ZLXMLReader::readDocument 2");
+//	AppLog(" ZLXMLReader::readDocument 2");
 	//std::string stringBuffer(myParserBuffer, 256);
 	stream->seek(0, true);
-	AppLog(" ZLXMLReader::readDocument 3");
+//	AppLog(" ZLXMLReader::readDocument 3");
 	std::string stringBuffer(512,' ');
 	stringBuffer.assign(myParserBuffer, 256);
 		AppLog(" ZLXMLReader::readDocument stringBuffer =%s",stringBuffer.c_str());
@@ -139,11 +154,12 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	size_t length;
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
+		AppLog(" ZLXMLReader::readDocument length = %d", length);
 		if (!readFromBuffer(myParserBuffer, length)) {
 			AppLog(" ZLXMLReader::readDocument break");
 			break;
 		}
-	//	AppLog(" ZLXMLReader::readDocument length = %d", length);
+
 	} while ((length == BUFFER_SIZE) && !myInterrupted);
 
 	stream->close();
@@ -164,6 +180,7 @@ void ZLXMLReader::shutdown() {
 }
 
 bool ZLXMLReader::readFromBuffer(const char *data, size_t len) {
+	AppLog(" ZLXMLReader::readFromBuffer");
 	return myInternalReader->parseBuffer(data, len);
 }
 

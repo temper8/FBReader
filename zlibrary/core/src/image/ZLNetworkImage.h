@@ -21,13 +21,14 @@
 #define __ZLNETWORKIMAGE_H__
 
 #include <ZLImage.h>
+#include <ZLMimeType.h>
 
 class ZLFileImage;
 
 class ZLNetworkImage : public ZLSingleImage {
 
 public:
-	ZLNetworkImage(const std::string &mimeType, const std::string &url);
+	ZLNetworkImage(shared_ptr<ZLMimeType> mimeType, const std::string &url);
 	const shared_ptr<std::string> stringData() const;
 
 private:

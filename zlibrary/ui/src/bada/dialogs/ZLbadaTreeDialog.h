@@ -89,6 +89,7 @@ private:
     //WaitWidget* myWaitWidget;
     shared_ptr<ZLExecutionData::Listener> myWaitWidgetListener;
     TreeViewForm* myForm;
+    //Osp::Base::Runtime::Monitor* myMonitor;
     //ZLbadaTreeModel* myModel;
 
 

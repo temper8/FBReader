@@ -27,11 +27,13 @@ class ZLbadaFSManager : public ZLFSManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLbadaFSManager(); }
+	ZLbadaFSManager();
 
 protected:
 	void normalizeRealPath(std::string &path) const;
 	std::string convertFilenameToUtf8(const std::string &name) const;
-	std::string mimeType(const std::string &path) const;
+	//std::string mimeType(const std::string &path) const;
+	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
 
 private:
 	std::string resolveSymlink(const std::string &path) const;

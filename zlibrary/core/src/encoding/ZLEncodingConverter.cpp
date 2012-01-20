@@ -21,13 +21,14 @@
 #include "ZLEncodingConverterProvider.h"
 
 ZLEncodingConverterProvider::ZLEncodingConverterProvider() {
+	AppLog("ZLEncodingConverterProvider()");
 }
 
 ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
 }
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
-	//AppLog("ZLEncodingConverterInfo::canCreateConverter()");
+	AppLog("ZLEncodingConverterInfo::canCreateConverter()");
 	ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
 	//AppLog("ZLEncodingCollection::Instance()");
 	const std::vector<shared_ptr<ZLEncodingConverterProvider> > &providers = collection.providers();

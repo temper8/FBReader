@@ -24,8 +24,10 @@
 
 #include "ZLbadaFileOutputStream.h"
 #include "ZLbadaFSManager.h"
+#include <FBase.h>
 
 ZLbadaFileOutputStream::ZLbadaFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
+	 AppLog("ZLbadaFileOutputStream %s",name.c_str());
 }
 
 ZLbadaFileOutputStream::~ZLbadaFileOutputStream() {
@@ -33,17 +35,24 @@ ZLbadaFileOutputStream::~ZLbadaFileOutputStream() {
 }
 
 bool ZLbadaFileOutputStream::open() {
+	 AppLog("ZLbadaFileOutputStream::open");
 	close();
+//TODO сделать временные файлы
+	//myTemporaryName = myName + ".XXXXXX" + '\0';
+	myTemporaryName = myName + '\0';// + ".XXXXXX" + '\0';
+	// AppLog("myTemporaryName %s",myTemporaryName.c_str());
+	//mode_t currentMask = umask(S_IRWXO | S_IRWXG);
+	// AppLog("umask");
+	//int temporaryFileDescriptor = ::mkstemp(const_cast<char*>(myTemporaryName.data()));
+	// AppLog("mkstemp");
+	//umask(currentMask);
+	//if (temporaryFileDescriptor == -1) {
+	//	return false;
+	//}
 
-	myTemporaryName = myName + ".XXXXXX" + '\0';
-	mode_t currentMask = umask(S_IRWXO | S_IRWXG);
-	int temporaryFileDescriptor = ::mkstemp(const_cast<char*>(myTemporaryName.data()));
-	umask(currentMask);
-	if (temporaryFileDescriptor == -1) {
-		return false;
-	}
-
-	myFile = fdopen(temporaryFileDescriptor, "w+");
+	//myFile = fdopen(temporaryFileDescriptor, "w+");
+	 myFile = fopen(const_cast<char*>(myTemporaryName.data()), "w+");
+	// AppLog("fopen");
 	return myFile != 0;
 }
 
@@ -63,8 +72,8 @@ void ZLbadaFileOutputStream::close() {
 	if (myFile != 0) {
 		::fclose(myFile);
 		myFile = 0;
-		if (!myHasErrors) {
-			rename(myTemporaryName.c_str(), myName.c_str());
-		}
+		//if (!myHasErrors) {
+		//	rename(myTemporaryName.c_str(), myName.c_str());
+		//}
 	}
 }

@@ -25,7 +25,7 @@
 #include <ZLXMLReader.h>
 
 #include "ZLUnicodeUtil.h"
-
+#include <FBase.h>
 struct ZLUnicodeData {
 	enum SymbolType {
 		LETTER_LOWERCASE,
@@ -82,7 +82,7 @@ static void initUnicodeTable() {
 	if (!inProgress && UNICODE_TABLE.empty()) {
 		inProgress = true;
 		ZLUnicodeTableReader reader;
-		//TODO Был unicode.xml.gz
+	//	reader.readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml",ZLMimeType::EMPTY));
 		reader.readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml"));
 		inProgress = false;
 	}
@@ -455,6 +455,7 @@ void ZLUnicodeUtil::toLower(Ucs4String &str) {
 }
 
 std::string ZLUnicodeUtil::toLower(const std::string &utf8String) {
+//	AppLog("toLower %s",utf8String.c_str());
 	Ucs4String ucs4String;
 	utf8ToUcs4(ucs4String, utf8String);
 
@@ -462,6 +463,7 @@ std::string ZLUnicodeUtil::toLower(const std::string &utf8String) {
 
 	std::string result;
 	ucs4ToUtf8(result, ucs4String, utf8String.length());
+//	AppLog("toLower result %s",result.c_str());
 	return result;
 }
 

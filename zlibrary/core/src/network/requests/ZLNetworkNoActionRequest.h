@@ -30,9 +30,9 @@ public:
 
 private:
 	bool doBefore();
-	bool doAfter(bool success);
+	bool doAfter(const std::string &error);
 
-	bool handleContent(void *ptr, size_t size);
+	bool handleContent(const void *ptr, size_t size);
 };
 
 #endif /* __ZLNETWORKNOACTIONREQUEST_H__ */

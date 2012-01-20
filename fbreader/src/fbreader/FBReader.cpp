@@ -47,7 +47,7 @@
 #include "../libraryTree/LibraryView.h"
 //#include "../network/NetworkLinkCollection.h"
 //#include "../networkActions/NetworkOperationRunnable.h"
-//#include "../networkTree/NetworkView.h"
+#include "../networkTree/NetworkView.h"
 
 //#include "../migration/migrate.h"
 
@@ -105,9 +105,9 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-//	myNetworkLibraryView = new NetworkView(*context());
-	myLibraryByAuthorView = new LibraryByAuthorView(*context());
-	myLibraryByTagView = new LibraryByTagView(*context());
+	myNetworkLibraryView = new NetworkView();
+//	myLibraryByAuthorView = new LibraryByAuthorView(*context());
+//	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
 	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
@@ -117,7 +117,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryTreeAction);
-//	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
+	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 //	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 //	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
@@ -215,7 +215,7 @@ void FBReader::initWindow() {
 		}
 		if (book.isNull()) {
 			AppLog("book.isNull() хелп на каком-нибудь языке");
-		//	book = BooksDBUtil::getBook(helpFileName(ZLibrary::Language()));
+			book = BooksDBUtil::getBook(helpFileName(ZLibrary::Language()));
 		}
 
 		if (book.isNull()) {
@@ -453,7 +453,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOKMARKS_MODE:
 			break;
 		case NETWORK_LIBRARY_MODE:
-			setView(myNetworkLibraryView);
+		//	setView(myNetworkLibraryView);
 			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:

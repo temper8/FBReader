@@ -34,6 +34,7 @@ EntityFilesCollector &EntityFilesCollector::Instance() {
 }
 	
 const std::vector<std::string> &EntityFilesCollector::externalDTDs(const std::string &format) {
+	AppLog("EntityFilesCollector::externalDTDs format= %s",format.c_str());
 	std::map<std::string,std::vector<std::string> >::const_iterator it = myCollections.find(format);
 	if (it != myCollections.end()) {
 		return it->second;
