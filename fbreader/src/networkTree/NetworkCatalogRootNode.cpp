@@ -147,9 +147,9 @@ NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent,
 	init();
 	parent->insert(this, atPosition);
 
-	AppLog("NetworkCatalogRootNode");
-	AppLog("title %s", item().Title.c_str());
-	AppLog("Summary %s", item().Summary.c_str());
+	//AppLog("NetworkCatalogRootNode");
+	//AppLog("title %s", item().Title.c_str());
+	//AppLog("Summary %s", item().Summary.c_str());
 }
 
 void NetworkCatalogRootNode::init() {
@@ -159,11 +159,9 @@ void NetworkCatalogRootNode::init() {
 	registerTreeAction(new ReloadAction(*this));
 	AppLog("ReloadAction");
 	if (!mgr.isNull()) {
-		AppLog("!mgr.isNull()");
+
 		registerTreeAction(new LoginAction(*mgr));
-		AppLog("LoginAction");
 		registerTreeAction(new LogoutAction(*mgr));
-		AppLog("LogoutAction %s",mgr->refillAccountLink().c_str());
 		if (!mgr->refillAccountLink().empty()) {
 		//	registerTreeAction(new RefillAccountAction(*mgr));
 		}

@@ -85,7 +85,7 @@ void NetworkView::showDialog() {
 	AppLog("showDialog");
 	makeUpToDate();
 	AppLog("makeUpToDate");
-	NetworkLinkCollection::Instance().addListener(this);
+	//NetworkLinkCollection::Instance().addListener(this);
 	AppLog("addListener");
 	myDialog->run();
 	AppLog("run()");
@@ -143,7 +143,7 @@ void NetworkView::onLinksChanged() {
 //}
 
 void NetworkView::makeUpToDate() {
-	AppLog("makeUpToDate");
+	AppLog("makeUpToDate()");
 
 	ZLTreeListener::RootNode &rootNode = myDialog->rootNode();
 	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();

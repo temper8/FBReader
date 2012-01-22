@@ -115,13 +115,12 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	}
 	std::string modifiedUrl(url);
 	rewriteUrl(modifiedUrl);
-	AppLog("result %s",result.ResumeURI.c_str());
-	AppLog("rewriteUrl %s",modifiedUrl.c_str());
+//	AppLog("result %s",result.ResumeURI.c_str());
+//	AppLog("rewriteUrl %s",modifiedUrl.c_str());
 	NetworkOPDSFeedReader* fr = new NetworkOPDSFeedReader(*this, url, result);
-//	OPDSFeedReader* fr = new OPDSLink::GenericFeedReader(*this);
-	AppLog("NetworkOPDSFeedReader");
+//	AppLog("NetworkOPDSFeedReader");
 	OPDSXMLParser* pr = new OPDSXMLParser(fr);
-	AppLog("OPDSXMLParser");
+//	AppLog("OPDSXMLParser");
 	return ZLNetworkManager::Instance().createXMLParserRequest(	modifiedUrl, pr);
 }
 
@@ -197,13 +196,13 @@ void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 }
 
 void OPDSLink::init() {
-	AppLog("init");
+//	AppLog("init");
 	const std::map<std::string,std::string> &links = getLinks();
 	std::map<std::string,std::string>::const_iterator it = links.find(URL_SIGN_IN);
 	if (it != links.end()) {
-		AppLog("new Amanager");
+		//AppLog("new Amanager");
 		const std::string &url = it->second;
-		AppLog("url = %s",url.c_str());
+		AppLog("OPDSLink::init url = %s",url.c_str());
 		if (url.find("https://robot.litres.ru/") == 0)
 			myAuthenticationManager = new LitResAuthenticationManager(*this);
 		else

@@ -193,11 +193,11 @@ void LoadSubCatalogRunnable::run() {
 LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode* node) :  myNode(node) {
 	AppLog("LoadSubCatalogRunnable");
 	//NetworkCatalogItem& nItem = node->item();
-	AppLog("NetworkCatalogItem");
-	AppLog("title %s",node->item().Title.c_str() );
-	AppLog("Summary %s",node->item().Summary.c_str());
-	node->item().loadChildren(myChildren, myListenerHolder);
-	//myNode->item().loadChildren(myChildren, myListenerHolder);
+	//AppLog("NetworkCatalogItem");
+	//AppLog("title %s",node->item().Title.c_str() );
+	//AppLog("Summary %s",node->item().Summary.c_str());
+	//node->item().loadChildren(myChildren, myListenerHolder);
+	myNode->item().loadChildren(myChildren, myListenerHolder);
 }
 
 void LoadSubCatalogRunnable::finished(const std::string &error) {

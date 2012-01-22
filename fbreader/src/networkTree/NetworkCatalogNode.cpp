@@ -58,10 +58,10 @@ NetworkCatalogNode::~NetworkCatalogNode() {
 }
 
 void NetworkCatalogNode::init() {
-	AppLog("init()");
+	//AppLog("init()");
 	const std::string htmlUrl =
 		item().URLByType[NetworkItem::URL_HTML_PAGE];
-	AppLog("htmlUrl = %s",htmlUrl.c_str());
+	//AppLog("htmlUrl = %s",htmlUrl.c_str());
 	if (!htmlUrl.empty()) {
 		registerTreeAction(new OpenInBrowserAction(htmlUrl));
 	}
@@ -76,7 +76,7 @@ void NetworkCatalogNode::requestChildren(shared_ptr<ZLExecutionData::Listener> l
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
-	AppLog("item()");
+//	AppLog("item()");
 	return (NetworkCatalogItem&)*myItem;
 }
 
