@@ -52,9 +52,9 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 		}
 	}
 	myNameWithoutExtension = myNameWithExtension;
-	AppLog("myNameWithoutExtension = %s",myNameWithoutExtension.c_str());
+	//AppLog("myNameWithoutExtension = %s",myNameWithoutExtension.c_str());
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::Instance().myForcedFiles;
-	AppLog("00");
+	//AppLog("00");
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
 	//AppLog("01");
 	if (it != forcedFiles.end()) {
@@ -67,7 +67,7 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 		//std::string lowerCaseName = myNameWithoutExtension;//ZLUnicodeUtil::toLower(myNameWithoutExtension);
 		std::string lowerCaseName = ZLUnicodeUtil::toLower(myNameWithoutExtension);
 
-		AppLog("04");
+		//AppLog("04");
 		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
 			myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3);
 			lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 3);
@@ -86,10 +86,10 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 							 ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
 			//myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3) + "tar";
 			myArchiveType = (ArchiveType)(myArchiveType | TAR | GZIP);
-			AppLog("05");
+			//AppLog("05");
 		}
 	}
-	AppLog("int index");
+	//AppLog("int index");
 	int index = myNameWithoutExtension.rfind('.');
 	if (index > 0) {
 		myExtension = ZLUnicodeUtil::toLower(myNameWithoutExtension.substr(index + 1));
@@ -113,7 +113,7 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 #include <iostream>
 
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
-	AppLog("ZLFile::inputStream()");
+	//AppLog("ZLFile::inputStream()");
 	shared_ptr<ZLInputStream> stream;
 	
 	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
@@ -123,12 +123,12 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 			if (isDirectory()) {
 				return 0;
 			}
-			AppLog("createPlainInputStream");
+			//AppLog("createPlainInputStream");
 			//std::cerr << "Create stream " << myPath << std::endl;
 			stream = ZLFSManager::Instance().createPlainInputStream(myPath);
-			AppLog("createPlainInputStream 1");
+			//AppLog("createPlainInputStream 1");
 			stream = envelopeCompressedStream(stream);
-			AppLog("createPlainInputStream 2");
+			//AppLog("createPlainInputStream 2");
 			ourPlainStreamCache[myPath] = stream;
 		}
 	} else {
