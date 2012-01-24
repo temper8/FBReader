@@ -119,6 +119,11 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
     	AppLog("iformat = IMG_FORMAT_PNG" );
     	iformat = IMG_FORMAT_PNG;
     }
+    else
+    if (strncmp(stringData.data(), "GIF", 3) == 0) {
+        	AppLog("iformat = IMG_FORMAT_GIF" );
+        	iformat = IMG_FORMAT_GIF;
+        }
     else {
     	iformat = IMG_FORMAT_JPG;
     	AppLog("iformat = IMG_FORMAT_JPG" );
