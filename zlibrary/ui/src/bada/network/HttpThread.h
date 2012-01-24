@@ -57,7 +57,7 @@ public:
 
 public:
 	// Timer time out for the expire of timer.
-	static const int	TIMER_TIMEOUT = 5000;
+	static const int	TIMER_TIMEOUT = 15000;
 
 	void OnUserEventReceivedN (RequestId requestId, Osp::Base::Collection::IList *pArgs);
 

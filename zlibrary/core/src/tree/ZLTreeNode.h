@@ -111,7 +111,7 @@ private:
 	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
 	std::vector<shared_ptr<ZLTreeAction> > myTreeActions;
 
-private:
+public:
 	ZLTreeNode(const ZLTreeNode&);
 	const ZLTreeNode &operator = (const ZLTreeNode&);
 };

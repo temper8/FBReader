@@ -137,7 +137,7 @@ void fEndElementHandler(void *userData, const xmlChar *name) {
 static xmlDocPtr ParseEntity;
 
 xmlEntityPtr fgetEntity(	void * 	user_data, 	const xmlChar * name){
-	AppLog("fgetEntity %s",name );
+	//AppLog("fgetEntity %s",name );
 	//ZLXMLReader &reader = *(ZLXMLReader*)userData;
 	xmlEntityPtr ep = xmlGetPredefinedEntity(name);
 	if (ep) return ep;

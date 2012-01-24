@@ -6,8 +6,10 @@
 #include <FBase.h>
 #include <FUi.h>
 #include <FContent.h>
-#include "ZLbadaTreeModel.h"
+//#include "ZLbadaTreeModel.h"
 #include "ZLTreeNode.h"
+#include "ZLTreeTitledNode.h"
+#include <ZLTreeDialog.h>
 
 #define ID_LIST_ITEM  			101
 #define ID_LIST_TEXT_TITLE  	102
@@ -16,6 +18,7 @@
 #define ID_LIST_CHECKBOX  		105
 #define ID_FORMAT_CUSTOM  		106
 
+//class ZLTreeDialog;
 
 class TreeViewForm :
 	public Osp::Ui::Controls::Form,
@@ -29,7 +32,8 @@ class TreeViewForm :
 public:
 	TreeViewForm();
 	~TreeViewForm();
-	bool Initialize(const char *title);
+	//bool Initialize(const char *title);
+	bool Initialize(ZLTreeDialog* treeDialog);
 	Osp::Base::Runtime::Monitor* myMonitor;
 
 protected:
@@ -38,7 +42,7 @@ protected:
 	// Called after the Run() method is called.
 //	void OnStop(void);
 
-
+	ZLTreeDialog* myTreeDialog;
 	static const int ID_CONTEXT_ITEM = 200;
 	static const int ID_CONTEXT_ITEM1 = 201;
 
@@ -82,9 +86,10 @@ public:
 
 	void	LoadContentInfo(Osp::Content::ContentSearchResult* pSearchResult);
 
+	void    updateItem(ZLTreeTitledNode &node, int index);
 	void	UpdateContent();
 	void	DeleteContent();
-	ZLbadaTreeModel* myModel;
+//	ZLbadaTreeModel* myModel;
 
 protected:
 	ZLTreeNode* selectedNode;
@@ -104,8 +109,9 @@ protected:
 
 
 public :
+
 	void SetPreviousForm(Osp::Ui::Controls::Form* preForm);
-    void setModel(ZLbadaTreeModel* TreeModel);
+ //   void setModel(ZLbadaTreeModel* TreeModel);
 };
-inline void TreeViewForm::setModel(ZLbadaTreeModel* TreeModel) {myModel = TreeModel; };
+//inline void TreeViewForm::setModel(ZLbadaTreeModel* TreeModel) {myModel = TreeModel; };
 #endif /* TREEVIEWFORM_H_ */

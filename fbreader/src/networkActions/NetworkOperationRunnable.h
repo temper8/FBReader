@@ -58,8 +58,8 @@ public:
 
 protected:
 	std::string myErrorMessage;
-	shared_ptr<ZLExecutionData::Listener> myListenerHolder;
-	shared_ptr<ZLRunnable> myRunnableHolder;
+	//shared_ptr<ZLExecutionData::Listener> myListenerHolder;
+	//shared_ptr<ZLRunnable> myRunnableHolder;
 	shared_ptr<ZLProgressDialog> myDialog;
 };
 

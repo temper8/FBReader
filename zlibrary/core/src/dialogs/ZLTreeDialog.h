@@ -2,17 +2,17 @@
 #define __ZLTREEDIALOG_H__
 
 #include <ZLTreeListener.h>
-
+class ZLTreeTitledNode;
 // This object should be pure successor of ZLTreeListener
 // or be merged with it.
 class ZLTreeDialog : public ZLTreeListener  {
 
 protected:
-	ZLTreeDialog();
+	ZLTreeDialog(const ZLResource &resource);
 
 public:
 	virtual ~ZLTreeDialog();
-
+	const ZLResource &myResource;
 	//TODO maybe run() should return an integer?
 	virtual void run() = 0;
 
@@ -25,7 +25,15 @@ public:
 	// This method should be called at every node state change except of adding/removing of children
 	virtual void onNodeUpdated(ZLTreeNode *node) = 0;
 
-protected:
+public:
+	bool back();
+	virtual void updateNode(ZLTreeTitledNode &node, int index) = 0;
+	virtual bool enter(ZLTreeNode* node)=0;
+    void update();
+	ZLTreeNode* myCurrentNode;
+	void loadCovers();
+	//ZLTreeListener::RootNode& myRootNode;
+
 };
 
 #endif /* __ZLTREEDIALOG_H__ */

@@ -268,14 +268,15 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 }
 
 void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::string &error) {
-	AppLog("onLinksUpdated)");
+	AppLog("onLinksUpdated");
 	(void) error;
 	UpdateLinksScope &scope = static_cast<UpdateLinksScope&>(*data.getUserData("scope"));
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = scope.links.begin(); it != scope.links.end(); ++it) {
 		saveLinkWithoutRefreshing(**it, true);
 	}
-
+	AppLog("onLinksUpdated 1");
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myTempCustomLinks.begin(); it != myTempCustomLinks.end(); ++it) {
+		AppLog("onLinksUpdated 2");
 		LoadLinkScope *loadScope = new LoadLinkScope;
 		std::string url = (*it)->url(NetworkLink::URL_MAIN);
 		AppLog("url %s", url.c_str());
@@ -296,7 +297,7 @@ void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::st
 }
 
 void NetworkLinkCollection::onLinkLoaded(ZLUserDataHolder &data, const std::string &error) {
-	AppLog("onLinkLoaded)");
+	AppLog("onLinkLoaded");
 	(void) error;
 	LoadLinkScope &scope = static_cast<LoadLinkScope&>(*data.getUserData("scope"));
 	if (scope.link != 0) {

@@ -101,14 +101,14 @@ const ZLResource &ZLResource::operator [] (const ZLResourceKey &key) const {
 }
 
 const ZLResource &ZLResource::resource(const std::string &key) {
-	AppLog("resource");
+	//AppLog("resource");
 	ZLTreeResource::buildTree();
-	AppLog("buildTree");
+	//AppLog("buildTree");
 	if (ZLTreeResource::ourRoot.isNull()) {
 		AppLog("return ZLMissingResource");
 		return ZLMissingResource::Instance();
 	}
-	AppLog("return (*ZLTreeResource::ourRoot)");
+	//AppLog("return (*ZLTreeResource::ourRoot)");
 	return (*ZLTreeResource::ourRoot)[key];
 }
 

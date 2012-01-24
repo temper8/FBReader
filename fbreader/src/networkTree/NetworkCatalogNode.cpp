@@ -100,26 +100,6 @@ std::string NetworkCatalogNode::subtitle() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
-shared_ptr<ZLImage> NetworkCatalogNode::image() const {
-	AppLog("NetworkCatalogNode::image()");
-//	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
-
-//	if (url.empty()) {
-//		return lastResortCoverImage();
-//	}
-
-//	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
-//	if (!image.isNull()) {
-//		return image;
-//	}
-
-//	if (url.find(':') == std::string::npos) {
-//		return defaultCoverImage(url);
-//	}
-
-//	return lastResortCoverImage();
-	return shared_ptr<ZLImage>();
-}
 
 
 std::string NetworkCatalogNode::imageUrl() const {
@@ -145,13 +125,14 @@ void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> li
 		AppLog("Summary %s", item().Summary.c_str());
 	myListeners.push_back(listener);
 	if (myListeners.size() == 1) {
-		AppLog("title %s", item().Title.c_str());
-		AppLog("Summary %s", this->item().Summary.c_str());
+	//	AppLog("title %s", item().Title.c_str());
+	//	AppLog("Summary %s", this->item().Summary.c_str());
 		LoadSubCatalogRunnable* r = new LoadSubCatalogRunnable(this);
 	}
 }
 	
 void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
+	AppLog("NetworkCatalogNode::onChildrenReceived");
 	clear();
 	myChildrenItems = runnable->children();
 
@@ -227,6 +208,30 @@ void NetworkCatalogNode::reloadItem(shared_ptr<NetworkItem> item) {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
-	AppLog("AuthorNode::extractCoverImage");
+	AppLog("NetworkCatalogNode::extractCoverImage");
 	return FBNode::defaultCoverImage("booktree-folder.png");
 }
+
+
+shared_ptr<ZLImage> NetworkCatalogNode::image() const {
+	AppLog("NetworkCatalogNode::image()");
+	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
+	AppLog("url=%s",url.c_str());
+	if (url.empty()) {
+		return lastResortCoverImage();
+	}
+	AppLog("getImageByUrl");
+	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
+	if (!image.isNull()) {
+		return image;
+	}
+	AppLog("FBNode::defaultCoverImage");
+//	if (url.find(':') == std::string::npos) {
+//		return defaultCoverImage(url);
+//	}
+
+//	return lastResortCoverImage();
+	//return shared_ptr<ZLImage>();
+	return FBNode::defaultCoverImage("booktree-folder.png");
+}
+

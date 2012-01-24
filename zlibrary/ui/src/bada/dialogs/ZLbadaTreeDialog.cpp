@@ -30,15 +30,18 @@
 
 using namespace Osp::App;
 using namespace Osp::Base;
+using namespace Osp::Base::Collection;
+using namespace Osp::Base::Runtime;
 using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
-using namespace Osp::Base::Collection;
 
 
 
-ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog()
+
+ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(resource)
 {
 	AppLog("ZLbadaTreeDialog::ZLbadaTreeDialog()");
+	//myResource = resource;
 	result r = E_SUCCESS;
 	//setCaption(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
@@ -54,11 +57,14 @@ ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog()
 
 
 	AppLog("new ZLbadaTreeModel");
-	ZLbadaTreeModel* myModel = new ZLbadaTreeModel(rootNode(), myWaitWidgetListener);
-	myForm->setModel(myModel);
-	myForm->myModel->TestTest();
+	//myRootNode = ;
+	myCurrentNode = &rootNode();
+	//ZLbadaTreeModel* myModel = new ZLbadaTreeModel(rootNode(), myWaitWidgetListener);
+	//myForm->setModel(myModel);
+	//myForm->myModel->TestTest();
 	myForm->SetPreviousForm(pFrame->GetCurrentForm());
-	myForm->Initialize(resource["title"].value().c_str());
+	//myForm->Initialize(resource["title"].value().c_str());
+	myForm->Initialize(this);
 	AppLog("ZLbadaTreeDialog->Initialize()");
 	r = pFrame->AddControl(*myForm);
 	r = pFrame->SetCurrentForm(*myForm);
@@ -72,6 +78,31 @@ ZLbadaTreeDialog::~ZLbadaTreeDialog() {
 	AppLog("ZLbadaTreeDialog::~ZLbadaTreeDialog()");
 //	delete myForm;
 //	aliveTrees()->remove(this);
+}
+
+Object* ZLbadaTreeDialog::Run(void){
+	AppLog("__pThread Run");
+	loadCovers();
+}
+
+bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
+	 myCurrentNode = node;
+	 myCurrentNode->requestChildren(myWaitWidgetListener);
+	 myForm->UpdateContent();
+	 AppLog("UpdateContent finish");
+	__pThread = new Thread();
+	__pThread->Construct(*this);
+		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
+		//__pListView->SetTextOfEmptyList(L"Loading...");
+		//__terminateThread = false;
+	__pThread->Start();
+
+	return true;
+}
+
+void ZLbadaTreeDialog::updateNode(ZLTreeTitledNode &node, int index){
+	AppLog("updateNode %d", index);
+	myForm->updateItem(node, index);
 }
 
 bool ZLbadaTreeDialog::isAlive(ZLbadaTreeDialog *dialog) {

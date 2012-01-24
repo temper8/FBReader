@@ -21,7 +21,6 @@
 
 #include "ZLTreeListener.h"
 
-const ZLTypeId ZLTreeListener::RootNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
 ZLTreeListener::RootNode::RootNode(ZLTreeListener &listener)
     : myListener(listener) {
@@ -39,11 +38,13 @@ const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
 
 const ZLTypeId ZLTreeListener::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
-ZLTreeListener::ZLTreeListener() : myRootNode(*this) {
+ZLTreeListener::ZLTreeListener() : myRootNode(*this) {//TODO ??? зачем это?
 }
 
 ZLTreeListener::~ZLTreeListener() {
 }
+
+const ZLTypeId ZLTreeListener::RootNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
 const ZLTypeId &ZLTreeListener::typeId() const {
 	return TYPE_ID;

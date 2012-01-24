@@ -45,7 +45,7 @@ bool ZLbadaFileInputStream::open() {
 }
 
 size_t ZLbadaFileInputStream::read(char *buffer, size_t maxSize) {
-	AppLog(" ZLbadaFileInputStream::read %d",maxSize);
+//	AppLog(" ZLbadaFileInputStream::read %d",maxSize);
 	if (buffer != 0) {
 		if (myNeedRepositionToStart) {
 			fseek(myFile, 0, SEEK_SET);

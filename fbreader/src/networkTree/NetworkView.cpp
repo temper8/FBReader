@@ -89,6 +89,7 @@ void NetworkView::showDialog() {
 	AppLog("addListener");
 	myDialog->run();
 	AppLog("run()");
+	myDialog->loadCovers();
 	//NetworkLinkCollection::Instance().removeListener(this);
 	AppLog("removeListener");
 }

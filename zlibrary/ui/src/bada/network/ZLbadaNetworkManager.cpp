@@ -40,6 +40,8 @@ static QString fixPath(const QString &path) {
 }
 */
 ZLbadaNetworkManager::ZLbadaNetworkManager() {
+	myMonitor = new HttpMonitor;
+	myMonitor->Construct();
 //	myCache = new ZLQtNetworkCache(&myManager);
 //	myManager.setCache(myCache);
 //	myCookieJar = new ZLQtNetworkCookieJar(&myManager);
@@ -91,15 +93,13 @@ std::string ZLbadaNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	std::set<std::string> errors;
 	std::set<HttpThread*> httpTreads;
 //	QEventLoop eventLoop;
+	//HttpMonitor* myMonitor = new HttpMonitor;
+	//myMonitor->Construct();
 
-	HttpMonitor* myMonitor = new HttpMonitor;
-	myMonitor->Construct();
-
-
+    int ThreadCounter = 0;
 	for (ZLExecutionData::Vector::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
-		if (it->isNull() || !(*it)->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {
-				continue;
-			}
+		if (it->isNull() || !(*it)->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {continue;}
+
 		ZLNetworkRequest &request = (ZLNetworkRequest&)**it;
 		AppLog("request.url() = %s", request.url().c_str());
 		HttpThread* httpTread = new HttpThread(myMonitor, request);
@@ -122,6 +122,15 @@ std::string ZLbadaNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		r = httpTread->Construct();
 		if (r == E_SUCCESS) AppLog("Construct E_SUCCESS");
 		AppLog("Construct");
+		myMonitor->Enter();
+		AppLog("myMonitor Enter");
+		if (myMonitor->count > 5) {
+			    AppLog("myMonitor count>5");
+				myMonitor->Wait();
+				AppLog("Wait %d",myMonitor->count);
+				}
+		myMonitor->Exit();
+		AppLog("myMonitor Exit");
 		if (httpTread->Start() == E_SUCCESS) AppLog("Start E_SUCCESS");
 
 		//if (__pHttpThread->OnStart()) AppLog("Start true");
@@ -158,17 +167,17 @@ std::string ZLbadaNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		//res = curl_multi_perform(handle, &counter);
 	} while (myMonitor->count > 0);
 
-			AppLog("doAfter");
-			myMonitor->Exit();
-			AppLog("Exit");
-		//	std::set<HttpThread*> httpTreads;
+	AppLog("doAfter");
+	myMonitor->Exit();
+	AppLog("Exit");
+	//	std::set<HttpThread*> httpTreads;
 	for (std::set<HttpThread*>::const_iterator it = httpTreads.begin(); it != httpTreads.end(); ++it) {
-
+		    AppLog("Interator doAfter");
 	    	HttpThread* httpTread = (HttpThread*)*it;
 	    	std::string error = httpTread->myRequest->errorMessage();
 	    	bool doAfterResult = httpTread->myRequest->doAfter(error);
 	}
-
+	AppLog("Exit 2");
 	std::string result;
 	for (std::set<std::string>::const_iterator et = errors.begin(); et != errors.end(); ++et) {
 		if (!result.empty()) {

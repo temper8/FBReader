@@ -135,8 +135,7 @@ CATCH:
 
 void HttpThread::OnStop(void){
 	AppLog("HttpThread::OnStop()");
-	myMonitor->DelRef();
-	if(myMonitor != null) 	myMonitor->Notify();
+
 	if(__pSession != null)
 		{
 		delete __pSession;
@@ -150,6 +149,8 @@ void HttpThread::OnStop(void){
 		delete __pTimer;
 		__pTimer = null;
 		}
+	myMonitor->DelRef();
+	if(myMonitor != null) 	myMonitor->Notify();
 	AppLog("HttpThread::OnStop() end");
 }
 
@@ -236,6 +237,8 @@ void HttpThread::OnTransactionCompleted(HttpSession& httpSession, HttpTransactio
 	AppLog("####### OnTransactionCompleted! #######");
 
 	delete &httpTransaction;
+
+	Thread::Stop();
 }
 
 void HttpThread::OnTransactionCertVerificationRequiredN(HttpSession& httpSession, HttpTransaction& httpTransaction, Osp::Base::String* pCert)

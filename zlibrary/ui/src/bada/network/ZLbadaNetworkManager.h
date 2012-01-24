@@ -24,10 +24,12 @@
 #include <ZLNetworkRequest.h>
 #include <FNet.h>
 
-class ZLQtNetworkCache;
-class ZLQtNetworkCookieJar;
+
+//class ZLQtNetworkCache;
+//class ZLQtNetworkCookieJar;
 //class QNetworkReply;
 //class QEventLoop;
+class HttpMonitor;
 
 struct ZLbadaNetworkReplyScope {
 	ZLNetworkRequest *request;
@@ -41,7 +43,7 @@ class ZLbadaNetworkManager : public ZLNetworkManager {
 public:
 	ZLbadaNetworkManager();
 	~ZLbadaNetworkManager();
-	
+	HttpMonitor* myMonitor;
 	static void createInstance();
 	void initPaths();
 	

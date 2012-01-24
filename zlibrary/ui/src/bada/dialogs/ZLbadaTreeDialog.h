@@ -33,7 +33,9 @@
 class TreeActionListener;
 //class TreeNodeActionsMenu;
 
-class ZLbadaTreeDialog : public ZLTreeDialog{
+class ZLbadaTreeDialog : public ZLTreeDialog,
+						 public Osp::Base::Runtime::IRunnable
+						 {
 
 
 public:
@@ -45,7 +47,7 @@ public:
 	
 	ZLbadaTreeDialog(const ZLResource &resource);
 	~ZLbadaTreeDialog();
-	
+
 	static bool isAlive(ZLbadaTreeDialog *dialog);
 	
 //	virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -75,6 +77,8 @@ public:
 	virtual void onNodeEndRemove();
 	virtual void onNodeUpdated(ZLTreeNode *node);
 	virtual void run();
+	Osp::Base::Object* Run(void);
+	Osp::Base::Runtime::Thread* __pThread;
 	virtual void onCloseRequest();
 	
 public: ///////; Q_SLOTS:
@@ -83,7 +87,8 @@ public: ///////; Q_SLOTS:
 //Q_SIGNALS:
 	void finished();
 	void progressChanged();
-
+	virtual bool enter(ZLTreeNode* node);
+	virtual void updateNode(ZLTreeTitledNode &node, int index);
 private:
 
     //WaitWidget* myWaitWidget;
