@@ -67,15 +67,15 @@ void ZLEncodingCollectionReader::startElementHandler(const char *tag, const char
 void ZLEncodingCollectionReader::endElementHandler(const char *tag) {
 //	AppLog("ZLEncodingCollectionReader::endElementHandler tag=%s",tag);
 	if (!myCurrentInfo.isNull() && (ENCODING == tag)) {
-		AppLog("ENCODING == tag");
+		//AppLog("ENCODING == tag");
 		if (myCurrentInfo->canCreateConverter()) {
-			AppLog("myCurrentInfo->canCreateConverter");
+			//AppLog("myCurrentInfo->canCreateConverter");
 			myCurrentSet->addInfo(myCurrentInfo);
 			for (std::vector<std::string>::const_iterator it = myNames.begin(); it != myNames.end(); ++it) {
 				myCollection.myInfosByName[ZLUnicodeUtil::toLower(*it)] = myCurrentInfo;
 			}
 		}
-		AppLog("myCurrentInfo = 0");
+		//AppLog("myCurrentInfo = 0");
 		myCurrentInfo = 0;
 		myNames.clear();
 	} else if (!myCurrentSet.isNull() && (GROUP == tag)) {

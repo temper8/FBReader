@@ -126,8 +126,8 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 //	AppLog(" ZLXMLReader::readDocument 3");
 	std::string stringBuffer(512,' ');
 	stringBuffer.assign(myParserBuffer, 256);
-		AppLog(" ZLXMLReader::readDocument stringBuffer =%s",stringBuffer.c_str());
-	AppLog(" ZLXMLReader::readDocument 4");
+	//	AppLog(" ZLXMLReader::readDocument stringBuffer =%s",stringBuffer.c_str());
+	//AppLog(" ZLXMLReader::readDocument 4");
 	int index = stringBuffer.find('>');
 	char *encoding = 0;
 	if (index > 0) {
@@ -180,7 +180,7 @@ void ZLXMLReader::shutdown() {
 }
 
 bool ZLXMLReader::readFromBuffer(const char *data, size_t len) {
-	AppLog(" ZLXMLReader::readFromBuffer");
+//	AppLog(" ZLXMLReader::readFromBuffer");
 	return myInternalReader->parseBuffer(data, len);
 }
 

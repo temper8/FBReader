@@ -107,7 +107,6 @@ private:
 	QString myFilePath;
 };
 */
-//Q_DECLARE_METATYPE(shared_ptr<ZLExecutionData>)
-//Q_DECLARE_METATYPE(ZLQtNetworkReplyScope)
+
 
 #endif /* __ZLQTNETWORKMANAGER_H__ */

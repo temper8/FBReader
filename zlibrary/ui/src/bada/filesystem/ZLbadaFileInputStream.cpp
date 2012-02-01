@@ -84,7 +84,7 @@ size_t ZLbadaFileInputStream::sizeOfOpened() {
 }
 
 void ZLbadaFileInputStream::seek(int offset, bool absoluteOffset) {
-	AppLog(" ZLbadaFileInputStream::seek %d",offset);
+//	AppLog(" ZLbadaFileInputStream::seek %d",offset);
 	if (myNeedRepositionToStart) {
 		absoluteOffset = true;
 		myNeedRepositionToStart = false;

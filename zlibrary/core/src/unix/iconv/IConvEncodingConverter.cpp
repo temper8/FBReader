@@ -84,14 +84,14 @@ AppLog("IConvEncodingConverterProvider::IConvEncodingConverter %s",encoding.c_st
 }
 
 IConvEncodingConverter::~IConvEncodingConverter() {
-	AppLog("IConvEncodingConverterProvider::~IConvEncodingConverter()");
+//	AppLog("IConvEncodingConverterProvider::~IConvEncodingConverter()");
 //	if (myIConverter != (iconv_t)-1) {
 		//iconv_close(myIConverter);
 	//}
 }
 
 void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	AppLog("IConvEncodingConverterProvider::convert()");
+//	AppLog("IConvEncodingConverterProvider::convert()");
 /*	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
 		return;
 	}
@@ -144,7 +144,7 @@ void IConvEncodingConverter::reset() {
 }
 
 bool IConvEncodingConverter::fillTable(int *map) {
-	AppLog("IConvEncodingConverterProvider::fillTable()");
+//	AppLog("IConvEncodingConverterProvider::fillTable()");
 /*	if (myIConverter == (iconv_t)-1) {
 		return false;
 	}

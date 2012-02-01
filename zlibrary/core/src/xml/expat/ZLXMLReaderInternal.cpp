@@ -278,6 +278,7 @@ int	fxmlCharEncodingOutputFunc(unsigned char * out, int * outlen,
 					 const unsigned char * in,  int * inlen)
 {
 	AppLog("xmlCharEncodingOutputFunc");
+	return -1;
 }
 
 void ZLXMLReaderInternal::init(const char *encoding) {
@@ -303,7 +304,6 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 
 	//	parseDTD(myParser, *it);
 	}
-
 //	XML_SetUserData(myParser, &myReader);
 	AppLog("XML_SetUserData");
 	if (encoding != 0) {
@@ -337,10 +337,10 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 }
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
-	AppLog("xmlParseChunk len = %d",len);
+	//AppLog("xmlParseChunk len = %d",len);
 	int r = xmlParseChunk(ctxt, buffer, len, 0);
-//	AppLog("xmlParseChunk r=%d", r);
-	return true;
+	AppLog("xmlParseChunk r=%d len = %d", r, len);
+	return (r == 0);
 }
 
 ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {

@@ -113,24 +113,24 @@ private:
 };
 
 MyEncodingConverterProvider::MyEncodingConverterProvider() {
-	AppLog("MyEncodingConverterProvider()");
-	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
+//	AppLog("MyEncodingConverterProvider()");
+//	AppLog("My encodingDescriptionPath %s",ZLEncodingCollection::encodingDescriptionPath().c_str());
 
 	shared_ptr<ZLDir> dir =
 		ZLFile(ZLEncodingCollection::encodingDescriptionPath()).directory();
 	//ZLFile(ZLEncodingCollection::encodingDescriptionPath(), ZLMimeType::EMPTY).directory();
-	AppLog("shared_ptr<ZLDir> dir");
+//	AppLog("shared_ptr<ZLDir> dir");
 	if (!dir.isNull()) {
 		std::vector<std::string> files;
 		dir->collectFiles(files, false);
-		AppLog("dir->collectFiles");
+	//	AppLog("dir->collectFiles");
 		myProvidedEncodings.insert(files.begin(), files.end());
-		AppLog("myProvidedEncodings.insert");
+	//	AppLog("myProvidedEncodings.insert");
 	}
 }
 
 bool MyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
+//	AppLog("MyEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	return myProvidedEncodings.find(encoding) != myProvidedEncodings.end();
 }
 
