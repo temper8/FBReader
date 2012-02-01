@@ -80,8 +80,19 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 {
 	AppLog("OnTouchReleased");
 	//myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
-	myHolder.view()->onFingerTap(currentPosition.x, currentPosition.y);
-	OnDraw();
+	if (Math::Abs(currentPosition.y-400)<100) {
+			if (__pOptionMenu != null){
+				__pOptionMenu->SetShowState(true);
+				__pOptionMenu->Show();
+			}
+	}
+	else
+		{
+		myHolder.view()->onFingerTap(currentPosition.x, currentPosition.y);
+		OnDraw();
+		}
+
+
 //	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 //	FormMgr* pFormMgr = static_cast<FormMgr *>(pFrame->GetControl("FormMgr"));
 //	if (pFormMgr != null)
@@ -93,7 +104,7 @@ void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::
 	AppLog("OnOrientationChanged");
 }
 
-badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder){
+badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0){
 
 }
 
@@ -159,15 +170,28 @@ result badaForm::OnTerminating(void)
 	return r;
 }
 
-void badaForm::AddMenuItem(const std::string &name,const  std::string &id){
+void badaForm::AddMenuItem(const std::string &name, const  std::string &id){
 	AppLog("badaForm::AddMenuItem %s,%s",name.c_str(),id.c_str());
 	int count =__pOptionMenu->GetItemCount();
-	AppLog("badaForm::AddMenuItem count=%d,%s",count);
-	ActionIdList[count] = id;
-	__pOptionMenu->AddItem(name.c_str(),ID_OPTIONMENU_ITEM0 + count);
+	AppLog("badaForm::AddMenuItem count=%d",count);
+	AppLog("badaForm::AddMenuItem MenuItemCount=%d",MenuItemCount);
 
-
+	if (count == 5) {
+		__pOptionMenu->AddItem("more...",ID_OPTIONMENU_ITEM0 + MenuItemCount);
+		ActionIdList[MenuItemCount] = id;
+		__pOptionMenu->AddSubItem(5,name.c_str(),ID_OPTIONMENU_ITEM0 + MenuItemCount);
+	}
+	if (count < 5) {
+		ActionIdList[MenuItemCount] = id;
+		__pOptionMenu->AddItem(name.c_str(),ID_OPTIONMENU_ITEM0 + MenuItemCount);
+	}
+	if (count > 5) {
+			ActionIdList[MenuItemCount] = id;
+			__pOptionMenu->AddSubItem(5,name.c_str(),ID_OPTIONMENU_ITEM0 + MenuItemCount);
+		}
+	MenuItemCount++;
 }
+
 void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 {
     int indx;
@@ -238,7 +262,8 @@ void badaForm::goOpenFileForm()
 	AppLog("go detail form");
 		Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 		OpenFileForm* pOpenFileForm = new OpenFileForm;
-
+		//pOpenFileForm->SetPreviousForm(this);
+		pOpenFileForm->SetPreviousForm(pFrame->GetCurrentForm());
 		if(pOpenFileForm->Initialize()){
 			r = pFrame->AddControl(*pOpenFileForm);
 			if(IsFailed(r)){AppLog("Initialize() is failed by %s.", GetErrorMessage(r));return;}
@@ -248,8 +273,7 @@ void badaForm::goOpenFileForm()
 				AppLog("pFrame->SetCurrentForm() is failed by %s.", GetErrorMessage(r));
 				return;
 			}
-			//pOpenFileForm->
-			pOpenFileForm->SetPreviousForm(this);
+
 			AppLog("LoadContentInfo");
 			//_detailForm->LoadContentInfo((ContentSearchResult*)__pLstContentInfo->GetAt(index));
 
@@ -263,6 +287,7 @@ void badaForm::goOpenFileForm()
 				AppLog("pFrame->Show() is failed by %s.", GetErrorMessage(r));
 				return;
 			}
+			pOpenFileForm->StartSearch();
 		}
 }
 

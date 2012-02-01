@@ -27,6 +27,7 @@ public:
 
 // Implementation
 protected:
+	int MenuItemCount;
 	static const int ID_BUTTON_OK = 101;
 	Osp::Ui::Controls::Button *__pButtonOk;
 	static const int ID_OPTIONKEY = 100;
@@ -37,7 +38,7 @@ protected:
 	static const int ID_OPTIONMENU_ITEM4 = 204;
 	static const int ID_OPTIONMENU_ITEM5 = 205;
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
-	std::string ActionIdList[10];
+	std::string ActionIdList[16];
 
 public:
 //	DialogForm* CreateDalogForm(const char* name);
