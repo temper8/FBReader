@@ -7,8 +7,10 @@
 
 #include "OpenFileForm.h"
 #include <FIo.h>
-#include "badaForm.h"
+ #include <FMedia.h>
 
+#include "badaForm.h"
+#include "../../../../fbreader/src/fbreader/FBReader.h"
 using namespace Osp::App;
 using namespace Osp::Base;
 using namespace Osp::Base::Collection;
@@ -17,6 +19,7 @@ using namespace Osp::Ui::Controls;
 using namespace Osp::Content;
 using namespace Osp::Graphics;
 using namespace Osp::Base::Runtime;
+using namespace Osp::Media;
 
 #define	ID_ACT_UPDATE	1600
 #define ID_ACT_DELETE	1601
@@ -36,7 +39,7 @@ bool OpenFileForm::Initialize()
 	AppLog("OpenFileForm::Initialize \n");
 	// Construct an XML form FORM_STYLE_INDICATOR|
 	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
-	SetTitleText(L"OpenFileForm");
+	SetTitleText(L"Add Book");
 
 //	AddSoftkeyActionListener(SOFTKEY_0, *this);
 	AddSoftkeyActionListener(SOFTKEY_1, *this);
@@ -54,12 +57,10 @@ result OpenFileForm::OnInitializing(void)
 	AppLog("OpenFileForm::OnInitializing \n");
 	SetSoftkeyText(SOFTKEY_1, L"Back");
 	// Creates close button
+	Rectangle formArea = GetClientAreaBounds();
 
-	    Button* pBtnClose = new Button();
-	    pBtnClose->Construct(Rectangle(50, 50, 150, 150), L"Нажми");
-
-
-
+/*	Button* pBtnClose = new Button();
+	pBtnClose->Construct(Rectangle(50, 50, 150, 150), L"Нажми");
 	if (pBtnClose == null)
 	{
 		AppLog("GetControl(IDC_BUTTON1) failed");
@@ -69,11 +70,11 @@ result OpenFileForm::OnInitializing(void)
 		pBtnClose->AddActionEventListener(*this);
 		AddControl(*pBtnClose);
 	}
-
+*/
     // Creates List
     List* pList = new List();
     __pLstSearchList = pList;
-    pList->Construct(Rectangle(0, 200, 480, 500), LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 100, 0, 480, 0);
+    pList->Construct(Rectangle(0, 0, formArea.width, formArea.height-20), LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 100, 0, 480, 0);
 //pList->AddItemEventListener(*this);
     pList->AddItemEventListener(*this);
 
@@ -83,27 +84,60 @@ result OpenFileForm::OnInitializing(void)
     String itemText3(L"Text4");
     String itemText4(L"Text5");
     // Adds an item to the List
-    pList->AddItem(&itemText1, null, null, null, 500);
-    pList->AddItem(&itemText2, null, null, null, 501);
-    pList->AddItem(&itemText3, null, null, null, 502);
-    pList->AddItem(&itemText4, null, null, null, 503);
-    pList->AddItem(&itemText1, null, null, null, 500);
-    pList->AddItem(&itemText2, null, null, null, 501);
-    pList->AddItem(&itemText3, null, null, null, 502);
-    pList->AddItem(&itemText4, null, null, null, 503);
-    pList->AddItem(&itemText1, null, null, null, 500);
-    pList->AddItem(&itemText2, null, null, null, 501);
-    pList->AddItem(&itemText3, null, null, null, 502);
-    pList->AddItem(&itemText4, null, null, null, 503);
-    pList->AddItem(&itemText1, null, null, null, 500);
-    pList->AddItem(&itemText2, null, null, null, 501);
-    pList->AddItem(&itemText3, null, null, null, 502);
-    pList->AddItem(&itemText4, null, null, null, 503);
+  //  pList->AddItem(&itemText1, null, null, null, 500);
+  //  pList->AddItem(&itemText2, null, null, null, 501);
+  //  pList->AddItem(&itemText3, null, null, null, 502);
+  //  pList->AddItem(&itemText4, null, null, null, 503);
 
     // Adds a List to the Form
     AddControl(*pList);
 
 
+	__pProgressPopup = new Popup();
+	__pProgressPopup->Construct(true, Dimension(formArea.width-50, 250));
+	__pProgressPopup->SetTitleText(L"Searching");
+
+	// Creates Bitmap.
+	//AppResource *pAppResource = Application::GetInstance()->GetAppResource();
+	Image *pImage = new Image();
+    r = pImage->Construct();
+	//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
+	Bitmap *pBitmap1 = pImage->DecodeN("/Res/icons/ani/progressing00.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap2 = pImage->DecodeN("/Res/icons/ani/progressing01.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap3 = pImage->DecodeN("/Res/icons/ani/progressing02.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap4 = pImage->DecodeN("/Res/icons/ani/progressing03.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap5 = pImage->DecodeN("/Res/icons/ani/progressing04.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap6 = pImage->DecodeN("/Res/icons/ani/progressing05.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap7 = pImage->DecodeN("/Res/icons/ani/progressing06.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	Bitmap *pBitmap8 = pImage->DecodeN("/Res/icons/ani/progressing07.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+
+	// Creates AnimationFrame.
+	AnimationFrame *pAniFrame1 = new AnimationFrame(*pBitmap1, 100);
+	AnimationFrame *pAniFrame2 = new AnimationFrame(*pBitmap2, 100);
+	AnimationFrame *pAniFrame3 = new AnimationFrame(*pBitmap3, 100);
+	AnimationFrame *pAniFrame4 = new AnimationFrame(*pBitmap4, 100);
+	AnimationFrame *pAniFrame5 = new AnimationFrame(*pBitmap5, 100);
+	AnimationFrame *pAniFrame6 = new AnimationFrame(*pBitmap6, 100);
+	AnimationFrame *pAniFrame7 = new AnimationFrame(*pBitmap7, 100);
+	AnimationFrame *pAniFrame8 = new AnimationFrame(*pBitmap8, 100);
+
+
+	__pAnimationFrameList = new ArrayList();
+	__pAnimationFrameList->Construct();
+	__pAnimationFrameList->Add(*pAniFrame1);
+	__pAnimationFrameList->Add(*pAniFrame2);
+	__pAnimationFrameList->Add(*pAniFrame3);
+	__pAnimationFrameList->Add(*pAniFrame4);
+	__pAnimationFrameList->Add(*pAniFrame5);
+	__pAnimationFrameList->Add(*pAniFrame6);
+	__pAnimationFrameList->Add(*pAniFrame7);
+	__pAnimationFrameList->Add(*pAniFrame8);
+
+	Rectangle popupFormArea = __pProgressPopup->GetClientAreaBounds();
+	__pAnimation = new Animation();
+	__pAnimation->Construct(Rectangle(popupFormArea.width/2-60, 20, 120, 120), *__pAnimationFrameList);
+	__pAnimation->AddAnimationEventListener(*this);
+	__pProgressPopup->AddControl(*__pAnimation);
 
 	return r;
 }
@@ -125,8 +159,20 @@ void OpenFileForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 	pFrame->SetCurrentForm(*pPreviousForm);
 	pPreviousForm->Draw();
 	pPreviousForm->Show();
-	((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
-	pPreviousForm->SendUserEvent(1, null);
+	//((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
+
+	if (pInfo) {
+			tmpContentPath = ((ContentInfo*)pInfo->GetContentInfo())->GetContentPath();
+			bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);
+			AppLog("tmpContentPath %s",(char*)bb->GetPointer());
+			//selectedFile =  std::string((const char*)bb->GetPointer()) ;
+			FBReader::Instance().openFile(ZLFile(std::string((const char*)bb->GetPointer())));
+			//pMessageBox->Construct(L"Открыть файл?", tmpContentPath , MSGBOX_STYLE_OKCANCEL ,3000);
+		}
+
+
+
+	pPreviousForm->SendUserEvent(2, null);
 
     switch (itemId)
     {
@@ -164,14 +210,12 @@ void OpenFileForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 	case ID_ACT_CLOSE:
 		{
 			AppLog("Close button is clicked! \n");
-			Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-			pFrame->SetCurrentForm(*pPreviousForm);
-			pPreviousForm->Draw();
-			pPreviousForm->Show();
-			((badaForm*)pPreviousForm)->pSearchResultInfo=null;
+			//Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+			//pFrame->SetCurrentForm(*pPreviousForm);
+			//pPreviousForm->Draw();
+			//pPreviousForm->Show();
+			//((badaForm*)pPreviousForm)->pSearchResultInfo=null;
 			pPreviousForm->SendUserEvent(0, null);
-
-
 		}
 		break;
 	case ID_ACT_UPDATE:
@@ -188,6 +232,65 @@ void OpenFileForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 	default:
 		break;
 	}
+}
+
+void OpenFileForm::OnUserEventReceivedN(RequestId requestId, IList* pArgs)
+{
+	Frame* pFrame = Osp::App::Application::GetInstance()->GetAppFrame()->GetFrame();
+	//FormMgr* pFormMgr = dynamic_cast<FormMgr*> (pFrame->GetControl("FormMgr"));
+
+	//if(pFormMgr == null)
+	//	return;
+
+	switch(requestId)
+	{
+		case ID_SEARCH_DONE:
+			{
+				ShowProgressPopup(false);
+
+			/*	bool ret = (static_cast<Boolean*>(pArgs->GetAt(0)))->ToBool();
+			//	pArgs->RemoveAll(true);
+			//	delete pArgs;
+				if(ret)
+					pFormMgr->SendUserEvent(FormMgr::REQUEST_ID_SEARCH_RESULT_FORM, null);
+				else
+				{
+					SetSearchButtonEnabled(true);
+					ShowErrorMessageBox(L"Failed to search contacts.");
+				}
+				*/
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+
+void    OpenFileForm::StartSearch(){
+	if(__pThread)
+	{
+		__pThread->Join();
+		delete __pThread;
+		__pThread = null;
+	}
+	ShowProgressPopup(true);
+
+	__pThread = new Thread();
+	__pThread->Construct(*this);
+	result r = __pThread->Start();
+	if(IsFailed(r))
+	{
+		//ShowErrorMessageBox(L"Failed to search contacts.");
+		//return false;
+	}
+
+}
+
+Object* OpenFileForm::Run() {
+	UpdateContent();
+	SendUserEvent(OpenFileForm::ID_SEARCH_DONE, null);
+	return null;
 }
 
 void OpenFileForm::UpdateContent(){
@@ -223,8 +326,8 @@ void OpenFileForm::UpdateContent(){
 	r = contentSearch.Construct(CONTENT_TYPE_ALL);
 	TryCatch(E_SUCCESS == r, popStr = "Search fail - Construct fail.", "Construct() is failed by %s.", GetErrorMessage(r));
 
-	strQuery = L"ContentFileName";
-	strQuery.Append(L" LIKE '%.fb2'");
+	strQuery = L"ContentFileName LIKE '%.fb2' OR ContentFileName LIKE '%.epub'";
+	//strQuery.Append(L" LIKE '%.fb2' OR  LIKE '%.fb2'");
 	//keyword = L" ";
 
 		// convert special char
@@ -296,3 +399,25 @@ void OpenFileForm::_ClearContentInfoList()
 	}
 }
 
+void OpenFileForm::ShowProgressPopup(const bool show)
+{
+	if(show == true)
+	{
+		// Changes to the desired show state.
+		__pProgressPopup->SetShowState(true);
+		__pProgressPopup->Show();
+		 __pAnimation->Play();
+	}
+	else
+	{
+		__pAnimation->Stop();
+		__pProgressPopup->SetShowState(false);
+		Draw();
+		Show();
+	}
+}
+void OpenFileForm::OnAnimationStopped(const Control& source)
+{
+	if(__pAnimation)
+		__pAnimation->Play();
+}

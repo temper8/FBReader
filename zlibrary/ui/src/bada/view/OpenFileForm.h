@@ -16,8 +16,9 @@
 class OpenFileForm :
 	public Osp::Ui::Controls::Form,
 	public Osp::Ui::IActionEventListener,
-    public Osp::Ui::IItemEventListener
-
+    public Osp::Ui::IItemEventListener,
+    public Osp::Ui::IAnimationEventListener,
+    public Osp::Base::Runtime::IRunnable
 {
 public:
 	OpenFileForm();
@@ -26,6 +27,9 @@ public:
 
 protected:
 	// Ui
+	Object* Run(void);
+	static const int ID_SEARCH_DONE			= 300;
+
 	Osp::Ui::Controls::Form*			pPreviousForm;
 	Osp::Ui::Controls::Button*			pBtnClose;
 	Osp::Ui::Controls::List*			__pLstSearchList;
@@ -34,6 +38,11 @@ protected:
 	Osp::Base::Collection::IList*				__pLstContentType;
 	Osp::Base::Collection::IList*				__pLstContentInfo;
 	Osp::Content::ContentType					__ContentType;
+
+ 	Osp::Ui::Controls::Popup*			__pProgressPopup;
+    Osp::Base::Runtime::Thread* 		__pThread;
+	Osp::Ui::Controls::Animation* 		__pAnimation;
+	Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
 
 	void    _ClearContentInfoList();
 
@@ -44,12 +53,14 @@ public:
 	result	OnTerminating(void);
 	void	OnActionPerformed(const Osp::Ui::Control& source, int actionId);
     void 	OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
-
+	virtual void OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
+	virtual void OnAnimationStopped(const Osp::Ui::Control& source);
 
 
 	void	SetPreviousForm(Osp::Ui::Controls::Form* preForm);
 	void	LoadContentInfo(Osp::Content::ContentSearchResult* pSearchResult);
-
+    void    StartSearch();
+	void 	ShowProgressPopup(const bool show);
 	void	UpdateContent();
 	void	DeleteContent();
 
