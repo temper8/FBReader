@@ -23,13 +23,13 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
-#include "../../../../core/src/dialogs/ZLOptionView.h"
+#include "../../../../../core/src/dialogs/ZLOptionView.h"
 #include <FApp.h>
 #include <FBase.h>
 #include <FUi.h>
 #include <FContent.h>
-#include "DialogForm.h"
-#include "ZLbadaDialogContent.h"
+#include "../DialogForm.h"
+#include "../ZLbadaDialogContent.h"
 //class ZLbadaDialogContent;
 
 
@@ -45,9 +45,10 @@ protected:
 	void _hide();
 
 protected:
-	ZLbadaDialogContent *myTab;
+
 	int myRow, myFromColumn, myToColumn;
 public :
+	ZLbadaDialogContent *myTab;
 	virtual void OnActionPerformed(int actionId) = 0;
 	//std::vector<QWidget*> myWidgets;
 };
@@ -236,7 +237,8 @@ private:
 friend class KeyLineEdit;
 };
 */
-class ColorComboOptionPopup	: public Osp::Ui::Controls::Popup, public Osp::Ui::IActionEventListener{
+class ColorComboOptionPopup	: public Osp::Ui::Controls::Popup,
+							  public Osp::Ui::IActionEventListener{
 public:
 	ColorComboOptionPopup(void);
 	virtual ~ColorComboOptionPopup(void);
@@ -291,18 +293,64 @@ private:
 //	QLabel *myColorBar;
 	friend class ColorComboOptionPopup;
 };
-/*
-class StaticTextOptionView : public ZLQtOptionView {
+
+
+class StaticTextOptionView : public ZLbadaOptionView,
+							 public Osp::Ui::Controls::ICustomListElement
+							 {
 
 public:
-	StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0) {}
+	StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myCaption(0), myLabel(0) {}
 
 private:
 	void _createItem();
 	void _onAccept() const;
 
 private:
-	QLabel *myLabel;
+	Osp::Graphics::EnrichedText* pEnrichedText;
+	void addParagraph(std::string &text);
+	int initText(const char *caption, std::string &text,  int height);
+	result DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus);
+	OptionListItem* pItem;
+	Osp::Base::String *myCaption;
+	Osp::Base::String *myLabel;
+	virtual void OnActionPerformed(int actionId);
 };
-*/
+
+class ButtonAction;
+
+class PictureView : public ZLbadaOptionView,
+					public Osp::Ui::IActionEventListener
+					{
+
+public:
+        PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn);
+        void updateActions();
+private:
+        void _createItem();
+        void _onAccept() const;
+
+private:
+        ButtonAction* myBottonActions[4];
+        shared_ptr<ZLImage> myImage;
+        shared_ptr<ZLTreeTitledNode> myNode;
+    	virtual void OnActionPerformed(int actionId);
+    	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+};
+
+class ButtonView : public ZLbadaOptionView,
+				   public Osp::Ui::IActionEventListener{
+
+public:
+		ButtonView(const std::string &name, const std::string &tooltip, ZLButtonOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn);
+
+private:
+        void _createItem();
+        void _onAccept() const;
+
+private:
+        shared_ptr<ZLRunnableWithKey> myAction;
+    	virtual void OnActionPerformed(int actionId);
+    	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+};
 #endif /* __ZLBADAOPTIONVIEW_H__ */

@@ -11,7 +11,8 @@
 #include <FBase.h>
 #include <FUi.h>
 #include <FContent.h>
-
+#include <shared_ptr.h>
+#include <ZLOptionsDialog.h>
 
 #define	ID_ACT_UPDATE	1700
 #define ID_ACT_DELETE	1701
@@ -24,7 +25,15 @@
 #define ID_LIST_TEXT_SUBTITLE  	103
 #define ID_LIST_BITMAP  		104
 #define ID_LIST_CHECKBOX  		105
-#define ID_FORMAT_CUSTOM  		106
+#define ID_LIST_CUSTOM  		106
+#define ID_LIST_BITMAP1  		107
+#define ID_LIST_BITMAP2  		108
+#define ID_LIST_BITMAP3  		109
+#define ID_LIST_BITMAP4  		110
+#define ID_LIST_TEXT_BITMAP1  		111
+#define ID_LIST_TEXT_BITMAP2  		112
+#define ID_LIST_TEXT_BITMAP3  		113
+#define ID_LIST_TEXT_BITMAP4  		114
 
 class ComboOptionPopup;
 class ComboOptionView;
@@ -48,8 +57,8 @@ class DialogForm :
 public:
 	DialogForm();
 	virtual ~DialogForm();
-	bool showApplyButton;
-	bool Initialize(const char *title);
+
+	bool Initialize(const char *title, bool showApplyButton);
 	void SetPreviousForm(Osp::Ui::Controls::Form* preForm);
 	//result  AddControls();
 	result  AddTab(const char *title);
@@ -61,15 +70,20 @@ public:
 	//Osp::Graphics::Rectangle clientArea;
 	ComboOptionPopup*	__pComboOptionPopup;
 	ColorComboOptionPopup*	__pColorComboOptionPopup;
-	ZLbadaOptionsDialog* __badaOptionsDialog;
-
+	//shared_ptr<ZLOptionsDialog>
+	shared_ptr<ZLOptionsDialog> __badaOptionsDialog;
+	Osp::Graphics::Bitmap* buttonBmp;
+	Osp::Graphics::Bitmap* buttonBmp2;
    int GroupCount;
     Osp::Ui::Controls::GroupedList* __pCustomList;
    // Osp::Ui::Controls::CustomList* __pCustomList;
-    Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pStringViewListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat1;
     Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat2;
     Osp::Ui::Controls::CustomListItemFormat* __pColorListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pImageViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pButtonViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pStaticTextListItemFormat;
  //  virtual void OnItemStateChanged(const Osp::Ui::Control& source, int index, int itemId, int elementId, Osp::Ui::ItemStatus status);
  //  virtual void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
     virtual void  OnItemStateChanged (const Osp::Ui::Control &source, int groupIndex, int itemIndex, int itemId, Osp::Ui::ItemStatus status);
