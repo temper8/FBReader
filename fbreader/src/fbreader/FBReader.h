@@ -105,7 +105,7 @@ private:
 	std::string helpFileName(const std::string &language) const;
 	shared_ptr<Book> helpFile(const std::string &language) const;
 
-	void openFile(const ZLFile &file);
+
 	bool canDragFiles(const std::vector<std::string> &filePaths) const;
 	void dragFiles(const std::vector<std::string> &filePaths);
 
@@ -114,6 +114,7 @@ private:
 	void showLibraryView();
 
 public:
+	void openFile(const ZLFile &file);
 	shared_ptr<ZLKeyBindings> keyBindings();
 	shared_ptr<ZLKeyBindings> keyBindings(ZLView::Angle angle);
 

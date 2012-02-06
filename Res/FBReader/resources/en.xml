@@ -116,6 +116,10 @@
 		<node name="showNetLibrary" value="NetWork library"/>
 		<node name="showRecent" value="Recent"/>
 		<node name="addBook" value="Add Book..."/>
+		<node name="night" value="Night" />
+		<node name="day" value="Day" />
+		<node name="increaseFont"  value="Increase Font"/>
+		<node name="decreaseFont"  value="Decrease Font"/>
 		<node name="library" value="Library">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
@@ -440,6 +444,14 @@
 					<node name="language" value="Language"/>
 					<node name="encodingSet" value="Encoding Set"/>
 					<node name="encoding" value="Encoding"/>
+				</node>
+				<node name="BookInfo" value="Book Info">
+					<node name="title" value="Title"/>
+					<node name="authors" value="Author"/>
+					<node name="seriesTitle" value="Series Title"/>
+					<node name="bookIndex" value="Book Index"/>
+					<node name="price" value="Price"/>
+					<node name="bay" value="Bay"/>
 				</node>
 				<node name="Authors" value="Authors">
 					<node name="authorDisplayName" value="Author Name"/>
