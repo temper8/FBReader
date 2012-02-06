@@ -79,12 +79,12 @@ shared_ptr<ZLMimeType> ZLbadaFSManager::mimeType(const std::string &path) const 
 
 static std::string getPwdDir() {
 	char *pwd = getenv("PWD");
-	return (pwd != 0) ? pwd : "";
+	return "Home";//(pwd != 0) ? pwd : "";
 }
 
 static std::string getHomeDir() {
 	char *home = getenv("HOME");
-	return (home != 0) ? home : "";
+	return "/Home";//(home != 0) ? home : "";
 }
 
 ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
@@ -140,18 +140,24 @@ std::string ZLbadaFSManager::resolveSymlink(const std::string &path) const {
 }
 */
 void ZLbadaFSManager::normalizeRealPath(std::string &path) const {
+//	AppLog("normalizeRealPath %s",path.c_str());
+
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
+//	AppLog("HomeDir %s",HomeDir.c_str());
+//	AppLog("PwdDir %s",PwdDir.c_str());
 
 	if (path.empty()) {
 		path = PwdDir;
 	} else if (path[0] == '~') {
 		if ((path.length() == 1) || (path[1] == '/')) {
+			//AppLog("HomeDir +");
 			path = HomeDir + path.substr(1);
 		}
 	} else if (path[0] != '/') {
 		path = PwdDir + '/' + path;
 	}
+//	AppLog("normalizeRealPath2 %s",path.c_str());
 	int last = path.length() - 1;
 	while ((last > 0) && (path[last] == '/')) {
 		--last;
@@ -183,10 +189,21 @@ void ZLbadaFSManager::normalizeRealPath(std::string &path) const {
 }
 
 ZLFSDir *ZLbadaFSManager::createNewDirectory(const std::string &path) const {
+//	AppLog("createNewDirectory %s",path.c_str());
+
+	result r = Osp::Io::Directory::Create  (Osp::Base::String(path.c_str()), true);
+	if (r == E_SUCCESS) {
+//		AppLog("E_SUCCESS ");
+		return createPlainDirectory(path);
+	}
+//	AppLog("no E_SUCCESS ");
+	return 0;
+	/*
 	std::vector<std::string> subpaths;
 	std::string current = path;
 
 	while (current.length() > 1) {
+		AppLog("current %s",current.c_str());
 		struct stat fileStat;
 		if (stat(current.c_str(), &fileStat) == 0) {
 			if (!S_ISDIR(fileStat.st_mode)) {
@@ -202,13 +219,15 @@ ZLFSDir *ZLbadaFSManager::createNewDirectory(const std::string &path) const {
 			current.erase(index);
 		}
 	}
-
+	AppLog("while end %d", subpaths.size());
 	for (int i = subpaths.size() - 1; i >= 0; --i) {
+		AppLog("mkdir %s", subpaths[i].c_str());
 		if (mkdir(subpaths[i].c_str(), 0x1FF) != 0) {
 			return 0;
 		}
 	}
 	return createPlainDirectory(path);
+	*/
 }
 
 ZLFSDir *ZLbadaFSManager::createPlainDirectory(const std::string &path) const {

@@ -126,7 +126,7 @@ void ZLibrary::initApplication(const std::string &name) {
 #ifdef XMLCONFIGHOMEDIR
 		//XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
 			//TODO где происходит создание папки .FBreader???
-		"Home" + FileNameDelimiter + name;
+		"/Home" + FileNameDelimiter + name;
 #else
 		"~" + FileNameDelimiter + "." + name;
 #endif
