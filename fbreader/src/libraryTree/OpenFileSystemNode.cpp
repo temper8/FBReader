@@ -10,7 +10,7 @@
 
 #include "../optionsDialog/OptionsDialogActions.h"
 
-
+#include "OpenFileDialogAction.h"
 
 const ZLTypeId OpenFileSystemNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
@@ -34,7 +34,7 @@ OpenFileSystemNode::OpenFileSystemNode() :
 DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP_NAME, "Directory", ZLFile("~").path()),
 FileOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP_NAME, "File", std::string()) {
 //	registerAction(new LookAndFeelOptionsDialogAction());
-	registerAction(new ReadingOptionsDialogAction());
+	registerAction(new OpenFileDialogAction());
 
 //	registerAction(new ShowContentsAction());
 
