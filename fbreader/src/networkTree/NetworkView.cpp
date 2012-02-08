@@ -65,7 +65,7 @@ void NetworkView::AddCatalogAction::onCatalogAdded(ZLUserDataHolder &data, const
 	(void) data;
 	if (error.empty())
 		myView->makeUpToDate();
-	finished(error);
+	//finished(error);
 }
 
 NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(false) {

@@ -62,6 +62,9 @@ public:
 		virtual void onLinksChanged() = 0;
 	};
 	
+
+
+
 	void addListener(Listener *listener);
 	void removeListener(Listener *listener);
 	
@@ -85,16 +88,20 @@ public:
 	void addNetworkCatalogByUser(shared_ptr<ZLExecutionData::Listener> listener = 0);
 
 private:
+	class UpdateLinksScope;
+	class LoadLinkScope;
+	class AddNetworkCatalogScope;
+
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 	void onNetworkCatalogReply(ZLUserDataHolder &data, const std::string &error);
 
 	void updateLinks(std::string genericUrl);
-	void onLinksUpdated(ZLUserDataHolder &data, const std::string &error);
+	void onLinksUpdated(UpdateLinksScope &scope);
+	//void onLinksUpdated(ZLUserDataHolder &data, const std::string &error);
+
 	void onLinkLoaded(ZLUserDataHolder &data, const std::string &error);
 	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
-	class UpdateLinksScope;
-	class LoadLinkScope;
-	class AddNetworkCatalogScope;
+
 
 
 private:

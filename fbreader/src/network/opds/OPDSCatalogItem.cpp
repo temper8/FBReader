@@ -47,7 +47,7 @@ void OPDSCatalogItemLoader::showPercent(int ready, int full) {
 
 void OPDSCatalogItemLoader::finished(const std::string &error) {
 	if (!error.empty()) {
-		myListener->finished(error);
+	//	myListener->finished(error);
 	//	ZLTimeManager::deleteLater(myHolder);
 		myHolder.reset();
 		return;
@@ -55,7 +55,7 @@ void OPDSCatalogItemLoader::finished(const std::string &error) {
 	myChildren.insert(myChildren.end(), myData.Items.begin(), myData.Items.end());
 	shared_ptr<ZLExecutionData> networkData = myData.resume();
 	if (networkData.isNull()) {
-		myListener->finished();
+//		myListener->finished();
 	//	ZLTimeManager::deleteLater(myHolder);
 		myHolder.reset();
 	} else {
@@ -74,9 +74,22 @@ OPDSCatalogItem::OPDSCatalogItem(
 ) : NetworkCatalogItem(link, title, summary, urlByType, visibility, catalogType) {
 }
 
-std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 	AppLog("loadChildren");
-	// loader will surely kill itself in some future
-	new OPDSCatalogItemLoader(static_cast<const OPDSLink&>(Link), URLByType[URL_CATALOG], children, listener);
-	return std::string();
+	NetworkOperationData data(Link);
+
+	shared_ptr<ZLExecutionData> networkData =
+		((OPDSLink&)Link).createNetworkData(URLByType[URL_CATALOG], data);
+
+	while (!networkData.isNull()) {
+		std::string error = ZLNetworkManager::Instance().perform(networkData);
+		if (!error.empty()) {
+			return error;
+		}
+
+		children.insert(children.end(), data.Items.begin(), data.Items.end());
+		networkData = data.resume();
+	}
+
+	return "";
 }

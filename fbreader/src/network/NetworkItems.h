@@ -106,7 +106,7 @@ public:
 	// method is called each time the View Node is created for the Item.
 	virtual void onDisplayItem();
 	// returns error message
-	virtual std::string loadChildren(List &children, shared_ptr<ZLExecutionData::Listener> listener) = 0;
+	virtual std::string loadChildren(List &children) = 0;
 
 public:
 	const VisibilityType Visibility;

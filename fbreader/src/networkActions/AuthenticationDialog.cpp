@@ -120,7 +120,7 @@ public:
 	}
 	
 	virtual void run() {
-		myListener->finished(myError);
+		//myListener->finished(myError);
 	}
 	
 private:
@@ -162,7 +162,7 @@ void AuthenticationDialogListener::finish(bool result) {
 		myUserList = NULL;
 	}
 	// FIXME: Return notable error
-	myListener->finished(result ? std::string() : "Some error");
+	//myListener->finished(result ? std::string() : "Some error");
 //	ZLTimeManager::deleteLater(myHolder);
 	myHolder.reset();
 }
@@ -171,13 +171,13 @@ void AuthenticationDialogListener::showPercent(int ready, int full) {
 	(void) ready;
 	(void) full;
 }
-
+/*
 void AuthenticationDialogListener::finished(const std::string &error) {
 	myError = error;
 	if (myState == LogOut) {
 		if (!AuthenticationDialog::runDialog(myManager, *myUserList, myError, myPassword)) {
 			myState = LogOutFinal;
-			new LogOutRunnable(myManager, myHolder);
+			new LogOutRunnable(myManager);
 			return;
 		}
 		if (myManager.UserNameOption.value().empty()) {
@@ -214,7 +214,7 @@ void AuthenticationDialogListener::onFinished(ZLUserDataHolder &data, const std:
 	(void) data;
 	finished(error);
 }
-
+*/
 void AuthenticationDialogListener::restart(const std::string &error) {
 	myPassword.clear();
 	myState = LogOut;

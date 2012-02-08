@@ -143,6 +143,10 @@ public:
 
 const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
 
+const ZLTypeId &NetworkCatalogRootNode::typeId() const {
+	return TYPE_ID;
+}
+
 NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(link.libraryItem()), myLink(link) {
 	init();
 	parent->insert(this, atPosition);
@@ -181,9 +185,7 @@ void NetworkCatalogRootNode::init() {
 	AppLog("init() end");
 }
 
-const ZLTypeId &NetworkCatalogRootNode::typeId() const {
-	return TYPE_ID;
-}
+
 
 const ZLResource &NetworkCatalogRootNode::resource() const {
 	return ZLResource::resource("networkView")["libraryItemRootNode"];
@@ -213,11 +215,11 @@ ZLResourceKey NetworkCatalogRootNode::LoginAction::key() const {
 
 void NetworkCatalogRootNode::LoginAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
-		finished(std::string());
+	//	finished(std::string());
 		return;
 	}
 
-	AuthenticationDialog::run(myManager, listener());
+	AuthenticationDialog::run(myManager);
 //	FBReader::Instance().invalidateAccountDependents();
 //	FBReader::Instance().refreshWindow();
 }
@@ -235,7 +237,7 @@ std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resourc
 }
 
 void NetworkCatalogRootNode::LogoutAction::run() {
-	new LogOutRunnable(myManager, listener());
+	new LogOutRunnable(myManager);
 //	logout.executeWithUI();
 //	FBReader::Instance().invalidateAccountDependents();
 //	FBReader::Instance().refreshWindow();
@@ -252,13 +254,13 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	ZLResourceKey boxKey("dontShowConfirmBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
-		finished(std::string());
+	//	finished(std::string());
 		return;
 	}
 	myLink.setEnabled(false);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
-	finished(std::string());
+	//finished(std::string());
 }
 
 bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
@@ -276,12 +278,12 @@ void NetworkCatalogRootNode::DeleteAction::run() {
 	ZLResourceKey boxKey("deleteConfirmBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
-		finished(std::string());
+	//	finished(std::string());
 		return;
 	}
 	NetworkLinkCollection::Instance().deleteLink(myLink);
 	myNode->parent()->remove(myNode);
-	finished(std::string());
+	//finished(std::string());
 }
 
 bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
@@ -314,7 +316,7 @@ void NetworkCatalogRootNode::EditAction::run() {
 		NetworkLinkCollection::Instance().saveLink(myLink);
 		myNode->updated();
 	}
-	finished(std::string());
+	//finished(std::string());
 }
 
 bool NetworkCatalogRootNode::EditAction::makesSense() const {
@@ -339,7 +341,7 @@ std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &
 
 void NetworkCatalogRootNode::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
-	finished(std::string());
+	//finished(std::string());
 }
 
 bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
@@ -360,7 +362,7 @@ void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
 		return;
 	}
 
-	PasswordRecoveryDialog::run(myManager, listener());
+	PasswordRecoveryDialog::run(myManager);
 }
 
 NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
@@ -375,7 +377,7 @@ void NetworkCatalogRootNode::RegisterUserAction::run() {
 		return;
 	}
 
-	RegisterUserDialog::run(myManager, listener());
+	RegisterUserDialog::run(myManager);
 }
 
 void NetworkCatalogRootNode::reloadLink() {

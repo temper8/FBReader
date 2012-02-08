@@ -25,7 +25,7 @@
 #include "NetworkCatalogUtil.h"
 
 #include "../networkActions/NetworkActions.h"
-#include "../optionsDialogMobile/MobileBookInfoDialog.h"
+//#include "../optionsDialogMobile/MobileBookInfoDialog.h"
 
 const ZLTypeId NetworkBookNode::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
@@ -38,26 +38,28 @@ const ZLResource &NetworkBookNode::resource() const {
 }
 
 NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : myBook(book), mySummaryType(summaryType) {
-	init();
+	registerAction(new NetworkBookPreviewAction(this));
+//	init();
 	parent->append(this);
 }
 
 void NetworkBookNode::init() {
 	const NetworkBookItem &book = this->book();
+
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
-		registerTreeAction(new NetworkBookReadAction(this, book, false));
-		registerTreeAction(new NetworkBookDownloadAction(this, book, false));
-		registerTreeAction(new NetworkBookDeleteAction(book));
+		registerAction(new NetworkBookReadAction(this, book, false));
+		registerAction(new NetworkBookDownloadAction(this, book, false));
+		registerAction(new NetworkBookDeleteAction(book));
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-		registerTreeAction(new NetworkBookReadAction(this, book, true));
-		registerTreeAction(new NetworkBookDownloadAction(this, book, true, resource()["demo"].value()));
+		registerAction(new NetworkBookReadAction(this, book, true));
+		registerAction(new NetworkBookDownloadAction(this, book, true, resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {
-		registerTreeAction(new NetworkBookBuyDirectlyAction(this, book));
+		registerAction(new NetworkBookBuyDirectlyAction(this, book));
 	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
-		registerTreeAction(new NetworkBookBuyInBrowserAction(book));
+	 registerAction(new NetworkBookBuyInBrowserAction(book));
 	}
 }
 
@@ -81,7 +83,7 @@ std::string NetworkBookNode::subtitle() const {
 	}
 	return authorsString;
 }
-
+/*
 void NetworkBookNode::fillContent(ZLDialogContent &content) const {
 //	MobileBookInfoDialog::fillContent(content, NetworkBookInfo(myBook.staticCast<NetworkBookItem>()));
 }
@@ -89,7 +91,7 @@ void NetworkBookNode::fillContent(ZLDialogContent &content) const {
 ZLResourceKey NetworkBookNode::contentKey() const {
 	return MobileBookInfoDialog::resourceKey();
 }
-
+*/
 shared_ptr<ZLImage> NetworkBookNode::image() const {
 	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
 	return !image.isNull() ? image : FBNode::defaultCoverImage("booktree-book.png");

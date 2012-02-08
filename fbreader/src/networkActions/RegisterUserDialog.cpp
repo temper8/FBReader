@@ -115,11 +115,11 @@ bool RegisterUserDialog::runDialog(std::string &login, std::string &password, st
 
 class RegisterUserDialogRunnable : public ZLRunnable {
 public:
-	RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr);
 	void run();
 	
 	NetworkAuthenticationManager &mgr;
-	shared_ptr<ZLExecutionData::Listener> listener;
+//	shared_ptr<ZLExecutionData::Listener> listener;
 	shared_ptr<ZLRunnable> myHolder;
 	std::string errorMessage;
 	std::string login;
@@ -135,13 +135,13 @@ private:
 	void onInitialized(ZLUserDataHolder &data, const std::string &error);
 };
 
-RegisterUserDialogRunnable::RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener)
-    : mgr(mgr), listener(listener), myHolder(this) {
+RegisterUserDialogRunnable::RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr)
+    : mgr(mgr), myHolder(this) {
 	ZLTimeManager::Instance().addAutoRemovableTask(myHolder);
 }
 
 void RegisterUserDialogRunnable::finish(const std::string &error) {
-	listener->finished(error);
+//	listener->finished(error);
 //	ZLTimeManager::deleteLater(myHolder);
 	myHolder.reset();
 }
@@ -195,7 +195,7 @@ void RegisterUserDialogRunnable::onInitialized(ZLUserDataHolder &data, const std
 //	new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onLogOut));
 }
 
-bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) {
-	new RegisterUserDialogRunnable(mgr, listener);
+bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr) {
+	new RegisterUserDialogRunnable(mgr);
 	return false;
 }

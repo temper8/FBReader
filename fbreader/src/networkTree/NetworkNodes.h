@@ -91,7 +91,8 @@ public:
 	NetworkCatalogItem &item();
 	const NetworkItem::List &childrenItems();
 
-	void updateChildren(shared_ptr<ZLExecutionData::Listener> listener);
+	//void updateChildren(shared_ptr<ZLExecutionData::Listener> listener);
+	void updateChildren();
 
 protected:
 	void onChildrenReceived(LoadSubCatalogRunnable *runnable);
@@ -244,7 +245,7 @@ public:
 
 	shared_ptr<ZLImage> extractCoverImage() const;
 
-private:
+public:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> image() const;

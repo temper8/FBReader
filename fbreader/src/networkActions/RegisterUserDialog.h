@@ -37,7 +37,7 @@ private:
 	static bool runDialog(std::string &login, std::string &password, std::string &email, std::string &errorMessage);
 
 public:
-	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	static bool run(NetworkAuthenticationManager &mgr);
 
 private:
 	shared_ptr<ZLDialog> myDialog;

@@ -23,11 +23,25 @@
 #include <ZLRunnable.h>
 #include "NetworkOperationRunnable.h"
 #include <ZLTreeNode.h>
-
+#include "../networkTree/NetworkNodes.h"
 class NetworkBookItem;
 class NetworkLink;
 
-class NetworkBookDownloadAction : public ZLTreeAction, public DownloadBookListener {
+
+class NetworkBookPreviewAction : public ZLRunnableWithKey {
+
+public:
+	NetworkBookPreviewAction(NetworkBookNode *node);
+	ZLResourceKey key() const;
+	void run();
+private:
+	NetworkBookNode *myNode;
+};
+
+
+class NetworkBookDownloadAction : public ZLRunnableWithKey
+								//, public DownloadBookListener
+							{
 
 public:
     static const ZLTypeId TYPE_ID;
@@ -50,7 +64,7 @@ protected:
 	const std::string myTag;
 };
 
-class NetworkBookReadAction : public ZLTreeAction {
+class NetworkBookReadAction : public ZLRunnableWithKey {
 
 public:
 	NetworkBookReadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo);
@@ -79,7 +93,7 @@ private:
 	void onPurchased(ZLUserDataHolder &data, const std::string &error);
 };
 
-class NetworkBookBuyInBrowserAction : public ZLTreeAction {
+class NetworkBookBuyInBrowserAction : public ZLRunnableWithKey {
 
 public:
 	NetworkBookBuyInBrowserAction(const NetworkBookItem &book);
@@ -92,7 +106,7 @@ private:
 	const NetworkBookItem &myBook;
 };
 
-class NetworkBookDeleteAction : public ZLTreeAction {
+class NetworkBookDeleteAction : public ZLRunnableWithKey {
 
 public:
 	NetworkBookDeleteAction(const NetworkBookItem &book);

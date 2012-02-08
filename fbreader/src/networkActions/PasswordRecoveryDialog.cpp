@@ -72,11 +72,11 @@ bool PasswordRecoveryDialog::runDialog(std::string &email, std::string &errorMes
 class PasswordRecoveryDialogRunnable : public ZLRunnable {
 public:
 	
-	PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr);
 	void run();
 	
 	NetworkAuthenticationManager &mgr;
-	shared_ptr<ZLExecutionData::Listener> listener;
+	//shared_ptr<ZLExecutionData::Listener> listener;
 	shared_ptr<ZLRunnable> myHolder;
 	std::string errorMessage;
 	std::string email;
@@ -88,13 +88,13 @@ private:
 	void onRecovered(ZLUserDataHolder &data, const std::string &error);
 };
 
-PasswordRecoveryDialogRunnable::PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener)
-    : mgr(mgr), listener(listener), myHolder(this) {
+PasswordRecoveryDialogRunnable::PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr)
+    : mgr(mgr), myHolder(this) {
 	ZLTimeManager::Instance().addAutoRemovableTask(myHolder);
 }
 
 void PasswordRecoveryDialogRunnable::finish(const std::string &error) {
-	listener->finished(error);
+//	listener->finished(error);
 //	ZLTimeManager::deleteLater(myHolder);
 	myHolder.reset();
 }
@@ -132,7 +132,7 @@ void PasswordRecoveryDialogRunnable::onRecovered(ZLUserDataHolder &, const std::
 	finish(std::string());
 }
 
-bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) {
-	new PasswordRecoveryDialogRunnable(mgr, listener);
+bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr) {
+	new PasswordRecoveryDialogRunnable(mgr);
 	return false;
 }

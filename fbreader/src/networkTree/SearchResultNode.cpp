@@ -30,6 +30,9 @@
 
 const ZLTypeId SearchResultNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
+const ZLTypeId &SearchResultNode::typeId() const {
+	return TYPE_ID;
+}
 SearchResultNode::SearchResultNode(ZLTreeListener::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition) : 
 	mySearchResult(searchResult), 
 	mySummary(summary) {
@@ -38,10 +41,6 @@ SearchResultNode::SearchResultNode(ZLTreeListener::RootNode *parent, shared_ptr<
 
 void SearchResultNode::init() {
 //	registerExpandTreeAction();
-}
-
-const ZLTypeId &SearchResultNode::typeId() const {
-	return TYPE_ID;
 }
 
 const ZLResource &SearchResultNode::resource() const {

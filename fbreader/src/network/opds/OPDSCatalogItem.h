@@ -54,7 +54,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children);
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

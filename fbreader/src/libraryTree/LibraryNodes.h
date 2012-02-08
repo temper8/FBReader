@@ -152,8 +152,8 @@ public:
 	shared_ptr<ZLImage> image() const;
 	virtual shared_ptr<ZLImage> extractCoverImage() const;
 	std::string imageUrl() const;
-	void fillContent(ZLDialogContent &content) const;
-	ZLResourceKey contentKey() const;
+//	void fillContent(ZLDialogContent &content) const;
+//	ZLResourceKey contentKey() const;
 	shared_ptr<Book> book() const;
 
 private:

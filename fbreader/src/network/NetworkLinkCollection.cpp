@@ -143,8 +143,8 @@ void NetworkLinkCollection::addNetworkCatalogByUser(shared_ptr<ZLExecutionData::
 //		request->setHandler(this, &NetworkLinkCollection::onNetworkCatalogReply);
 		ZLNetworkManager::Instance().perform(request);
 	} else {
-		if (!listener.isNull())
-			listener->finished(std::string());
+	//	if (!listener.isNull())
+	//		listener->finished(std::string());
 	}
 }
 
@@ -154,8 +154,8 @@ void NetworkLinkCollection::onNetworkCatalogReply(ZLUserDataHolder &data, const 
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), error);
 	if (scope.link == 0) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"), message);
-		if (!scope.listener.isNull())
-			scope.listener->finished(error);
+	//	if (!scope.listener.isNull())
+	//		scope.listener->finished(error);
 		return;
 	}
 
@@ -177,8 +177,8 @@ void NetworkLinkCollection::onNetworkCatalogReply(ZLUserDataHolder &data, const 
 		scope.link->setSummary(SubNameOption.value());
 		NetworkLinkCollection::Instance().saveLink(*scope.link);
 	}
-	if (!scope.listener.isNull())
-		scope.listener->finished(std::string());
+	//if (!scope.listener.isNull())
+	//	scope.listener->finished(std::string());
 }
 
 void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto) {
@@ -261,16 +261,18 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createXMLParserRequest(myGenericUrl, prsr);
 	AppLog("createXMLParserRequest");
 	request->addUserData("scope", scope);
-	request->setHandler(this, &NetworkLinkCollection::onLinksUpdated);
+	//request->setHandler(this, &NetworkLinkCollection::onLinksUpdated);
 	AppLog("addUserData");
 	ZLNetworkManager::Instance().perform(request);
 	AppLog("perform(request)");
+	onLinksUpdated(*scope);
 }
 
-void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::string &error) {
+//void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::string &error) {
+void NetworkLinkCollection::onLinksUpdated(UpdateLinksScope &scope) {
 	AppLog("onLinksUpdated");
-	(void) error;
-	UpdateLinksScope &scope = static_cast<UpdateLinksScope&>(*data.getUserData("scope"));
+//	(void) error;
+	//UpdateLinksScope &scope = static_cast<UpdateLinksScope&>(*data.getUserData("scope"));
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = scope.links.begin(); it != scope.links.end(); ++it) {
 		saveLinkWithoutRefreshing(**it, true);
 	}
@@ -288,7 +290,7 @@ void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::st
 		AppLog("03");
 		request->addUserData("scope", loadScope);
 		AppLog("04");
-		request->setHandler(this, &NetworkLinkCollection::onLinkLoaded);
+		//request->setHandler(this, &NetworkLinkCollection::onLinkLoaded);
 		AppLog("05");
 		ZLNetworkManager::Instance().perform(request);
 		AppLog("06");
@@ -454,7 +456,7 @@ public:
 	}
 
 	void finished(const std::string &error = std::string()) {
-		myListener->finished(error);
+	//	myListener->finished(error);
 	}
 
 private:
@@ -463,8 +465,13 @@ private:
 	shared_ptr<ZLExecutionData::Listener> myListener;
 };
 
+
+
 bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+	AppLog("NetworkLinkCollection::downloadBook");
+	AppLog("fileName %s", fileName.c_str());
 	std::string nURL = ::normalize(reference.URL);
+	AppLog("nURL %s", nURL.c_str());
 	rewriteUrl(nURL);
 	const std::string nNetworkBookId = ::normalize(reference.cleanURL());
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
@@ -472,19 +479,19 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 
 	if (nURL.empty() || nNetworkBookId.empty()) {
 		myErrorMessage = errorResource["unknownErrorMessage"].value();
-		listener->finished(myErrorMessage);
+//		listener->finished(myErrorMessage);
 		return false;
 	}
 	fileName = bookFileName(nNetworkBookId, reference.BookFormat, reference.ReferenceType, true);
 	if (ZLFile(fileName).exists()) {
-		listener->finished();
+//		listener->finished();
 		return true;
 	}
 	if (fileName.empty()) {
 		if (myErrorMessage.empty()) {
 			myErrorMessage = errorResource["unknownErrorMessage"].value();
 		}
-		listener->finished(myErrorMessage);
+//		listener->finished(myErrorMessage);
 		return false;
 	}
 	if (ZLFile(fileName).exists()) {

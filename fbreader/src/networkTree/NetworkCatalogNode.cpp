@@ -50,6 +50,10 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
+const ZLTypeId &NetworkCatalogNode::typeId() const {
+	return TYPE_ID;
+}
+
 NetworkCatalogNode::NetworkCatalogNode(shared_ptr<NetworkItem> item) : myItem(item) {
 	init();
 }
@@ -70,9 +74,9 @@ void NetworkCatalogNode::init() {
 
 void NetworkCatalogNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
 	if (children().empty())
-		updateChildren(listener);
-	else
-		listener->finished();
+		updateChildren();
+	//else
+	//	listener->finished();
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
@@ -84,9 +88,6 @@ const NetworkItem::List &NetworkCatalogNode::childrenItems() {
 	return myChildrenItems;
 }
 
-const ZLTypeId &NetworkCatalogNode::typeId() const {
-	return TYPE_ID;
-}
 
 const ZLResource &NetworkCatalogNode::resource() const {
 	return ZLResource::resource("networkView")["libraryItemNode"];
@@ -118,6 +119,41 @@ shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 //	return ((FBReaderNode*)parent())->image();
 }
 
+void NetworkCatalogNode::updateChildren() {
+	//if (isOpen()) {
+	//	open(false);
+	//}
+	clear();
+
+	myChildrenItems.clear();
+	LoadSubCatalogRunnable loader(item(), myChildrenItems);
+	loader.executeWithUI();
+
+	if (loader.hasErrors()) {
+		loader.showErrorMessage();
+	} else if (myChildrenItems.empty()) {
+		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
+	}
+
+	bool hasSubcatalogs = false;
+	for (NetworkItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+		if ((*it)->typeId() == NetworkCatalogItem::TYPE_ID) {
+			hasSubcatalogs = true;
+			break;
+		}
+	}
+
+	if (hasSubcatalogs) {
+		for (NetworkItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+			NetworkNodesFactory::createNetworkNode(this, *it);
+		}
+	} else {
+		NetworkNodesFactory::fillAuthorNode(this, myChildrenItems);
+	}
+	FBReader::Instance().invalidateAccountDependents();
+}
+
+/*
 void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> listener) {
 	AppLog("NetworkCatalogNode::updateChildren");
 	//AppLog("NetworkCatalogRootNode");
@@ -130,7 +166,8 @@ void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> li
 		LoadSubCatalogRunnable* r = new LoadSubCatalogRunnable(this);
 	}
 }
-	
+*/
+/*
 void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
 	AppLog("NetworkCatalogNode::onChildrenReceived");
 	clear();
@@ -159,12 +196,12 @@ void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
 	}
 	FBReader::Instance().invalidateAccountDependents();
 	for (int i = 0; i < myListeners.size(); ++i) {
-		if (!myListeners.at(i).isNull())
-			myListeners.at(i)->finished(runnable->errorMessage());
+		//if (!myListeners.at(i).isNull())
+		//	myListeners.at(i)->finished(runnable->errorMessage());
 	}
 	myListeners.clear();
 }
-
+*/
 NetworkCatalogNode::OpenInBrowserAction::OpenInBrowserAction(const std::string &url) : myURL(url) {
 }
 
@@ -174,7 +211,7 @@ ZLResourceKey NetworkCatalogNode::OpenInBrowserAction::key() const {
 
 void NetworkCatalogNode::OpenInBrowserAction::run() {
 	FBReader::Instance().openLinkInBrowser(myURL);
-	finished(std::string());
+//	finished(std::string());
 }
 
 NetworkCatalogNode::ReloadAction::ReloadAction(NetworkCatalogNode &node) : myNode(node) {
@@ -191,13 +228,13 @@ bool NetworkCatalogNode::ReloadAction::makesSense() const {
 
 void NetworkCatalogNode::ReloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
-		finished(std::string());
+	//	finished(std::string());
 		return;
 	}
 
-	myNode.updateChildren(0);
+	myNode.updateChildren();
 	myNode.updated();
-	finished(std::string());
+//	finished(std::string());
 //	myNode.expandOrCollapseSubtree();
 //	FBReader::Instance().refreshWindow();
 }

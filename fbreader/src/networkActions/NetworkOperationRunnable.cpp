@@ -62,7 +62,9 @@ void NetworkOperationRunnable::showPercent(int ready, int full) {
 }
 
 void NetworkOperationRunnable::executeWithUI() {
-	myDialog->run(*this);
+	AppLog("executeWithUI");
+	//myDialog->run(*this);
+	run();
 }
 
 bool NetworkOperationRunnable::hasErrors() const {
@@ -120,11 +122,13 @@ void DownloadBookRunnable::setListener(DownloadBookListener *listener) {
 }
 
 void DownloadBookRunnable::run() {
-/*	NetworkLinkCollection::Instance().downloadBook(
+	AppLog("DownloadBookRunnable::run()");
+	NetworkLinkCollection::Instance().downloadBook(
 		*myReference, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
-		myListenerHolder
-	);*/
+				myDialog->listener()
+	);
+
 }
 
 void DownloadBookRunnable::finished(const std::string &error) {
@@ -143,8 +147,8 @@ const std::string &DownloadBookRunnable::fileName() const {
 	return myFileName;
 }
 
-LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) :
-	myManager(mgr), myListener(listener) {
+LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
+	myManager(mgr){
 //	ZLTimeManager::Instance().addAutoRemovableTask(myRunnableHolder);
 }
 
@@ -152,13 +156,13 @@ void LogOutRunnable::run() {
 	if (myManager.isAuthorised(0).Status != B3_FALSE) {
 //		myManager.logOut(myListenerHolder);
 	} else if (!myListener.isNull()) {
-		myListener->finished(std::string());
+		//myListener->finished(std::string());
 		destroy();
 	}
 }
 
 void LogOutRunnable::finished(const std::string &error) {
-	myListener->finished(error);
+	//myListener->finished(error);
 	destroy();
 }
 
@@ -184,17 +188,18 @@ void AdvancedSearchRunnable::run() {
 	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();
 }
 
-/*
+
 LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) :
-	NetworkOperationRunnable("loadSubCatalog"),
+		NetworkOperationRunnable(),//NetworkOperationRunnable("loadSubCatalog"),
 	myItem(item),
 	myChildren(children) {
 }
 
 void LoadSubCatalogRunnable::run() {
+	AppLog("myItem.loadChildren");
 	myErrorMessage = myItem.loadChildren(myChildren);
 }
-*/
+/*
 LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode* node) :  myNode(node) {
 	AppLog("LoadSubCatalogRunnable");
 	//NetworkCatalogItem& nItem = node->item();
@@ -203,7 +208,7 @@ LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode* node) :  myNo
 	//AppLog("Summary %s",node->item().Summary.c_str());
 	//node->item().loadChildren(myChildren, myListenerHolder);
 //	myNode->item().loadChildren(myChildren, myListenerHolder);
-	myNode->item().loadChildren(myChildren, this);
+	myNode->item().loadChildren(myChildren);
 }
 
 void LoadSubCatalogRunnable::finished(const std::string &error) {
@@ -215,3 +220,4 @@ void LoadSubCatalogRunnable::finished(const std::string &error) {
 void LoadSubCatalogRunnable::run() {
 //	myErrorMessage = myItem.loadChildren(myChildren);
 }
+*/

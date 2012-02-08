@@ -34,7 +34,8 @@ class ZLProgressDialog;
 class NetworkAuthenticationManager;
 class NetworkCatalogNode;
 
-class NetworkOperationRunnable : public ZLRunnable, public ZLExecutionData::Listener
+class NetworkOperationRunnable : public ZLRunnable
+//TODO избавиться от ZLExecutionData::Listener
 		{
 
 public:
@@ -97,7 +98,7 @@ private:
 class LogOutRunnable : public NetworkOperationRunnable {
 
 public:
-	LogOutRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	LogOutRunnable(NetworkAuthenticationManager &mgr);
 	void run();
 	void finished(const std::string &error = std::string());
 
@@ -148,7 +149,14 @@ private:
 
 
 class LoadSubCatalogRunnable : public NetworkOperationRunnable {
+public:
+	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children);
+	void run();
 
+private:
+	NetworkCatalogItem &myItem;
+	NetworkItem::List &myChildren;
+	/*
 public:
 	LoadSubCatalogRunnable(NetworkCatalogNode* node);
 	
@@ -161,6 +169,7 @@ protected:
 private:
 	NetworkCatalogNode* myNode;
 	NetworkItem::List myChildren;
+	*/
 };
 
 #endif /* __NETWORKOPERATIONRUNNABLE_H__ */
