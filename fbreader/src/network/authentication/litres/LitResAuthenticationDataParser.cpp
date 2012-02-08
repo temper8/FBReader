@@ -33,8 +33,7 @@ static const std::string TAG_REGISTRATION_FAILED = "catalit-registration-failed"
 static const std::string TAG_PASSWORD_RECOVERY_OK = "catalit-pass-recover-ok";
 static const std::string TAG_PASSWORD_RECOVERY_FAILED = "catalit-pass-recover-failed";
 
-LitResAuthenticationDataParser::LitResAuthenticationDataParser(Type type, LitResAuthenticationManager *manager, shared_ptr<ZLExecutionData::Listener> listener)
-    : myType(type), myManager(manager), myListener(listener) {
+LitResAuthenticationDataParser::LitResAuthenticationDataParser() {
 }
 
 void LitResAuthenticationDataParser::startElementHandler(const char *tag, const char **attributes) {
@@ -50,18 +49,12 @@ void LitResAuthenticationDataParser::startElementHandler(const char *tag, const 
 	processTag(tag);	
 }
 
-void LitResAuthenticationDataParser::showPercent(int ready, int full) {
-}
 
-void LitResAuthenticationDataParser::finished(const std::string &error) {
-}
 
-void LitResAuthenticationDataParser::finish() {
-	myListener->finished(errorMessage());
-}
+
 
 LitResLoginDataParser::LitResLoginDataParser(std::string &firstName, std::string &lastName, std::string &sid) : 
-	LitResAuthenticationDataParser(), myFirstName(firstName), myLastName(lastName), mySid(sid) {
+	myFirstName(firstName), myLastName(lastName), mySid(sid) {
 }
 
 void LitResLoginDataParser::processTag(const std::string &tag) {

@@ -51,10 +51,9 @@ public:
 		AuthenticationStatus(const std::string &msg);
 	};
 
-	// if listener is null then don't use network
-	virtual AuthenticationStatus isAuthorised(shared_ptr<ZLExecutionData::Listener> listener) = 0;
-	virtual std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) = 0; // returns error message
-	virtual void logOut(shared_ptr<ZLExecutionData::Listener> listener) = 0;
+	virtual AuthenticationStatus isAuthorised(bool useNetwork = true) = 0;
+	virtual std::string authorise(const std::string &pwd) = 0; // returns error message
+	virtual void logOut() = 0;
 
 	virtual bool skipIPSupported();
 
@@ -63,9 +62,9 @@ public:
 public: // Account specific methods (can be called only if authorised!!!)
 	virtual const std::string &currentUserName() = 0;
 	virtual bool needsInitialization();
-	virtual std::string initialize(shared_ptr<ZLExecutionData::Listener> listener); // returns error message
+	virtual std::string initialize(); // returns error message
 	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
-	virtual std::string purchaseBook(const NetworkBookItem &book, shared_ptr<ZLExecutionData::Listener> listener); // returns error message
+	virtual std::string purchaseBook(const NetworkBookItem &book); // returns error message
 
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();
@@ -74,11 +73,11 @@ public: // Account specific methods (can be called only if authorised!!!)
 
 public: // new User Registration
 	virtual bool registrationSupported();
-	virtual std::string registerUser(const std::string &login, const std::string &password, const std::string &email, shared_ptr<ZLExecutionData::Listener> listener);
+	virtual std::string registerUser(const std::string &login, const std::string &password, const std::string &email);
 
 public: // Password Recovery
 	virtual bool passwordRecoverySupported();
-	virtual std::string recoverPassword(const std::string &email, shared_ptr<ZLExecutionData::Listener> listener);
+	virtual std::string recoverPassword(const std::string &email);
 
 private: // disable copying
 	NetworkAuthenticationManager(const NetworkAuthenticationManager &);

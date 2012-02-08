@@ -43,7 +43,8 @@ public:
 	virtual bool doBefore() = 0;
 
 	// When `success == true` return false MUST make request fail; when `success == false` return value MUST be ignored.
-	virtual bool doAfter(const std::string &error) = 0;
+	//virtual bool doAfter(const std::string &error) = 0;
+	virtual bool doAfter(bool success) = 0;
 
 protected:
 	void setErrorMessage(const std::string &message);

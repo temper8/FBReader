@@ -34,12 +34,15 @@ ZLNetworkReadToStringRequest::ZLNetworkReadToStringRequest(const std::string &ur
 bool ZLNetworkReadToStringRequest::doBefore() {
 	return true;
 }
-
+/*
 bool ZLNetworkReadToStringRequest::doAfter(const std::string &error) {
-	finished(error);
+//	finished(error);
 	return true;
 }
-
+*/
+bool ZLNetworkReadToStringRequest::doAfter(bool) {
+	return true;
+}
 bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, size_t size) {
 	static const std::string prefix = "Content-Length: ";
 	std::string headerData((const char *) ptr, size);

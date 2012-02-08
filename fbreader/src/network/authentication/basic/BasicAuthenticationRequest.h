@@ -32,7 +32,7 @@ public:
 	bool handleContent(const void *ptr, size_t size);
 
 	bool doBefore();
-	bool doAfter(const std::string &error);
+	bool doAfter(bool success);
 
 private:
 	std::string myStatusCode;

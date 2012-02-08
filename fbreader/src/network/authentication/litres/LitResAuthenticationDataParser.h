@@ -21,24 +21,14 @@
 #define __LITRESAUTHENTICATIONDATAPARSER_H__
 
 #include <ZLXMLReader.h>
-#include <ZLExecutionData.h>
 
 #include "../../NetworkErrors.h"
 
-class LitResAuthenticationManager;
 
-class LitResAuthenticationDataParser : public ZLXMLReader, public ZLExecutionData::Listener {
+class LitResAuthenticationDataParser : public ZLXMLReader {
 
 public:
-	enum Type {
-		Login,
-		Purchase,
-		Register,
-		PasswordRecovery
-	};
-
-	LitResAuthenticationDataParser(Type type, LitResAuthenticationManager *manager, shared_ptr<ZLExecutionData::Listener> listener);
-	LitResAuthenticationDataParser() {}
+	LitResAuthenticationDataParser();
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -46,16 +36,10 @@ private:
 protected:
 	void setErrorCode(const std::string &msg);
 	std::map<std::string, std::string> &attributes();
-	void showPercent(int ready, int full);
-	void finished(const std::string &error = std::string());
-	void finish();
 
 	virtual void processTag(const std::string &tag) = 0;
 
 private:
-	Type myType;
-	LitResAuthenticationManager *myManager;
-	shared_ptr<ZLExecutionData::Listener> myListener;
 	std::map<std::string, std::string> myAttributes;
 };
 

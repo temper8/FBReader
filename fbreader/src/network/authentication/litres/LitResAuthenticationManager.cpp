@@ -16,10 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
-#include <ZLTimeManager.h>
 
 #include "LitResAuthenticationManager.h"
 #include "LitResDataParser.h"
@@ -42,20 +41,9 @@ const ZLNetworkSSLCertificate &LitResAuthenticationManager::certificate() {
 	return myCertificate;
 }
 
-class LitResAuthorisationScope : public ZLUserData {
-public:
-	std::string firstName;
-	std::string lastName;
-	std::string newSid;
-	shared_ptr<ZLExecutionData::Listener> listener;
-};
-
-NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(shared_ptr<ZLExecutionData::Listener> listener) {
-	const bool useNetwork = !listener.isNull();
+NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 	bool authState = !mySidUserNameOption.value().empty() && !mySidOption.value().empty();
 	if (mySidChecked || !useNetwork) {
-		if (!listener.isNull())
-			listener->finished(authState ? std::string() : "Not authorised");
 		return AuthenticationStatus(authState);
 	}
 
@@ -63,13 +51,11 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-		listener->finished("Not authorised");
 		return AuthenticationStatus(false);
 	}
 
-	LitResAuthorisationScope *scope = new LitResAuthorisationScope;
-	scope->listener = listener;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(scope->firstName, scope->lastName, scope->newSid);
+	std::string firstName, lastName, newSid;
+	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
 
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "sid", mySidOption.value());
@@ -78,16 +64,25 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), xmlReader
 		);
-	networkData->setHandler(this, &LitResAuthenticationManager::onAuthorised);
-	networkData->addUserData("scope", scope);
-	ZLNetworkManager::Instance().perform(networkData);
-	return AuthenticationStatus(std::string());
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
+
+	if (!error.empty()) {
+		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+			return AuthenticationStatus(error);
+		}
+		mySidChecked = true;
+		mySidUserNameOption.setValue("");
+		mySidOption.setValue("");
+		return AuthenticationStatus(false);
+	}
+	mySidChecked = true;
+	mySidOption.setValue(newSid);
+	return AuthenticationStatus(true);
 }
 
-std::string LitResAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) {
-	LitResAuthorisationScope *scope = new LitResAuthorisationScope;
-	scope->listener = listener;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(scope->firstName, scope->lastName, scope->newSid);
+std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
+	std::string firstName, lastName, newSid;
+	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
 
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
@@ -102,30 +97,23 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd, share
 			certificate(),
 			xmlReader
 		);
-	networkData->setHandler(this, &LitResAuthenticationManager::onAuthorised);
-	networkData->addUserData("scope", scope);
-	return ZLNetworkManager::Instance().perform(networkData);
-}
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
-void LitResAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
-	LitResAuthorisationScope &scope = static_cast<LitResAuthorisationScope&>(*data.getUserData("scope"));
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-	} else {
-		mySidOption.setValue(scope.newSid);
-		mySidUserNameOption.setValue(UserNameOption.value());
+		return error;
 	}
-	
-	scope.listener->finished(error);
+	mySidOption.setValue(newSid);
+	mySidUserNameOption.setValue(UserNameOption.value());
+	return "";
 }
 
-void LitResAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> listener) {
+void LitResAuthenticationManager::logOut() {
 	mySidChecked = true;
 	mySidUserNameOption.setValue("");
 	mySidOption.setValue("");
-	listener->finished(std::string());
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {
@@ -136,51 +124,30 @@ bool LitResAuthenticationManager::needPurchase(const NetworkBookItem &book) {
 	return myPurchasedBooksIds.count(book.Id) == 0;
 }
 
-class LitResPurchaseBookScope : public ZLUserData {
-public:
-	std::string account;
-	std::string bookId;
-	const NetworkBookItem *book;
-	shared_ptr<ZLExecutionData::Listener> listener;
-};
-
-std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &book, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &book) {
 	const std::string &sid = mySidOption.value();
-	std::string error;
 	if (sid.empty()) {
-		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-		listener->finished(error);
-		return error;
+		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 
 	shared_ptr<BookReference> reference = book.reference(BookReference::BUY);
 	if (reference.isNull()) {
 		// TODO: add correct error message
-		error = "Oh, that's impossible";
-		listener->finished(error);
-		return error;
+		return "Oh, that's impossible";
 	}
 	std::string query = reference->URL;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 
-	LitResPurchaseBookScope *scope = new LitResPurchaseBookScope;
-	scope->book = &book;
-	scope->listener = listener;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(scope->account, scope->bookId);
+	std::string account, bookId;
+	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		query, certificate(), xmlReader
 	);
-	networkData->addUserData("scope", scope);
-	networkData->setHandler(this, &LitResAuthenticationManager::onBookPurchased);
-	return ZLNetworkManager::Instance().perform(networkData);
-}
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
-void LitResAuthenticationManager::onBookPurchased(ZLUserDataHolder &data, const std::string &error) {
-	LitResPurchaseBookScope &scope = static_cast<LitResPurchaseBookScope&>(*data.getUserData("scope"));
-	shared_ptr<ZLExecutionData::Listener> listener = scope.listener;
-	if (!scope.account.empty()) {
-		myAccount = BuyBookReference::price(scope.account, "RUB");
+	if (!account.empty()) {
+		myAccount = BuyBookReference::price(account, "RUB");
 	}
 	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 		mySidChecked = true;
@@ -190,17 +157,15 @@ void LitResAuthenticationManager::onBookPurchased(ZLUserDataHolder &data, const 
 	const std::string alreadyPurchasedError = NetworkErrors::errorMessage(NetworkErrors::ERROR_PURCHASE_ALREADY_PURCHASED);
 	if (error != alreadyPurchasedError) {
 		if (!error.empty()) {
-			listener->finished(error);
-			return;
+			return error;
 		}
-		if (scope.bookId != scope.book->Id) {
-			listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.SiteName));
-			return;
+		if (bookId != book.Id) {
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.SiteName);
 		}
 	}
-	myPurchasedBooksIds.insert(scope.book->Id);
-	myPurchasedBooksList.push_back(new NetworkBookItem(*scope.book, 0));
-	listener->finished(error);
+	myPurchasedBooksIds.insert(book.Id);
+	myPurchasedBooksList.push_back(new NetworkBookItem(book, 0));
+	return error;
 }
 
 shared_ptr<BookReference> LitResAuthenticationManager::downloadReference(const NetworkBookItem &book) {
@@ -223,7 +188,6 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 }
 
 std::string LitResAuthenticationManager::refillAccountLink() {
-	AppLog("refillAccountLink");
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return std::string();
@@ -247,58 +211,32 @@ bool LitResAuthenticationManager::needsInitialization() {
 	return sid != myInitializedDataSid;
 }
 
-std::string LitResAuthenticationManager::initialize(shared_ptr<ZLExecutionData::Listener> listener) {
+std::string LitResAuthenticationManager::initialize() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
-		listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 	if (sid == myInitializedDataSid) {
-		listener->finished(std::string());
-		return std::string();
+		return "";
 	}
-	
-	shared_ptr<ZLExecutionData> data = loadPurchasedBooks(myPurchasedBooksIds, myPurchasedBooksList);
-	data->setHandler(this, &LitResAuthenticationManager::onBooksLoaded);
-	data->addUserData("listener", listener.staticCast<ZLUserData>());
-	return ZLNetworkManager::Instance().perform(data);
-}
 
-class LitResInitializationScope : public ZLUserData {
-public:
-	std::string dummy;
-	std::string error;
-	shared_ptr<ZLExecutionData::Listener> listener;
-};
+	std::string dummy1;
 
-void LitResAuthenticationManager::onBooksLoaded(ZLUserDataHolder &data, const std::string &error) {
-	LitResInitializationScope *scope = new LitResInitializationScope;
-	scope->error = error;
-	scope->listener = data.getUserData("listener").staticCast<ZLExecutionData::Listener>();
-	shared_ptr<ZLExecutionData> networkData = loadAccount(scope->dummy);
-	networkData->setHandler(this, &LitResAuthenticationManager::onAccountReceived);
-	networkData->addUserData("scope", scope);
-	ZLNetworkManager::Instance().perform(networkData);
-}
+	ZLExecutionData::Vector dataList;
+	dataList.push_back(loadPurchasedBooks(myPurchasedBooksIds, myPurchasedBooksList));
+	dataList.push_back(loadAccount(dummy1));
 
-void LitResAuthenticationManager::onAccountReceived(ZLUserDataHolder &data, const std::string &error) {
-	LitResInitializationScope &scope = static_cast<LitResInitializationScope&>(*data.getUserData("scope"));
-	if (!error.empty() && !scope.error.empty()) {
-		scope.error.append("\n").append(error);
-	} else if (!error.empty()) {
-		scope.error = error;
-	}
-	if (!scope.error.empty()) {
+	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	if (!error.empty()) {
 		myInitializedDataSid.clear();
 		loadPurchasedBooksOnError(myPurchasedBooksIds, myPurchasedBooksList);
 		loadAccountOnError();
-		scope.listener->finished(scope.error);
-		return;
+		return error;
 	}
-	myInitializedDataSid = mySidOption.value();
+	myInitializedDataSid = sid;
 	loadPurchasedBooksOnSuccess(myPurchasedBooksIds, myPurchasedBooksList);
 	loadAccountOnSuccess();
-	scope.listener->finished(std::string());
+	return "";
 }
 
 shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
@@ -362,18 +300,9 @@ bool LitResAuthenticationManager::registrationSupported() {
 	return true;
 }
 
-class LitResUserRegisterScope : public ZLUserData {
-public:
+std::string LitResAuthenticationManager::registerUser(const std::string &login, const std::string &password, const std::string &email) {
 	std::string newSid;
-	std::string login;
-	shared_ptr<ZLExecutionData::Listener> listener;
-};
-
-std::string LitResAuthenticationManager::registerUser(const std::string &login, const std::string &password, const std::string &email, shared_ptr<ZLExecutionData::Listener> listener) {
-	LitResUserRegisterScope *scope = new LitResUserRegisterScope;
-	scope->login = login;
-	scope->listener = listener;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResRegisterUserDataParser(scope->newSid);
+	shared_ptr<ZLXMLReader> xmlReader = new LitResRegisterUserDataParser(newSid);
 
 	std::string url = Link.url(NetworkLink::URL_SIGN_UP);
 	ZLNetworkUtil::appendParameter(url, "new_login", login);
@@ -384,30 +313,24 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), xmlReader
 		);
-	networkData->addUserData("scope", scope);
-	networkData->setHandler(this, &LitResAuthenticationManager::onUserRegistered);
-	return ZLNetworkManager::Instance().perform(networkData);
-}
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
-void LitResAuthenticationManager::onUserRegistered(ZLUserDataHolder &data, const std::string &error) {
-	LitResUserRegisterScope &scope = static_cast<LitResUserRegisterScope&>(*data.getUserData("scope"));
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-		scope.listener->finished(error);
-		return;
+		return error;
 	}
-	mySidOption.setValue(scope.newSid);
-	mySidUserNameOption.setValue(scope.login);
-	scope.listener->finished(std::string());
+	mySidOption.setValue(newSid);
+	mySidUserNameOption.setValue(login);
+	return "";
 }
 
 bool LitResAuthenticationManager::passwordRecoverySupported() {
 	return true;
 }
 
-std::string LitResAuthenticationManager::recoverPassword(const std::string &email, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string LitResAuthenticationManager::recoverPassword(const std::string &email) {
 	std::string url = Link.url(NetworkLink::URL_RECOVER_PASSWORD);
 	ZLNetworkUtil::appendParameter(url, "mail", email);
 
@@ -415,50 +338,27 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), new LitResPasswordRecoveryDataParser()
 		);
-	networkData->setHandler(this, &LitResAuthenticationManager::onPasswordRecovered);
-	networkData->addUserData("listener", listener.staticCast<ZLUserData>());
 	return ZLNetworkManager::Instance().perform(networkData);
 }
 
-void LitResAuthenticationManager::onPasswordRecovered(ZLUserDataHolder &data, const std::string &error) {
-	data.getUserData("listener").staticCast<ZLExecutionData::Listener>()->finished(error);
-}
-
-class LitResReloadPurchasedBooksScope : public ZLUserData {
-public:
-	std::set<std::string> purchasedBooksIds;
-	NetworkItem::List purchasedBooksList;
-};
-
-std::string LitResAuthenticationManager::reloadPurchasedBooks(shared_ptr<ZLExecutionData::Listener> listener) {
+std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	const std::string &sid = mySidOption.value();
-	std::string error;
 	if (sid.empty()) {
-		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-		listener->finished(error);
-		return error;
+		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 	if (sid != myInitializedDataSid) {
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");
-		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-		listener->finished(error);
-		return error;
+		mySidOption.setValue("");		
+		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 
-	LitResReloadPurchasedBooksScope *scope = new LitResReloadPurchasedBooksScope;
-	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(scope->purchasedBooksIds, scope->purchasedBooksList);
-	networkData->addUserData("listener", listener.staticCast<ZLUserData>());
-	networkData->addUserData("scope", scope);
-	networkData->setHandler(this, &LitResAuthenticationManager::onBooksReloaded);
+	std::set<std::string> purchasedBooksIds;
+	NetworkItem::List purchasedBooksList;
 
-	return ZLNetworkManager::Instance().perform(networkData);
-}
+	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
 
-void LitResAuthenticationManager::onBooksReloaded(ZLUserDataHolder &data, const std::string &error) {
-	shared_ptr<ZLExecutionData::Listener> listener = data.getUserData("listener").staticCast<ZLExecutionData::Listener>();
-	LitResReloadPurchasedBooksScope &scope = static_cast<LitResReloadPurchasedBooksScope&>(*data.getUserData("scope"));
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 	if (!error.empty()) {
 		//loadPurchasedBooksOnError(purchasedBooksIds, purchasedBooksList);
 		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
@@ -466,11 +366,10 @@ void LitResAuthenticationManager::onBooksReloaded(ZLUserDataHolder &data, const 
 			mySidUserNameOption.setValue("");
 			mySidOption.setValue("");
 		}
-		listener->finished(error);
-		return;
+		return error;
 	}
-	loadPurchasedBooksOnSuccess(scope.purchasedBooksIds, scope.purchasedBooksList);
-	myPurchasedBooksIds = scope.purchasedBooksIds;
-	myPurchasedBooksList = scope.purchasedBooksList;
-	listener->finished(std::string());
+	loadPurchasedBooksOnSuccess(purchasedBooksIds, purchasedBooksList);
+	myPurchasedBooksIds = purchasedBooksIds;
+	myPurchasedBooksList = purchasedBooksList;
+	return "";
 }

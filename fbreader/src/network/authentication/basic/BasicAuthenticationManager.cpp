@@ -16,10 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <ZLNetworkManager.h>
 #include <ZLNetworkRequest.h>
-#include <ZLTimeManager.h>
 
 #include "BasicAuthenticationManager.h"
 #include "BasicAuthenticationRequest.h"
@@ -36,19 +35,15 @@ BasicAuthenticationManager::BasicAuthenticationManager(const NetworkLink &link) 
 }
 
 
-NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(shared_ptr<ZLExecutionData::Listener> listener) {
-	const bool useNetwork = !listener.isNull();
+NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(bool useNetwork) {
 	bool authState = !myAccountUserNameOption.value().empty();
 	if (myAccountChecked || !useNetwork) {
-		if (!listener.isNull())
-			listener->finished(authState ? std::string() : "Not authorised");
 		return AuthenticationStatus(authState);
 	}
 
 	if (!authState) {
 		myAccountChecked = true;
 		myAccountUserNameOption.setValue("");
-		listener->finished("Not authorised");
 		return AuthenticationStatus(false);
 	}
 
@@ -59,27 +54,22 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
 
 	request.setRedirectionSupported(false);
-	request.setHandler(this, &BasicAuthenticationManager::onAuthorisationCheck);
-	request.addUserData("listener", listener.staticCast<ZLUserData>());
 
-	return ZLNetworkManager::Instance().perform(data);
-}
+	std::string error = ZLNetworkManager::Instance().perform(data);
 
-void BasicAuthenticationManager::onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error) {
-	shared_ptr<ZLExecutionData::Listener> listener = data.getUserData("listener").staticCast<ZLExecutionData::Listener>();
 	if (!error.empty()) {
-		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
-			myAccountChecked = true;
-			myAccountUserNameOption.setValue("");
+		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+			return AuthenticationStatus(error);
 		}
-		listener->finished(error);
-		return;
+		myAccountChecked = true;
+		myAccountUserNameOption.setValue("");
+		return AuthenticationStatus(false);
 	}
 	myAccountChecked = true;
-	listener->finished(std::string());
+	return AuthenticationStatus(true);
 }
 
-std::string BasicAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
 	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
 		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
@@ -88,23 +78,19 @@ std::string BasicAuthenticationManager::authorise(const std::string &pwd, shared
 
 	request.setRedirectionSupported(false);
 	request.setupAuthentication(ZLNetworkRequest::BASIC, UserNameOption.value(), pwd);
-	request.setHandler(this, &BasicAuthenticationManager::onAuthorised);
-	request.addUserData("listener", listener.staticCast<ZLUserData>());
 
-	return ZLNetworkManager::Instance().perform(data);
-}
+	std::string error = ZLNetworkManager::Instance().perform(data);
 
-
-void BasicAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
 	myAccountChecked = true;
-	if (!error.empty())
+	if (!error.empty()) {
 		myAccountUserNameOption.setValue("");
-	else
-		myAccountUserNameOption.setValue(UserNameOption.value());
-	data.getUserData("listener").staticCast<ZLExecutionData::Listener>()->finished(error);
+		return error;
+	}
+	myAccountUserNameOption.setValue(UserNameOption.value());
+	return "";
 }
 
-void BasicAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> listener) {
+void BasicAuthenticationManager::logOut() {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
@@ -115,7 +101,6 @@ void BasicAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> li
 			signOutUrl,
 			certificate()
 		);
-		data->setListener(listener);
 		ZLNetworkManager::Instance().perform(data);
 	}
 }
@@ -130,9 +115,4 @@ const ZLNetworkSSLCertificate &BasicAuthenticationManager::certificate() {
 
 shared_ptr<BookReference> BasicAuthenticationManager::downloadReference(const NetworkBookItem &book) {
 	return 0;
-}
-
-std::string BasicAuthenticationManager::refillAccountLink() {
-	AppLog("refillAccountLink");
-	return "";
 }

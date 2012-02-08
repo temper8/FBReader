@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <ZLNetworkSSLCertificate.h>
 
 #include "NetworkAuthenticationManager.h"
@@ -37,24 +37,19 @@ bool NetworkAuthenticationManager::needsInitialization() {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::initialize(shared_ptr<ZLExecutionData::Listener> listener) {
-	std::string error = NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-	listener->finished(error);
-	return error;
+std::string NetworkAuthenticationManager::initialize() {
+	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
 bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
 	return true;
 }
 
-std::string NetworkAuthenticationManager::purchaseBook(const NetworkBookItem &, shared_ptr<ZLExecutionData::Listener> listener) {
-	std::string error = NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-	listener->finished(error);
-	return error;
+std::string NetworkAuthenticationManager::purchaseBook(const NetworkBookItem &) {
+	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
 std::string NetworkAuthenticationManager::refillAccountLink() {
-	AppLog("refillAccountLink");
 	return "";
 }
 
@@ -70,18 +65,14 @@ bool NetworkAuthenticationManager::registrationSupported() {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::registerUser(const std::string &, const std::string &, const std::string &, shared_ptr<ZLExecutionData::Listener> listener) {
-	std::string error = NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-	listener->finished(error);
-	return error;
+std::string NetworkAuthenticationManager::registerUser(const std::string &, const std::string &, const std::string &) {
+	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
 bool NetworkAuthenticationManager::passwordRecoverySupported() {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::recoverPassword(const std::string &, shared_ptr<ZLExecutionData::Listener> listener) {
-	std::string error = NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-	listener->finished(error);
-	return error;
+std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
+	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }

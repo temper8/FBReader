@@ -36,7 +36,8 @@ protected:
 	bool handleContent(const void *ptr, size_t size);
 
 	bool doBefore();
-	bool doAfter(const std::string &error);
+	//bool doAfter(const std::string &error);
+	bool doAfter(bool success);
 
 	const std::string &fileName() const;
 

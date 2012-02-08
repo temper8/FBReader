@@ -16,11 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-#include <FBase.h>
+
 #include <algorithm>
 
 #include <ZLExecutionData.h>
-#include <ZLTimeManager.h>
 
 #include "LitResBookshelfItem.h"
 #include "LitResAuthenticationManager.h"
@@ -28,6 +27,7 @@
 #include "../../NetworkLink.h"
 #include "../../NetworkComparators.h"
 #include "../../NetworkErrors.h"
+#include <FBase.h>
 
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
@@ -49,44 +49,19 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-class LitResBookshelfItemLoaderScope : public ZLUserData {
-public:
-	NetworkItem::List *children;
-	shared_ptr<ZLExecutionData::Listener> listener;
-};
-
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
 	AppLog("LitResBookshelfItem::loadChildren");
-	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
-	shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
-	LitResBookshelfItemLoaderScope *scope = new LitResBookshelfItemLoaderScope;
-	scope->children = &children;
-	scope->listener = listener;
-	data->addUserData("scope", scope);
-	mgr.isAuthorised(ZLExecutionData::createListener(data, this, &LitResBookshelfItem::onAuthorised));
-	return std::string();
-}
-
-void LitResBookshelfItem::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
-	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
-	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
-	if (!error.empty()) {
-		scope.listener->finished(error);
-		return;
+	LitResAuthenticationManager &mgr =
+		(LitResAuthenticationManager&)*Link.authenticationManager();
+	if (mgr.isAuthorised().Status == B3_FALSE) {
+		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
+	std::string error;
 	if (myForceReload) {
-		ZLUserDataHolder *dataCopy = new ZLUserDataHolder(data);
-		mgr.reloadPurchasedBooks(ZLExecutionData::createListener(dataCopy, this, &LitResBookshelfItem::onReloaded));
-		return;
+		error = mgr.reloadPurchasedBooks();
 	}
-	onReloaded(data, error);
-}
-
-void LitResBookshelfItem::onReloaded(ZLUserDataHolder &data, const std::string &error) {
-	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
-	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
 	myForceReload = true;
-	mgr.collectPurchasedBooks(*scope.children);
-	std::sort(scope.children->begin(), scope.children->end(), NetworkBookItemComparator());
-	scope.listener->finished(error);
+	mgr.collectPurchasedBooks(children);
+	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
+	return error;
 }

@@ -44,9 +44,9 @@ public:
 		(void) ready;
 		(void) full;
 	}
-	virtual void finished(const std::string &error = std::string()) {
-		(void) error;
-	}
+//	virtual void finished(const std::string &error = std::string()) {
+//		(void) error;
+//	}
 };
 
 ZLNetworkManager *ZLNetworkManager::ourInstance = 0;

@@ -47,13 +47,19 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
-	if (error.empty())
-		finished(myReader->errorMessage());
-	else
-		finished(error);
+bool ZLNetworkXMLParserRequest::doAfter(bool) {
 	return true;
 }
+
+/*
+bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
+//	if (error.empty())
+	//	finished(myReader->errorMessage());
+//	else
+	//	finished(error);
+	return true;
+}
+*/
 
 bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, size_t size) {
 	std::string header = ZLUnicodeUtil::toLower(std::string((const char *) ptr, size));

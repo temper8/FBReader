@@ -53,20 +53,29 @@ bool ZLNetworkDownloadRequest::doBefore() {
 	if (myOutputStream.isNull() || !myOutputStream->open()) {
 		const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 		setErrorMessage(ZLStringUtil::printf(errorResource["couldntCreateFileMessage"].value(), myFileName));
-		finished(errorMessage());
+		//finished(errorMessage());
 		return false;
 	}
 	return true;
 }
-
+/*
 bool ZLNetworkDownloadRequest::doAfter(const std::string &error) {
 	myOutputStream->close();
 	if (!error.empty() && !myFileName.empty()) {
 		ZLFile(myFileName).remove();
 	}
-	finished(error);
+//	finished(error);
 	return true;
 }
+*/
+bool ZLNetworkDownloadRequest::doAfter(bool success) {
+	myOutputStream->close();
+	if (!success && !myFileName.empty()) {
+		ZLFile(myFileName).remove();
+	}
+	return true;
+}
+
 
 bool ZLNetworkDownloadRequest::handleHeader(void *ptr, size_t size) {
 	static const std::string prefix = "Content-Length: ";
