@@ -36,6 +36,9 @@ public:
 
 public:
 	std::string title() const;
+	std::string subtitle() const;
+	virtual shared_ptr<ZLImage> image() const;
+	virtual shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
 	void createChildren();
@@ -55,6 +58,10 @@ public:
 
 public:
 	std::string title() const;
+	std::string subtitle() const;
+	virtual shared_ptr<ZLImage> image() const;
+	virtual shared_ptr<ZLImage> extractCoverImage() const;
+
 	bool activate();
 
 private:

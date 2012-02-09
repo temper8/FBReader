@@ -28,3 +28,13 @@ void ReferenceTreeNode::createChildren() {
 std::string ReferenceTreeNode::title() const {
 	return myParagraph.text();
 }
+
+std::string ReferenceTreeNode::subtitle() const {
+	return std::string();
+}
+
+
+
+shared_ptr<ZLImage> ReferenceTreeNode::image() const {
+	return shared_ptr<ZLImage>();
+}

@@ -49,3 +49,13 @@ bool ReferenceNode::activate() {
 	fbreader.bookTextView().gotoParagraph(paragraphIndex);
 	return true;
 }
+
+std::string ReferenceNode::subtitle() const {
+	return std::string();
+}
+
+
+
+shared_ptr<ZLImage> ReferenceNode::image() const {
+	return shared_ptr<ZLImage>();
+}
