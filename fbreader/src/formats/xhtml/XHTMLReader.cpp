@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <cstring>
 
 #include <ZLFile.h>
@@ -486,6 +486,8 @@ XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
 bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName) {
+	AppLog("referenceName = %s", referenceName.c_str());
+
 	myModelReader.addHyperlinkLabel(referenceName);
 
 	fillTagTable();
@@ -542,6 +544,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	addStyleEntry(sTag, sClass);
 	const char *style = attributeValue(attributes, "style");
 	if (style != 0) {
+		AppLog("parseString(style) = %s", style);
 		shared_ptr<ZLTextStyleEntry> entry = myStyleParser.parseString(style);
 		myModelReader.addControl(*entry);
 		myStyleEntryStack.push_back(entry);

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <algorithm>
 
 #include <ZLStringUtil.h>
@@ -46,6 +46,7 @@ static const std::string ITEMREF = "itemref";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
+	AppLog("OEBBookReader::startElementHandler");
 	std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (!myOPFSchemePrefix.empty() &&
 			ZLStringUtil::stringStartsWith(tagString, myOPFSchemePrefix)) {
@@ -126,16 +127,18 @@ bool OEBBookReader::readBook(const ZLFile &file) {
 	if (!readDocument(file)) {
 		return false;
 	}
-
+	AppLog("OEBBookReader::readBook");
 	myModelReader.setMainTextModel();
 	myModelReader.pushKind(REGULAR);
-
+    int n=0;
 	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
 		if (it != myHtmlFileNames.begin()) {
 			myModelReader.insertEndOfSectionParagraph();
 		}
+		AppLog("xhtmlReader.readFile ");
 		XHTMLReader xhtmlReader(myModelReader);
 		xhtmlReader.readFile(ZLFile(myFilePrefix + *it), *it);
+		if (++n>5) break;
 	}
 
 	generateTOC();
@@ -185,6 +188,7 @@ void OEBBookReader::generateTOC() {
 }
 
 bool OEBBookReader::processNamespaces() const {
+
 	return true;
 }
 
@@ -192,6 +196,7 @@ void OEBBookReader::namespaceListChangedHandler() {
 	const std::map<std::string,std::string> &namespaceMap = namespaces();
 	std::map<std::string,std::string>::const_iterator iter = namespaceMap.begin();
 	for (; iter != namespaceMap.end(); ++iter) {
+		AppLog("namespaceListChangedHandler ");
 		if (iter->second == ZLXMLNamespace::OpenPackagingFormat) {
 			break;
 		}

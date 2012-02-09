@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <cstdlib>
 
 #include <ZLStringUtil.h>
@@ -83,6 +83,7 @@ bool OEBMetaInfoReader::isNSName(const std::string &fullName, const std::string 
 }
 
 void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attributes) {
+	AppLog("OEBMetaInfoReader::startElementHandler ");
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString || DC_METADATA == tagString ||
 			isNSName(tagString, METADATA, ZLXMLNamespace::OpenPackagingFormat)) {
