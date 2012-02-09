@@ -33,8 +33,8 @@
 #include "expat/ZLXMLReaderInternal.h"
 
 
-//static const size_t BUFFER_SIZE = 2048;
-static const size_t BUFFER_SIZE = 4096;
+static const size_t BUFFER_SIZE = 2048;
+//static const size_t BUFFER_SIZE = 4096;
 
 class ZLXMLReaderHandler : public ZLAsynchronousInputStream::Handler {
 
