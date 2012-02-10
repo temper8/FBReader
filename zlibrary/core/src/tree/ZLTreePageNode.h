@@ -32,8 +32,8 @@ public:
 	shared_ptr<ZLDialogContent> content() const;
 	
 protected:
-	virtual void fillContent(ZLDialogContent &content) const = 0;
-	virtual ZLResourceKey contentKey() const = 0;
+//	virtual void fillContent(ZLDialogContent &content) const = 0;
+//	virtual ZLResourceKey contentKey() const = 0;
 	
 private:
         mutable shared_ptr<ZLDialogContent> myContent;

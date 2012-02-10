@@ -29,7 +29,7 @@ const ZLTypeId &ZLTreeTitledNode::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTreeTitledNode::ZLTreeTitledNode() {
+ZLTreeTitledNode::ZLTreeTitledNode():myIsInitialized(false) {
 }
 
 ZLTreeTitledNode::~ZLTreeTitledNode() {
@@ -47,3 +47,5 @@ shared_ptr<ZLImage> ZLTreeTitledNode::image() const {
 	return shared_ptr<ZLImage>();
 }
 
+void ZLTreeTitledNode::init() {
+}

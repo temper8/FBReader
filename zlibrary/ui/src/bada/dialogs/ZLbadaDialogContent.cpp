@@ -24,7 +24,7 @@
 
 #include "ZLbadaDialogContent.h"
 #include <FBase.h>
-#include "ZLbadaOptionView.h"
+#include "optionView/ZLbadaOptionView.h"
 
 void ZLbadaDialogContent::close() {
 //	myLayout->setRowStretch(myRowCounter, 10);
@@ -37,6 +37,7 @@ ZLbadaDialogContent::ZLbadaDialogContent(DialogForm *form, const ZLResource &res
 }
 
 ZLbadaDialogContent::~ZLbadaDialogContent() {
+	AppLog("ZLbadaDialogContent::~ZLbadaDialogContent");
 }
 
 void ZLbadaDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -108,8 +109,15 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
 			break;
 		case ZLOptionEntry::STATIC:
 			AppLog("ZLOptionEntry::STATIC:");
-			//view = new StaticTextOptionView(name, tooltip, (ZLStaticTextOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			  view = new StaticTextOptionView(name, tooltip, (ZLStaticTextOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
+    	case ZLOptionEntry::PICTURE:
+		    view = new PictureView(name, tooltip, (ZLPictureOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+		    break;
+    	case ZLOptionEntry::BUTTON:
+    		AppLog("ZLOptionEntry::BUTTON");
+    		    view = new ButtonView(name, tooltip, (ZLButtonOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+    		    break;
 	}
 
 	if (view != 0) {

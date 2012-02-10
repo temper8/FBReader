@@ -23,7 +23,7 @@ using namespace Osp::Base::Runtime;
 #define ID_ACT_DELETE	1601
 #define ID_ACT_CLOSE	1602
 
-TreeViewForm::TreeViewForm() {
+TreeViewForm::TreeViewForm():__pCustomListItemFormat(0),__pCustomList(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -31,18 +31,16 @@ TreeViewForm::TreeViewForm() {
 TreeViewForm::~TreeViewForm() {
 	// TODO Auto-generated destructor stub
 	AppLog("TreeViewForm::~TreeViewForm()");
-
-	//delete myModel;
-	AppLog("delete myModel");
-
+	__myTreeDialog = 0;
+	AppLog("__myTreeDialog = 0");
+	myTreeDialog = 0;
 	//__pCustomList->RemoveAllItems();
 	AppLog("__pCustomList->RemoveAllItems()");
-
-  //  delete __pCustomList;
-    AppLog("delete __pCustomList;");
-
-//    delete __pCustomListItemFormat;
+    delete __pCustomListItemFormat;
 	AppLog("delete __pCustomListItemFormat;");
+
+//    delete __pCustomList;
+    AppLog("delete __pCustomList;");
 }
 /*
 bool TreeViewForm::OnStart(void){

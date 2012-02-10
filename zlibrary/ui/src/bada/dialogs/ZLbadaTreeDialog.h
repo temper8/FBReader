@@ -87,12 +87,14 @@ public: ///////; Q_SLOTS:
 //Q_SIGNALS:
 	void finished();
 	void progressChanged();
+	virtual bool back();
 	virtual bool enter(ZLTreeNode* node);
 	virtual void updateNode(ZLTreeTitledNode &node, int index);
+	virtual void treadTerminator();
 private:
 
     //WaitWidget* myWaitWidget;
-    shared_ptr<ZLExecutionData::Listener> myWaitWidgetListener;
+ //   shared_ptr<ZLExecutionData::Listener> myWaitWidgetListener;
     TreeViewForm* myForm;
     //Osp::Base::Runtime::Monitor* myMonitor;
     //ZLbadaTreeModel* myModel;
@@ -108,7 +110,7 @@ public:
 
 public:
     void showPercent(int ready, int full);
-    void finished(const std::string &error);
+  //  void finished(const std::string &error);
 
 public:
     bool isFinished() const;

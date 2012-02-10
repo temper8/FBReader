@@ -50,13 +50,14 @@ public:
 	virtual ZLDialogContent &createTab(const ZLResourceKey &key) = 0;
 	void createPlatformDependentTabs();
 	virtual bool run();
+	void accept();
 
 protected:
 	virtual const std::string &selectedTabKey() const = 0;
 	virtual void selectTab(const ZLResourceKey &key) = 0;
 	virtual bool runInternal() = 0;
 
-	void accept();
+
 
 	const std::string &caption() const;
 	const ZLResource &tabResource(const ZLResourceKey &key) const;

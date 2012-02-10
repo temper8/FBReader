@@ -26,7 +26,9 @@
 #include <ZLOptions.h>
 #include <ZLImageManager.h>
 #include <ZLImage.h>
-
+#include <ZLRunnable.h>
+#include <ZLTreeTitledNode.h>
+#include <FBase.h>
 class ZLOptionView;
 
 class ZLOptionEntry {
@@ -46,7 +48,8 @@ public:
 		MULTILINE,
 		STATIC,
 		PATH,
-                PICTURE,
+        PICTURE,
+        BUTTON,
 	};
 
 public:
@@ -254,18 +257,39 @@ private:
 
 class ZLPictureOptionEntry : public ZLOptionEntry {
 
-public:
-        ZLPictureOptionEntry(shared_ptr<ZLImage> image);
+public://ZLTreeTitledNode
+        ZLPictureOptionEntry(shared_ptr<ZLImage> image,std::vector<shared_ptr<ZLRunnableWithKey> > &actions );
+		//ZLPictureOptionEntry(shared_ptr<ZLTreeTitledNode> node);
+		ZLPictureOptionEntry(ZLTreeTitledNode* node);
         ZLOptionKind kind() const;
         //TODO may be there should be link to:
         //1) book-id:///45 (for cover)
         //2) file:/// for file
         //3) http:/// for url
         // all of it instead of ZLImage
+        //const shared_ptr<ZLTreeTitledNode> node() const;
+
+      //  const ZLTreeTitledNode* node() const;
         const shared_ptr<ZLImage> image() const;
+       const  std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
+private:
+        //shared_ptr<ZLTreeTitledNode> myNode;
+
+      //  ZLTreeTitledNode *myNode;
+        shared_ptr<ZLImage> myImage;
+};
+
+
+class ZLButtonOptionEntry : public ZLOptionEntry {
+
+public:
+        ZLButtonOptionEntry(shared_ptr<ZLRunnableWithKey> action);
+        ZLOptionKind kind() const;
+        const shared_ptr<ZLRunnableWithKey> action() const;
 
 private:
-        shared_ptr<ZLImage> myImage;
+        shared_ptr<ZLRunnableWithKey> myAction;
+
 };
 
 
@@ -328,8 +352,21 @@ inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH
 inline const std::string &ZLPathOptionEntry::initialValue() const { return myOption.value(); }
 inline void ZLPathOptionEntry::onAccept(const std::string &value) {	myOption.setValue(value); }
 
-inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image): myImage(image) { }
+//inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image): myImage(image) { }
+inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image,std::vector<shared_ptr<ZLRunnableWithKey> > &actions ): myImage(image), myActions(actions) {}
+
+//inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLTreeTitledNode> node): myNode(node),myImage(0) { }
+inline ZLPictureOptionEntry::ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()), myActions(node->actions()) { }
+
 inline ZLOptionEntry::ZLOptionKind ZLPictureOptionEntry::kind() const { return PICTURE; }
 inline const shared_ptr<ZLImage> ZLPictureOptionEntry::image() const { return myImage; }
+
+//inline const shared_ptr<ZLTreeTitledNode> ZLPictureOptionEntry::node() const { AppLog("ZLPictureOptionEntry::node()"); return myNode; }
+//inline const ZLTreeTitledNode* ZLPictureOptionEntry::node() const { AppLog("ZLPictureOptionEntry::node()"); return myNode; }
+
+inline ZLButtonOptionEntry::ZLButtonOptionEntry(shared_ptr<ZLRunnableWithKey> action): myAction(action) { }
+inline ZLOptionEntry::ZLOptionKind ZLButtonOptionEntry::kind() const { return BUTTON; }
+inline const shared_ptr<ZLRunnableWithKey> ZLButtonOptionEntry::action() const { return myAction; }
+
 
 #endif /* __ZLOPTIONENTRY_H__ */

@@ -40,6 +40,7 @@ public:
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const;
+	void startOpenFileDialog();
 
 	shared_ptr<ZLTreeDialog> createTreeDialog(const ZLResourceKey &key) const;
 	static void deleteTreeDialog();
@@ -57,6 +58,7 @@ private:
 	mutable ZLbadaApplicationWindow *myApplicationWindow;
 	static shared_ptr<ZLTreeDialog> myTreeDialog;
 	mutable shared_ptr<ZLOptionsDialog> mybadaOptionsDialog;
+	//mutable ZLOptionsDialog* mybadaOptionsDialog;
 };
 
 #endif /* __ZLBADADIALOGMANAGER_H__ */

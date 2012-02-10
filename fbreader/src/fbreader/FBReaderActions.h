@@ -125,6 +125,15 @@ public:
 	void run();
 };
 
+class ShowNetworkLibraryTreeAction : public ZLApplication::Action {
+
+public:
+
+	void makeUpToDate();
+	void run();
+};
+
+
 
 class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
 

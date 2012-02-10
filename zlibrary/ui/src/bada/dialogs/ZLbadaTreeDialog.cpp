@@ -47,9 +47,9 @@ ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(re
 
 	//        myWaitWidget = new WaitWidget;
 
-    TreeActionListener* listener = new TreeActionListener;
+ //   TreeActionListener* listener = new TreeActionListener;
     //because we should have a shared_ptr
-    myWaitWidgetListener = listener;
+  //  myWaitWidgetListener = listener;
 
 	AppLog("new TreeViewForm");
    	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
@@ -85,16 +85,59 @@ Object* ZLbadaTreeDialog::Run(void){
 	loadCovers();
 }
 
-bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
-	 myCurrentNode = node;
-	 myCurrentNode->requestChildren(myWaitWidgetListener);
+bool ZLbadaTreeDialog::back() {
+	if (__pThread) {
+		terminateThread = true;
+		__pThread->Join();
+		 AppLog("Join");
+		delete __pThread;
+		__pThread = null;
+	}
+	if (myCurrentNode == &rootNode()) {
+		return false;
+	}
+	myCurrentNode = myCurrentNode->parent();
 	 myForm->UpdateContent();
 	 AppLog("UpdateContent finish");
 	__pThread = new Thread();
 	__pThread->Construct(*this);
 		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
 		//__pListView->SetTextOfEmptyList(L"Loading...");
-		//__terminateThread = false;
+	terminateThread = false;
+	__pThread->Start();
+	return true;
+}
+
+void ZLbadaTreeDialog::treadTerminator(){
+	if (__pThread) {
+		terminateThread = true;
+		__pThread->Join();
+		 AppLog("Join");
+		delete __pThread;
+		__pThread = null;
+	}
+}
+
+
+bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
+	 AppLog("enter node");
+	if (__pThread) {
+		terminateThread = true;
+		__pThread->Join();
+		 AppLog("Join");
+		delete __pThread;
+		__pThread = null;
+	}
+	 AppLog("__pThread kill????");
+	 myCurrentNode = node;
+	 myCurrentNode->requestChildren(0);
+	 myForm->UpdateContent();
+	 AppLog("UpdateContent finish");
+	__pThread = new Thread();
+	__pThread->Construct(*this);
+		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
+		//__pListView->SetTextOfEmptyList(L"Loading...");
+	terminateThread = false;
 	__pThread->Start();
 
 	return true;
@@ -116,7 +159,28 @@ void ZLbadaTreeDialog::run() {
 //	myForm->myMonitor = pMonitor;
 
 	result r = E_SUCCESS;
-	myForm->UpdateContent();
+	//myForm->UpdateContent();
+
+	if (__pThread) {
+		terminateThread = true;
+		__pThread->Join();
+		 AppLog("Join");
+		delete __pThread;
+		__pThread = null;
+	}
+	 //myCurrentNode = node;
+	// myCurrentNode->requestChildren(myWaitWidgetListener);
+	 myForm->UpdateContent();
+	 AppLog("UpdateContent finish");
+	__pThread = new Thread();
+	__pThread->Construct(*this);
+		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
+		//__pListView->SetTextOfEmptyList(L"Loading...");
+	terminateThread = false;
+	__pThread->Start();
+
+
+
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	r = pFrame->Draw();
 	AppLog("pFrame->Draw();");
@@ -170,7 +234,7 @@ bool TreeActionListener::isFinished() const {
 void TreeActionListener::showPercent(int ready, int full) {
   //  emit percentChanged(ready,full);
 }
-
+/*
 void TreeActionListener::finished(const std::string &error) {
     myIsFinished = true;
  //   emit finishedHappened(error);

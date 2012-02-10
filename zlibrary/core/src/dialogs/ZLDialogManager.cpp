@@ -88,19 +88,21 @@ int ZLDialogManager::questionBox(const ZLResourceKey &key, const ZLResourceKey &
 	return questionBox(key, dialogMessage(key), button0, button1, button2);
 }
 */
+
 shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResourceKey &key) const {
 	return 0;
 }
 
 void ZLDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
 	AppLog("createProgressDialog");
-//TODO	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
-//	if (!dialog.isNull()) {
-//		dialog->run(runnable);
-//	} else {
-	AppLog("runnable.run()");
+//TODO
+	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
+	if (!dialog.isNull()) {
+		dialog->run(runnable);
+	} else {
+	AppLog("else runnable.run()");
 		runnable.run();
-//	}
+	}
 }
 
 

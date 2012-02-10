@@ -27,7 +27,7 @@
 
 
 //#include "ZLQtDialogContent.h"
-//#include "ZLQtProgressDialog.h"
+#include "ZLbadaProgressDialog.h"
 //#include "ZLQtUtil.h"
 
 //#include "../image/ZLQtImageManager.h"
@@ -42,7 +42,9 @@
 #include "ZLbadaOpenFileDialog.h"
 #include "ZLbadaOptionsDialog.h"
 #include "ZLbadaTreeDialog.h"
+#include "ZLTypeId.h"
 
+using namespace Osp::App;
 using namespace Osp::Ui::Controls;
 
 void ZLbadaDialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -58,9 +60,13 @@ shared_ptr<ZLDialog> ZLbadaDialogManager::createDialog(const ZLResourceKey &key)
 shared_ptr<ZLOptionsDialog> ZLbadaDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	AppLog("ZLbadaDialogManager::createOptionsDialog");
 	//ZLbadaOptionsDialog* b= new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
-	mybadaOptionsDialog = new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	//mybadaOptionsDialog =new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	shared_ptr<ZLOptionsDialog> b = new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
+	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	DialogForm* d = (DialogForm*)pFrame->GetCurrentForm();
+	d->__badaOptionsDialog = b;
 	//b->myDialogForm = myApplicationWindow->viewWidget().mybadaForm->CreateDalogForm();
-	return mybadaOptionsDialog;
+	return b;//new ZLbadaOptionsDialog(myApplicationWindow->viewWidget().mybadaForm,resource()[key], applyAction, showApplyButton);
 }
 
 
@@ -69,8 +75,11 @@ shared_ptr<ZLOpenFileDialog> ZLbadaDialogManager::createOpenFileDialog(const ZLR
 	ZLbadaOpenFileDialog *b= new ZLbadaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 	AppLog("ZLbadaDialogManager::createOpenFileDialog");
 	b->pSearchResultInfo = myApplicationWindow->viewWidget().mybadaForm->pSearchResultInfo;
-
 	return b;
+}
+
+void ZLbadaDialogManager::startOpenFileDialog(){
+	myApplicationWindow->viewWidget().mybadaForm->goOpenFileForm();
 }
 
 void ZLbadaDialogManager::informationBox(const std::string &title, const std::string &message) const {
@@ -101,11 +110,12 @@ int ZLbadaDialogManager::questionBox(const ZLResourceKey &key, const std::string
 		::qtButtonName(button2)
 	);
 }
-
-shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {
-	return new ZLQtProgressDialog(key);
+*/
+shared_ptr<ZLProgressDialog> ZLbadaDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLbadaProgressDialog(key);
 }
 
+/*
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
 	return true;
 }
@@ -131,10 +141,15 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 shared_ptr<ZLTreeDialog> ZLbadaDialogManager::createTreeDialog(const ZLResourceKey &key) const {
 	AppLog("ZLbadaDialogManager::createTreeDialog");
 
-	//myTreeDialog = new ZLbadaTreeDialog(myApplicationWindow->viewWidget().mybadaForm);
-	myTreeDialog = new ZLbadaTreeDialog(resource()[key]);
-	//new Event(dialog, this, &ZLQmlDialogManager::treeDialogRequested);
-	return myTreeDialog;
+	//myTreeDialog = new ZLbadaTreeDialog(resource()[key]);
+	//return myTreeDialog;
+
+	shared_ptr<ZLTreeDialog> b = new ZLbadaTreeDialog(resource()[key]);
+	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	TreeViewForm* d = (TreeViewForm*)pFrame->GetCurrentForm();
+	d->__myTreeDialog = b;
+   return b;
+
 }
 
 shared_ptr<ZLTreeDialog> ZLbadaDialogManager::myTreeDialog = 0;

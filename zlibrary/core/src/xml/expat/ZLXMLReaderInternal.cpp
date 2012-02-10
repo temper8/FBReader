@@ -30,17 +30,17 @@
 //void ZLXMLReaderInternal::fCharacterDataHandler(void *userData, const char *text, int len) {
 //void fCharacterDataHandler(void *userData, const char *text, int len) {
 void fCharacterDataHandler(void *userData,	const xmlChar *text, int len) {
-	char buf[100];
+//	char buf[100];
 //	AppLog("ZLXMLReaderInternal::fCharacterDataHandler");
 	ZLXMLReader &reader = *(ZLXMLReader*)userData;
 	if (!reader.isInterrupted()) {
 		reader.characterDataHandler((const char*)text, len);
 
-		if (len<50) {
-			memset(buf, 0, 99);
-		    strncpy(buf, (const char*)text, len);
+	//	if (len<50) {
+	//		memset(buf, 0, 99);
+	//	    strncpy(buf, (const char*)text, len);
 	//	AppLog("fCharacterDataHandler text=%s",buf);
-		}
+	//	}
 	//	AppLog("fCharacterDataHandler len = %d",len);
 	}
 }
@@ -266,7 +266,7 @@ int	ZLXMLReaderInternal::fxmlCharEncodingInputFunc(unsigned char * out, int * ou
 			//memcpy(out,(char*)myBuffer.c_str(),*outlen);
 			memcpy(out,(char*)myBuffer.data(),*outlen);
 			//memcpy(out,(char*)in,*outlen);
-	//		AppLog("fxmlCharEncodingInputFunc inlen =%d, outlen =%d",*inlen, *outlen);
+			AppLog("fxmlCharEncodingInputFunc inlen =%d, outlen =%d",*inlen, *outlen);
 	//		AppLog("out =%s",out);
 			return *outlen;
 		}
@@ -340,7 +340,8 @@ bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 	//AppLog("xmlParseChunk len = %d",len);
 	int r = xmlParseChunk(ctxt, buffer, len, 0);
 	AppLog("xmlParseChunk r=%d len = %d", r, len);
-	return (r == 0);
+	//return (r == 0);
+	return true;
 }
 
 ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
@@ -374,7 +375,7 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 	AppLog("XML_ParserFree");
     xmlParseChunk(ctxt, 0, 0, 1);
     xmlFreeParserCtxt(ctxt);
-//	xmlCleanupParser();
+	xmlCleanupParser();
 //	XML_ParserFree(myParser);
 }
 

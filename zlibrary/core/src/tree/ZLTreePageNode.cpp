@@ -25,7 +25,7 @@ const ZLTypeId ZLTreePageNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
 const ZLTypeId &ZLTreePageNode::typeId() const {
 	return TYPE_ID;
 }
-
+/*
 shared_ptr<ZLDialogContent> ZLTreePageNode::content() const {
         // if was commented, because there's necessary to make new content each time,
         //because object ZLQtDialogContent has inner widget, that can become invalidated
@@ -36,3 +36,4 @@ shared_ptr<ZLDialogContent> ZLTreePageNode::content() const {
         //}
 	return myContent;
 }
+*/

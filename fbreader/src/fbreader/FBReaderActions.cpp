@@ -55,6 +55,7 @@
 #include "../libraryTree/LibraryTreeNodes.h"
 #include "../bookmodel/TOCTreeNodes.h"
 
+
 #include <FBase.h>
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
@@ -120,7 +121,6 @@ void ShowOptionsDialogAction::run() {
 }
 
 
-
 void ShowLibraryTreeAction::run() {
 	AppLog("ShowLibraryTreeAction::run() ");
 	//TODO maybe use call LibraryView().showDialog here?
@@ -160,9 +160,9 @@ void ShowTOCTreeAction::run() {
 	for (size_t index=0; index<children.size(); ++index) {
 		const ZLTextTreeParagraph& paragraph = *children.at(index);
 		if (paragraph.children().size() == 0) {
-			//dialog->rootNode().insert(new ReferenceNode(paragraph), index);
+			dialog->rootNode().insert(new ReferenceNode(paragraph), index);
 		} else {
-			//dialog->rootNode().insert(new ReferenceTreeNode(paragraph), index);
+			dialog->rootNode().insert(new ReferenceTreeNode(paragraph), index);
 		}
 	}
 	dialog->run();

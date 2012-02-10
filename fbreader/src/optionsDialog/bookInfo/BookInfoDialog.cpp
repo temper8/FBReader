@@ -323,10 +323,6 @@ void BookTitleEntry::onAccept(const std::string &value) {
 }
 
 
-
-
-
-
 class BookEncodingEntry : public AbstractEncodingEntry {
 
 public:
@@ -368,10 +364,6 @@ BookLanguageEntry::BookLanguageEntry(BookInfoDialog &dialog, const std::vector<s
 void BookLanguageEntry::onAcceptCode(const std::string &code) {
 	myInfoDialog.myBook->setLanguage(code);
 }
-
-
-
-
 
 class BookTagEntry : public ZLComboOptionEntry {
 

@@ -51,7 +51,7 @@ friend class IConvEncodingConverterProvider;
 };
 
 bool IConvEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	AppLog("IConvEncodingConverterProvider::providesConverter %s",encoding.c_str());
+//	AppLog("IConvEncodingConverterProvider::providesConverter %s",encoding.c_str());
 	 Osp::Base:: String bada_encoding(encoding.c_str());
 	//iconv_t converter = iconv_open("utf-8", encoding.c_str());
 	 result r = E_SUCCESS;
@@ -62,9 +62,10 @@ bool IConvEncodingConverterProvider::providesConverter(const std::string &encodi
 	 // E_UNSUPPORTED_TYPE The specified encoding type is not supported.
 	if (GetLastResult() == E_SUCCESS) {
 			delete pEnc;
+		//AppLog("true");
 		return true;
 	}
-
+	//AppLog("false");
 /*
 	if (converter != (iconv_t)-1) {
 		iconv_close(converter);
@@ -78,7 +79,7 @@ shared_ptr<ZLEncodingConverter> IConvEncodingConverterProvider::createConverter(
 }
 
 IConvEncodingConverter::IConvEncodingConverter(const std::string &encoding) {
-AppLog("IConvEncodingConverterProvider::IConvEncodingConverter %s",encoding.c_str());
+//AppLog("IConvEncodingConverterProvider::IConvEncodingConverter %s",encoding.c_str());
 
 //	myIConverter = iconv_open("utf-8", encoding.c_str());
 }
@@ -91,7 +92,7 @@ IConvEncodingConverter::~IConvEncodingConverter() {
 }
 
 void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-//	AppLog("IConvEncodingConverterProvider::convert()");
+	AppLog("IConvEncodingConverterProvider::convert()");
 /*	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
 		return;
 	}

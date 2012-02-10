@@ -35,6 +35,7 @@ public:
 	//bool Initialize(const char *title);
 	bool Initialize(ZLTreeDialog* treeDialog);
 	Osp::Base::Runtime::Monitor* myMonitor;
+	shared_ptr<ZLTreeDialog> __myTreeDialog;
 
 protected:
 	// Ui

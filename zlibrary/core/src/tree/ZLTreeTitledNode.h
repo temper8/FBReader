@@ -44,6 +44,11 @@ public:
 	// |       |  subtitle     |
 	// +-------+---------------+
 	// Name of book
+
+
+	bool myIsInitialized;
+	virtual void init();
+
 	virtual std::string title() const = 0;
 	// Short description
 	virtual std::string subtitle() const;

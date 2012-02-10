@@ -31,7 +31,9 @@
 #include "../fbreader/FBReader.h"
 #include "../formats/FormatPlugin.h"
 
-#include "../optionsDialogMobile/MobileBookInfoDialog.h"
+//#include "../optionsDialogMobile/MobileBookInfoDialog.h"
+
+#include <FBase.h>
 
 static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::SubtitleMode subtitleMode) {
     switch (subtitleMode) {
@@ -56,7 +58,7 @@ public:
 	
 	virtual void run() {
                 FBReader::Instance().openBook(myNode->book());
-                finished(std::string());
+           //     finished(std::string());
                 myNode->close();
 	}
 
@@ -72,7 +74,7 @@ BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
     myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
 	//registerAction(new ReadBookAction(this));
 
-	registerAction(new BookReadAction(myBook));
+	//registerAction(new BookReadAction(myBook));
 	registerAction(new BookEditInfoAction(myBook));
 	//registerAction(new BookRemoveAction(myBook));
 }
@@ -99,7 +101,9 @@ std::string BookNode::imageUrl() const {
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {
 	return FBNode::defaultCoverImage("booktree-book.png");
 }
+
 shared_ptr<ZLImage> BookNode::image() const {
+	AppLog("BookNode::image()");
 	shared_ptr<ZLImage> image = originalImage();
 	if (image.isNull())
 		image = FBNode::defaultCoverImage("booktree-book.png");
@@ -110,13 +114,14 @@ shared_ptr<ZLImage> BookNode::originalImage() const {
 	if (myCoverImageIsStored)
 		return myStoredCoverImage;
 	myCoverImageIsStored = true;
+	AppLog("myCoverImageIsStored = true");
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
 	if (!plugin.isNull()) {
 		myStoredCoverImage = plugin->coverImage(myBook->file());
 	}
 	return myStoredCoverImage;
 }
-
+/*
 void BookNode::fillContent(ZLDialogContent &content) const {
 	MobileBookInfoDialog::fillContent(content, LocalBookInfo(myBook));
 }
@@ -124,7 +129,7 @@ void BookNode::fillContent(ZLDialogContent &content) const {
 ZLResourceKey BookNode::contentKey() const {
 	return MobileBookInfoDialog::resourceKey();
 }
-
+*/
 shared_ptr<Book> BookNode::book() const {
 	return myBook;
 }

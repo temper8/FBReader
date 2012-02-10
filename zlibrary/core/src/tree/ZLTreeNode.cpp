@@ -115,8 +115,8 @@ size_t ZLTreeNode::childIndex() const {
 }
 
 void ZLTreeNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
-        if (!listener.isNull())
-            listener->finished();
+        //if (!listener.isNull())
+         //   listener->finished();
 }
 
 const ZLResource &ZLTreeNode::resource() const {
@@ -130,7 +130,14 @@ void ZLTreeNode::registerTreeAction(shared_ptr<ZLTreeAction> action) {
 		myTreeActions.push_back(action);
 	}
 }
+/*
+void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
+	if (!action.isNull()) {
+		myActions.push_back(std::make_pair(action, auxiliary));
+	}
+}
 
+*/
 void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
 	if (!action.isNull()) {
 		myActions.push_back(action);

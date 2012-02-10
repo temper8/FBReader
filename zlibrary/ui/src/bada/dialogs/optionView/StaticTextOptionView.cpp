@@ -73,16 +73,13 @@ void StaticTextOptionView::_createItem() {
 
 	int groupIndex = myTab->form()->GroupCount-1;
 	int itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
-	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,true);
-
-
+	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,false);
 }
 
 void StaticTextOptionView::_onAccept() const {
 }
 
 void StaticTextOptionView::OnActionPerformed(int actionId){}
-
 
 result StaticTextOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus)
 {

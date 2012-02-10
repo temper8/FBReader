@@ -325,15 +325,20 @@ class PictureView : public ZLbadaOptionView,
 
 public:
         PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn);
+        ~PictureView();
         void updateActions();
 private:
         void _createItem();
         void _onAccept() const;
 
 private:
+    	int groupIndex;
+    	int itemIndex;
+    	const  std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
         ButtonAction* myBottonActions[4];
         shared_ptr<ZLImage> myImage;
-        shared_ptr<ZLTreeTitledNode> myNode;
+        //shared_ptr<ZLTreeTitledNode> myNode;
+      //  const ZLTreeTitledNode* myNode;
     	virtual void OnActionPerformed(int actionId);
     	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
 };

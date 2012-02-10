@@ -138,7 +138,7 @@ bool OEBBookReader::readBook(const ZLFile &file) {
 		AppLog("xhtmlReader.readFile ");
 		XHTMLReader xhtmlReader(myModelReader);
 		xhtmlReader.readFile(ZLFile(myFilePrefix + *it), *it);
-		if (++n>5) break;
+		//if (++n>5) break;
 	}
 
 	generateTOC();

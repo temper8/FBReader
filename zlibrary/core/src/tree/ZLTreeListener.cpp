@@ -38,7 +38,7 @@ const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
 
 const ZLTypeId ZLTreeListener::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
-ZLTreeListener::ZLTreeListener() : myRootNode(*this) {//TODO ??? зачем это?
+ZLTreeListener::ZLTreeListener() : myRootNode(*this) {
 }
 
 ZLTreeListener::~ZLTreeListener() {

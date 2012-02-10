@@ -58,7 +58,7 @@ void ZLbadaImageData::init(unsigned int width, unsigned int height) {
 	}
 	//pImage = new QImage(width, height, QImage::Format_RGB32);
 	AppLog("new Bitmap %d %d",width,height );
-	 pBitmap = new Bitmap();
+	// pBitmap = new Bitmap();
      // Construct Bitmap without buffer scaling.
    //  pBitmap->Construct(Dimension(width, height), BITMAP_PIXEL_FORMAT_ARGB8888);
 
@@ -95,9 +95,10 @@ shared_ptr<ZLImageData> ZLbadaImageManager::createData() const {
 }
 
 bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
-	((ZLbadaImageData&)data).init(0, 0);
+
 	result r = E_SUCCESS;
 	Image Image;
+
 	r = Image.Construct();
 	AppLog("convertImageDirect" );
 	//IMG_FORMAT_NONE  No image format type
@@ -128,13 +129,28 @@ bool ZLbadaImageManager::convertImageDirect(const std::string &stringData, ZLIma
     	iformat = IMG_FORMAT_JPG;
     	AppLog("iformat = IMG_FORMAT_JPG" );
     }
-    ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
+    Bitmap* tmpBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
+    //((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_ARGB8888);
+	AppLog("DecodeN" );
  //   ((ZLbadaImageData&)data).pBitmap = Image.DecodeN(*pBuffer,iformat, BITMAP_PIXEL_FORMAT_RGB565);
     r = GetLastResult();
-    imageWidth = ((ZLbadaImageData&)data).pBitmap->GetWidth();
-    imageHeight = ((ZLbadaImageData&)data).pBitmap->GetHeight();
-	AppLog("image w = %d, h = %d", imageWidth, imageHeight);
+	AppLog("GetLastResult =%d", r);
+	if (!IsFailed(r)) {
+		((ZLbadaImageData&)data).init(0, 0);
+		((ZLbadaImageData&)data).pBitmap = tmpBitmap;
+	    imageWidth = ((ZLbadaImageData&)data).pBitmap->GetWidth();
+	    imageHeight = ((ZLbadaImageData&)data).pBitmap->GetHeight();
+		AppLog("image w = %d, h = %d", imageWidth, imageHeight);
+		delete pBuffer;
+		return true;
+	}
+	else {
+		AppLog("DecodeN IsFailed" );
+		//((ZLbadaImageData&)data).pBitmap = null;
+		delete pBuffer;
+		return false;
+	}
 
-	delete pBuffer;
-	return !IsFailed(r);
+
+
 }

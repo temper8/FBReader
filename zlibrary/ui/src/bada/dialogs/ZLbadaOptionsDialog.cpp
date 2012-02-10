@@ -24,9 +24,10 @@ ZLbadaOptionsDialog::ZLbadaOptionsDialog(Form   *PreviousForm, const ZLResource 
 
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	myDialogForm = new DialogForm;
-	myDialogForm->showApplyButton = true;
-	myDialogForm->__badaOptionsDialog = this;
-	myDialogForm->Initialize(caption().c_str());
+
+	//myDialogForm->showApplyButton = true;
+	//myDialogForm->__badaOptionsDialog = this;
+	myDialogForm->Initialize(caption().c_str(),!applyAction.isNull());
 
 	myDialogForm->SetPreviousForm(pFrame->GetCurrentForm());
 	r = pFrame->AddControl(*myDialogForm);

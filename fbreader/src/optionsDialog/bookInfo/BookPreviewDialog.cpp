@@ -119,7 +119,7 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	//	bookImage = plugin->coverImage(myBook->file());
 	//	}
 	//else
-		bookImage = FBNode::defaultCoverImage("booktree-book.png");
+    bookImage = FBNode::defaultCoverImage("booktree-book.png");
 //	commonTab.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(bookImage));
 
 

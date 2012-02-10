@@ -26,9 +26,12 @@ using namespace Osp::Base::Runtime;
 class ButtonAction : public Osp::Ui::Controls::ICustomListElement {
 public :
 	ButtonAction(PictureView* holder, Bitmap* Bmp1, Bitmap* Bmp2);
+	~ButtonAction();
     void SetCaption(std::string &text);
-	void  SetAction(shared_ptr<ZLRunnableWithKey> action);
-	void OnActionPerformed(int actionId);
+	void SetAction(shared_ptr<ZLRunnableWithKey> action);
+	bool OnActionPerformed(int actionId);
+	bool visible;
+
 private :
 	Osp::Graphics::EnrichedText* pEnrichedText;
 	PictureView* myHolder;
@@ -38,15 +41,17 @@ private :
 	result DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus);
 
 };
-void ButtonAction::OnActionPerformed(int actionId){
+bool ButtonAction::OnActionPerformed(int actionId){
 	AppLog("myAction->run %d",actionId);
 	if (!myAction.isNull()) {
-		std::string text = myAction->text(ZLResource::resource("networkView")["bookNode"]);
-		AppLog("OnActionPerformed %s", text.c_str());
+		//std::string text = myAction->text(ZLResource::resource("networkView")["bookNode"]);
+		std::string text = myAction->key().Name;
+		AppLog("OnActionPerformed= %s", text.c_str());
 		myAction->run();
-
-
+		if (text=="readDemo") 	return true;
+		if (text=="read") 	return true;
 	}
+	return false;
 }
 
 void  ButtonAction::SetAction(shared_ptr<ZLRunnableWithKey> action){
@@ -54,6 +59,16 @@ void  ButtonAction::SetAction(shared_ptr<ZLRunnableWithKey> action){
 	std::string text = myAction->text(ZLResource::resource("networkView")["bookNode"]);
 	AppLog("SetActiont %s", text.c_str());
 	SetCaption(text);
+	visible = true;
+}
+
+ButtonAction::~ButtonAction(){
+	AppLog("~ButtonAction  1");
+	if(pEnrichedText) {
+		AppLog("~ButtonAction  2");
+		delete pEnrichedText;
+	}
+	AppLog("~ButtonAction  3");
 }
 
 ButtonAction::ButtonAction(PictureView* holder, Bitmap* Bmp1, Bitmap* Bmp2):myHolder(holder), myAction(null), myButtonBmp1(Bmp1), myButtonBmp2(Bmp2)
@@ -84,8 +99,8 @@ void ButtonAction::SetCaption(std::string &text){
 	result r = E_SUCCESS;
 	TextElement* pTextElement1 = null;
 	AppLog("SetCaption  1 %s",text.c_str());
-	//pEnrichedText->RemoveAllTextElements(false);
-	pEnrichedText->RemoveAll(false);
+	pEnrichedText->RemoveAllTextElements(true);
+	//pEnrichedText->RemoveAll(false);
 	AppLog("SetCaption  2");
     pTextElement1 = new TextElement();
     r = pTextElement1->Construct(text.c_str());
@@ -98,12 +113,14 @@ void ButtonAction::SetCaption(std::string &text){
       	}
     pEnrichedText->Add(*pTextElement1);
 }
+
 result ButtonAction::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus)
 {
 	result r = E_SUCCESS;
-	AppLog("DrawElement");
+	if (!visible) return r;
+//	AppLog("DrawElement");
 	Osp::Graphics::Canvas* pCanvas = const_cast<Osp::Graphics::Canvas*>(&canvas);
-	AppLog("pCanvas");
+//	AppLog("pCanvas");
 	switch(itemStatus) {
 	case  CUSTOM_LIST_ITEM_STATUS_NORMAL:
 		    pCanvas->DrawBitmap(rect,*myButtonBmp1);
@@ -116,8 +133,6 @@ result ButtonAction::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp:
 			break;
 	default : break;
 	}
-
-
 
 /*	pCanvas->SetLineWidth(5);
 	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREEN);
@@ -132,39 +147,51 @@ result ButtonAction::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp:
 	return r;
 }
 
-PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLbadaDialogContent *tab,int row,int fromColumn,int  toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {
+PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLbadaDialogContent *tab,int row,int fromColumn,int  toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myActions(option->myActions) {
 	 AppLog("PictureView::PictureView");
-	 myNode = option->node();
+	 //myNode = option->node();
 	  AppLog("PictureView::PictureView 1");
-	  myImage = myNode->image();
+
+	  myImage = option->image();
     AppLog("PictureView::PictureView 2");
 }
+
+PictureView::~PictureView(){
+	  AppLog("~PictureView 1");
+	delete myBottonActions[0];
+	delete myBottonActions[1];
+	delete myBottonActions[2];
+	delete myBottonActions[3];
+	  AppLog("~PictureView 2");
+}
+
 void PictureView::updateActions(){
 	std::string s0 = "Button0";
 	std::string s1 = "Button1";
-	myBottonActions[0]->SetCaption(s0);
-	myBottonActions[1]->SetCaption(s1);
-	myBottonActions[2]->SetCaption(s0);
-	myBottonActions[3]->SetCaption(s1);
-	int actionsCount = myNode->actions().size();
-	AppLog("actionsCount %d", actionsCount);
-	if (!myNode->myIsInitialized) {
-		myNode->init();
-		myNode->myIsInitialized = true;
-	}
+	//myBottonActions[0]->SetCaption(s0);
+	//myBottonActions[1]->SetCaption(s1);
+	//myBottonActions[2]->SetCaption(s0);
+	///myBottonActions[3]->SetCaption(s1);
+	myBottonActions[0]->visible = false;
+	myBottonActions[1]->visible = false;
+	myBottonActions[2]->visible = false;
+	myBottonActions[3]->visible = false;
 
-	actionsCount = myNode->actions().size();
+	int actionsCount = myActions.size();
+	AppLog("actionsCount %d", actionsCount);
+
+	actionsCount = myActions.size();
 	AppLog("after init actionsCount %d", actionsCount);
 	actionsCount =0;
-	for (int i =1; i<myNode->actions().size();i++){
-		shared_ptr<ZLRunnableWithKey> a = myNode->actions()[i];
+	for (int i =1; i<myActions.size();i++){
+		shared_ptr<ZLRunnableWithKey> a = myActions[i];
 		if (a->makesSense()&&(actionsCount<4)) { AppLog("makesSense true %d",actionsCount);
 			myBottonActions[actionsCount++]->SetAction(a);
 		}
 		else AppLog("makesSense false");
-
 	}
 }
+
 void PictureView::_createItem() {
     AppLog("PictureView::_createItem");
     if (myImage.isNull()) {
@@ -212,21 +239,16 @@ void PictureView::_createItem() {
 	pItem->SetElement(ID_LIST_BITMAP4, *myBottonActions[3]);
 	//*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4,false);
 //	*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
-//    std::string s1 = "Read Sample";
-  //  l =
-
-
 	//pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 	//pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
 	pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
-
-
 	//pItem->SetCheckBox(ID_LIST_CHECKBOX);
 	//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
-	int groupIndex = myTab->form()->GroupCount-1;
-	int itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	groupIndex = myTab->form()->GroupCount-1;
+	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
 	//myTab->form()->__pCustomList->GetLastCheckedItemIndex( groupIndex, itemIndex);
 	//checkState = ((ZLBooleanOptionEntry&)*myOption).initialState();
 //	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,false);
@@ -246,39 +268,53 @@ void PictureView::OnActionPerformed(const Control& source, int actionId)
 
 void PictureView::OnActionPerformed(int actionId){
 	AppLog("PictureView::OnActionPerformed 2 %d",actionId);
-
+	bool exitFlag;
+	bool needUpdate= false;
 	   switch (actionId)
 	    {
 	        case ID_LIST_BITMAP1:
-	        	myBottonActions[0]->OnActionPerformed(actionId);
+	        	if (myBottonActions[0]->visible)
+	        	{
+	        		exitFlag=myBottonActions[0]->OnActionPerformed(actionId);
+	        		needUpdate= true;
+	        	}
 	        	break;
 	        case ID_LIST_BITMAP2:
-	        	myBottonActions[1]->OnActionPerformed(actionId);
+	        	if (myBottonActions[1]->visible)
+	        	{
+	        		exitFlag=myBottonActions[1]->OnActionPerformed(actionId);
+	        		needUpdate= true;
+	        	}
 	        	break;
 	        case ID_LIST_BITMAP3:
-	        	myBottonActions[2]->OnActionPerformed(actionId);
+	        	if (myBottonActions[2]->visible)
+	        	{
+	        		needUpdate= true;
+	        		exitFlag=myBottonActions[2]->OnActionPerformed(actionId);
+	        	}
 	        	break;
 	        case ID_LIST_BITMAP4:
-	        	myBottonActions[3]->OnActionPerformed(actionId);
-	        	break;
+	        	if (myBottonActions[3]->visible){
+	        		needUpdate= true;
+	        		exitFlag=myBottonActions[3]->OnActionPerformed(actionId);
+	        	}
+	          	break;
 	        default:
 	        	break;
 	    }
 	   AppLog("PictureView::OnActionPerformed 2222 %d",actionId);
-		updateActions();
+	   if (exitFlag) {
+			myTab->form()->pPreviousForm->SendUserEvent(2, null);
+			return;
+	   }
+	   if (needUpdate) 	{
+		   updateActions();
+		   myTab->form()->__pCustomList->RefreshItem( groupIndex,itemIndex );
+		   myTab->form()->RequestRedraw(true);
+		   //	myTab->form()->RequestRedraw(true);
+		   //myTab->form()->Draw();
+	   }
 
-		//AppLog("action name %s finished", text.c_str());
-	/*	if (text=="readDemo") 	{
-					AppLog("readDemo");
-					myTab->form()->pPreviousForm->SendUserEvent(2, null);
-			}
-*/
 
-		myTab->form()->Draw();
-		myTab->form()->Show();
-
-		myTab->form()->RequestRedraw(true);
-	//	myTab->form()->RequestRedraw(true);
-		//myTab->form()->Draw();
 
 }

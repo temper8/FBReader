@@ -62,6 +62,20 @@ DialogForm::DialogForm() {
 
 DialogForm::~DialogForm() {
 	// TODO Auto-generated destructor stub
+	AppLog("delete __badaOptionsDialog;...");
+	__badaOptionsDialog =0;
+	AppLog("delete buttonBmp;...");
+	delete buttonBmp;
+	delete buttonBmp2;
+	AppLog("delete __pCustomListItemFormat...");
+
+	delete __pStringViewListItemFormat;
+	delete __pCustomListItemFormat1;
+	delete __pCustomListItemFormat2;
+	delete __pColorListItemFormat;
+	delete __pImageViewListItemFormat;
+	delete __pButtonViewListItemFormat;
+	delete __pStaticTextListItemFormat;
 	AppLog("DialogForm::~DialogForm()");
 }
 
@@ -232,11 +246,8 @@ result  DialogForm::AddTab(const char *title){
 	    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 
  //  __pCustomList->AddItem(GroupCount-1, *pItem, ID_LIST_ITEM);
-
-
-
-
 }
+
 result DialogForm::OnTerminating(void)
 {
 	result r = E_SUCCESS;

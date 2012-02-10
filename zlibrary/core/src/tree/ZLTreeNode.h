@@ -85,7 +85,7 @@ public:
 	
 	virtual const ZLResource &resource() const;
 	void registerAction(shared_ptr<ZLRunnableWithKey> action);
-
+	//void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary);
 	void registerTreeAction(shared_ptr<ZLTreeAction> action);
 	const std::vector<shared_ptr<ZLRunnableWithKey> > &actions() const;
 	std::string actionText(const shared_ptr<ZLRunnableWithKey> &action) const;
@@ -108,6 +108,7 @@ private:
 
 	List myChildren;
 	// Looks like we should also handle actions for menu on "Tap and hold"
+	//std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
 	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
 	std::vector<shared_ptr<ZLTreeAction> > myTreeActions;
 

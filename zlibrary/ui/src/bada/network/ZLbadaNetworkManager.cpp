@@ -105,7 +105,8 @@ std::string ZLbadaNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		HttpThread* httpTread = new HttpThread(myMonitor, request);
 		httpTreads.insert(httpTread);
 		if (!request.doBefore()) {
-			if (!request.hasListener()) {
+			//if (!request.hasListener())
+			{
 				std::string error = request.errorMessage();
 				if (error.empty()) {
 					const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
@@ -175,7 +176,9 @@ std::string ZLbadaNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		    AppLog("Interator doAfter");
 	    	HttpThread* httpTread = (HttpThread*)*it;
 	    	std::string error = httpTread->myRequest->errorMessage();
-	    	bool doAfterResult = httpTread->myRequest->doAfter(error);
+			//CURLcode result = message->data.result;
+			//bool doAfterResult = request.doAfter(result == CURLE_OK);
+	    	bool doAfterResult = httpTread->myRequest->doAfter(true);
 	}
 	AppLog("Exit 2");
 	std::string result;

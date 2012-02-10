@@ -43,6 +43,7 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 
 	AppLog("ZLFile::ZLFile %s",path.c_str());
 	ZLFSManager::Instance().normalize(myPath);
+	AppLog("ZLFile::ZLFile %s",myPath.c_str());
 	{
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
 		if (index < myPath.length() - 1) {

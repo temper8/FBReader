@@ -45,6 +45,10 @@ NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNod
 	//shared_ptr<ZLImage> bookImage;
 	//bookImage = myNode->image();
 		//bookImage = FBNode::defaultCoverImage("booktree-book.png");
+	if (!myNode->myIsInitialized) {
+		myNode->init();
+		myNode->myIsInitialized = true;
+	}
 	commonTab.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(myNode));
 	//commonTab.addOption(ZLResourceKey("title"), new BookPreviewTitleEntry(*this));
 	ZLDialogContent &BookInfoTab = myDialog->createTab(ZLResourceKey("BookInfo"));

@@ -27,9 +27,10 @@
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../optionsDialog/bookInfo/BookPreviewDialog.h"
 #include "../fbreader/BookTextView.h"
 #include <FBase.h>
-
+//#include "../optionsDialogMobile/MobileBookInfoDialog.h"
 
 GotoParagraphAction::GotoParagraphAction(int reference) : paragraphReference(reference) {
 
@@ -141,7 +142,9 @@ BookEditInfoAction::BookEditInfoAction(shared_ptr<Book> book) : myBook(book) {
 }
 
 void BookEditInfoAction::run() {
-	if (BookInfoDialog(myBook).dialog().run()) {
+	if (BookPreviewDialog(myBook).dialog().run()) {
+	//if (BookInfoDialog(myBook).dialog().run()) {
+	//if (MobileBookInfoDialog(myBook).dialog().run()) {
 		// TODO: select current node (?) again
 		FBReader::Instance().refreshWindow();
 	}
@@ -150,3 +153,4 @@ void BookEditInfoAction::run() {
 ZLResourceKey BookEditInfoAction::key() const {
 	return ZLResourceKey("edit");
 }
+

@@ -105,6 +105,7 @@ void ZLbadaProgressDialog::run(ZLRunnable &runnable) {
 	if (__pPopup)  {
 					__pPopup->SetShowState(false);
 					delete __pPopup;
+					AppLog("delete __pPopup");
 	}
 
 	//myDialog = new ZLQtWaitDialog(messageText());

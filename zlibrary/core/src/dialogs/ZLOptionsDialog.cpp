@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLDialogManager.h>
 
 #include "ZLOptionsDialog.h"
@@ -46,10 +46,13 @@ bool ZLOptionsDialog::run() {
 }
 
 void ZLOptionsDialog::accept() {
+	AppLog("ZLOptionsDialog::accept()");
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		(*it)->accept();
 	}
+	AppLog("myApplyAction->run()");
 	if (!myApplyAction.isNull()) {
 		myApplyAction->run();
 	}
+	AppLog("ZLOptionsDialog::accept() end");
 }

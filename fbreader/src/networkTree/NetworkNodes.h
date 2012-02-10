@@ -234,13 +234,16 @@ public:
 
 	enum SummaryType { AUTHORS, NONE };
 
+
 private:
 	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType);
-	void init();
+
 
 friend class NetworkNodesFactory;
 
 public:
+    void init();
+
 	const NetworkBookItem &book() const;
 
 	shared_ptr<ZLImage> extractCoverImage() const;

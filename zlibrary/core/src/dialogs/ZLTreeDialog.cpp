@@ -105,13 +105,7 @@ ZLTreeDialog::ZLTreeDialog(const ZLResource &resource):myResource(resource) {
 ZLTreeDialog::~ZLTreeDialog() {
 }
 
-bool ZLTreeDialog::back() {
-	if (myCurrentNode == &rootNode()) {
-		return false;
-	}
-	myCurrentNode = myCurrentNode->parent();
-	return true;
-}
+
 
 /*
 bool ZLTreeDialog::enter(ZLTreeNode* node) {
@@ -133,30 +127,49 @@ void ZLTreeDialog::loadCovers() {
 		const ZLTreeNode::List &nodes = myCurrentNode->children();
 		int index =0;
 		for (ZLTreeNode::List::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+			//if (terminateThread) {
+			//	AppLog("terminateThread 1");
+			//	break;
+			//}
 			ZLTreeTitledNode &node = *(ZLTreeTitledNode*)*it;
 			AppLog("ZLTreeTitledNode");
 			shared_ptr<ZLImage> coverImage = node.image();
-				if (!coverImage.isNull()) {
+			//if (terminateThread) {
+			//	AppLog("terminateThread 2");
+			//	break;
+			//}
+			if (!coverImage.isNull()) {
 					AppLog("addTask");
-					//shared_ptr<ZLExecutionData> exe = coverImage->synchronizationData();
+					shared_ptr<ZLExecutionData> exe = coverImage->synchronizationData();
 					//if (!exe.isNull()) {AppLog("exe not null");ZLExecutionData::perform(exe);}
 					//else {AppLog("exe = null");}
-					updater->addTask(coverImage->synchronizationData());
-					if (updater->hasTasks()) {
-								AppLog("hasTasks");
-								updater->run();
+					if (!exe.isNull()) {
+						AppLog("exe not null");
+						updater->addTask(exe);
+						if (updater->hasTasks()) {
+											AppLog("hasTasks");
+											updater->run();
+							}
 					}
 					//ZLExecutionData::perform(coverImage->synchronizationData());
+					updateNode(node,index);
 				}
-			updateNode(node,index);
+
+
 			index++;
+			if (terminateThread) {
+					AppLog("terminateThread 3");
+					break;
+				}
 			}
+		/*
 		if (updater->hasTasks()) {
 				AppLog("hasTasks");
 				updater->run();
 				//ZLTimeManager::Instance().addAutoRemovableTask(new CoverUpdaterRunner(updater));
-			}
+			}*/
 		}
+
 
 	AppLog("loadCovers end");
 }
