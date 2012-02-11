@@ -50,7 +50,7 @@ const ZLTypeId BookNode::TYPE_ID(ZLTreePageNode::TYPE_ID);
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
-
+/*
 class ReadBookAction : public ZLTreeAction {
 public:
 	ReadBookAction(BookNode *node) : myNode(node) {
@@ -69,7 +69,7 @@ public:
 private:
 	BookNode *myNode;
 };
-
+*/
 BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
     myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
 	//registerAction(new ReadBookAction(this));

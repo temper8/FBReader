@@ -70,3 +70,4 @@ void ZLTextOptionEntry::onValueEdited(const char *value) {
 void ZLTextOptionEntry::onAccept(const char *value) {
 	onAccept((value != 0) ? std::string(value) : std::string());
 }
+

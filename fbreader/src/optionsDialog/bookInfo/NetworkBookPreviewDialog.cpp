@@ -34,6 +34,27 @@
 #include "../../networkActions/NetworkActions.h"
 #include "PreviewEntries.h"
 
+class NetworkBookPictureEntry : public ZLPictureOptionEntry {
+
+public:
+	NetworkBookPictureEntry(NetworkBookNode* node);
+
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+};
+//ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()),	myActions(node->actions()){	}
+NetworkBookPictureEntry::NetworkBookPictureEntry(NetworkBookNode* node) : ZLPictureOptionEntry(node->image(),node->actions()) {
+//NetworkBookPictureEntry::NetworkBookPictureEntry(NetworkBookNode* node) : myImage(node->image()),	myActions(node->actions()) {
+}
+
+const std::string &NetworkBookPictureEntry::initialValue() const {
+	return std::string();
+}
+
+void NetworkBookPictureEntry::onAccept(const std::string &value) {
+	//myPreviewDialog.myBook->setTitle(value);
+}
+
 
 NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNode(node) {
 	// TODO Auto-generated constructor stub
@@ -49,7 +70,7 @@ NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNod
 		myNode->init();
 		myNode->myIsInitialized = true;
 	}
-	commonTab.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(myNode));
+	commonTab.addOption(ZLResourceKey("cover"), new NetworkBookPictureEntry(myNode));
 	//commonTab.addOption(ZLResourceKey("title"), new BookPreviewTitleEntry(*this));
 	ZLDialogContent &BookInfoTab = myDialog->createTab(ZLResourceKey("BookInfo"));
 	BookInfoTab.addOption(ZLResourceKey("title"), new StaticTextEntry(node->title()));

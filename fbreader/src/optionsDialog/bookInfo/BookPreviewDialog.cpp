@@ -24,36 +24,43 @@
 #include "../../library/Book.h"
 #include "../../library/Tag.h"
 #include "../../library/Author.h"
+#include "../../libraryActions/LibraryBookActions.h"
 #include "BookPreviewDialog.h"
 #include <FBase.h>
 #include "../../tree/FBNode.h"
 #include "../../fbreader/FBReader.h"
 #include "../../formats/FormatPlugin.h"
 #include "PreviewEntries.h"
-/*
-class StringEntry2 : public ZLStringOptionEntry {
+
+
+class BookPictureEntry : public ZLPictureOptionEntry {
 
 public:
-	StringEntry2(const std::string &value);
+	BookPictureEntry(shared_ptr<Book> book);
 
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
-
-private:
-	const std::string &myString;
 };
 
-StringEntry2::StringEntry2(const std::string &value) : myString(value) {
+BookPictureEntry::BookPictureEntry(shared_ptr<Book> book) : ZLPictureOptionEntry() {
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*book);
+	if (!plugin.isNull()) {
+		myImage = plugin->coverImage(book->file());
+		}
+	if (myImage.isNull())	myImage = FBNode::defaultCoverImage("booktree-book.png");
+	bookActions.push_back(new BookReadAction(book));
+	bookActions.push_back(new BookReadAction(book));
+	bookActions.push_back(new BookRemoveAction(book));
 }
 
-const std::string &StringEntry2::initialValue() const {
-	return myString;
+const std::string &BookPictureEntry::initialValue() const {
+	return std::string();
 }
 
-void StringEntry2::onAccept(const std::string &value) {
+void BookPictureEntry::onAccept(const std::string &value) {
 	//myPreviewDialog.myBook->setTitle(value);
 }
-*/
+
 
 class BookPreviewTitleEntry : public ZLStringOptionEntry {
 
@@ -78,7 +85,7 @@ void BookPreviewTitleEntry::onAccept(const std::string &value) {
 	//myPreviewDialog.myBook->setTitle(value);
 }
 
-
+/*
 
 class BookOpenAction : public ZLRunnable {
 
@@ -100,7 +107,7 @@ void BookOpenAction::run() {
 	fbreader.showBookTextView();
 	//AppLog("BookOpenAction %s",book.title().c_str());
 }
-
+*/
 class AuthorFunctor {
 public:
     std::string operator()(shared_ptr<Author> author) const;
@@ -108,8 +115,8 @@ public:
 
 BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	// TODO Auto-generated constructor stub
-	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookOpenAction(myBook));
-
+//	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookReadAction(myBook));
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
 	AppLog("myDialog->createTab");
 	shared_ptr<ZLImage> bookImage;
@@ -120,7 +127,7 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	//	}
 	//else
     bookImage = FBNode::defaultCoverImage("booktree-book.png");
-//	commonTab.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(bookImage));
+	commonTab.addOption(ZLResourceKey("cover"), new BookPictureEntry(book));
 
 
 	ZLDialogContent &BookInfoTab = myDialog->createTab(ZLResourceKey("BookInfo"));
