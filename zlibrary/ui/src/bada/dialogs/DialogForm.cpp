@@ -68,9 +68,9 @@ DialogForm::~DialogForm() {
 	delete buttonBmp;
 	delete buttonBmp2;
 	AppLog("delete __pCustomListItemFormat...");
-
+	delete __pSpinViewListItemFormat;
 	delete __pStringViewListItemFormat;
-	delete __pCustomListItemFormat1;
+	delete __pBooleanListItemFormat;
 	delete __pCustomListItemFormat2;
 	delete __pColorListItemFormat;
 	delete __pImageViewListItemFormat;
@@ -131,29 +131,41 @@ result DialogForm::OnInitializing(void)
 	    AddControl(*pButton);
 */
 	// Creates an item format of the CustomList
+
+
+	  __pSpinViewListItemFormat = new CustomListItemFormat();
+	  __pSpinViewListItemFormat->Construct();
+
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 400, 80), 30, Color(0, 191, 255), Color(0, 191, 255));
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(420, 25, 400, 80), 30);
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+
+
+
 	  __pStringViewListItemFormat = new CustomListItemFormat();
 	  __pStringViewListItemFormat->Construct();
 
-	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 5, 400, 80), 25, Color::COLOR_BLUE, Color::COLOR_BLUE);
-	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 45, 400, 80), 30);
+	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
+	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 50, 400, 80), 30);
 	  __pStringViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pStringViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 	//  AddControl(*__pCustomList);
 
 		// Creates an item format of the CustomList
-	__pCustomListItemFormat1 = new CustomListItemFormat();
-	__pCustomListItemFormat1->Construct();
+	__pBooleanListItemFormat = new CustomListItemFormat();
+	__pBooleanListItemFormat->Construct();
 
-	__pCustomListItemFormat1->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(20, 20, 400, 80), 30);
-	__pCustomListItemFormat1->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(20, 55, 400, 80), 20);
-	__pCustomListItemFormat1->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
-	__pCustomListItemFormat1->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
-	__pCustomListItemFormat1->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
+	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(20, 25, 400, 80), 30);
+	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(20, 55, 400, 80), 20);
+	__pBooleanListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
+	__pBooleanListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+	__pBooleanListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
 	__pCustomListItemFormat2 = new CustomListItemFormat();
 	__pCustomListItemFormat2->Construct();
 
-	__pCustomListItemFormat2->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, 300, 80), 30, Color::COLOR_RED, Color::COLOR_RED);
+	__pCustomListItemFormat2->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 10, 300, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
 	__pCustomListItemFormat2->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 55, 300, 80), 20);
 	__pCustomListItemFormat2->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	__pCustomListItemFormat2->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
@@ -163,7 +175,7 @@ result DialogForm::OnInitializing(void)
 	__pColorListItemFormat = new CustomListItemFormat();
 	__pColorListItemFormat->Construct();
 
-	__pColorListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 300, 80), 30, Color::COLOR_RED, Color::COLOR_RED);
+	__pColorListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 300, 80), 30, Color::COLOR_GREY, Color::COLOR_GREY);
 	__pColorListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(105, 55, 300, 80), 30);
 	__pColorListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(15, 45, 80, 40));
 	__pColorListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 10, 90, 90));
@@ -175,6 +187,7 @@ result DialogForm::OnInitializing(void)
 	__pImageViewListItemFormat = new CustomListItemFormat();
 	__pImageViewListItemFormat->Construct();
 
+	__pImageViewListItemFormat->AddElement(ID_LIST_BACKGROUND, Osp::Graphics::Rectangle(0, 0, 480, 300));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 15, 200, 300));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP1, Osp::Graphics::Rectangle(240, 25, 220, 52));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP2, Osp::Graphics::Rectangle(240, 100, 220, 52));
@@ -193,7 +206,7 @@ result DialogForm::OnInitializing(void)
 //	__pImageViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 10, 90, 90));
 //	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_TITLE, true);
 //	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_SUBTITLE, true);
-
+	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BACKGROUND, false);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP1, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP2, true);
@@ -235,10 +248,10 @@ result  DialogForm::AddTab(const char *title){
 */
     __pCustomList->AddGroup(String(title), null);
     GroupCount++;
-	CustomListItem* pItem = new CustomListItem();
-    pItem->Construct(100);
-    pItem->SetItemFormat(*__pCustomListItemFormat2);
-    pItem->SetElement(ID_LIST_TEXT_TITLE,String(title));
+//	CustomListItem* pItem = new CustomListItem();
+  //  pItem->Construct(100);
+//    pItem->SetItemFormat(*__pCustomListItemFormat2);
+  //  pItem->SetElement(ID_LIST_TEXT_TITLE,String(title));
 	//    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
 	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
 	//    pItem->SetCheckBox(ID_LIST_CHECKBOX);

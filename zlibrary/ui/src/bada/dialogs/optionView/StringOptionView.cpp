@@ -26,19 +26,7 @@ using namespace Osp::Base::Runtime;
 
 void StringOptionView::_createItem() {
 	AppLog("StringOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
-	//myTab->form();
-/*	myEditField = new EditField();
-	myEditField->Construct(Rectangle(5, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
-    EDIT_FIELD_STYLE_NORMAL, INPUT_STYLE_FULLSCREEN,
-    true, 100, GROUP_STYLE_SINGLE );
-	myEditField->SetGuideText("GuideText1");
-  //  const char *titleText = ZLOptionView::name().c_str();
-	myEditField->SetTitleText(String(ZLOptionView::name().c_str()));
-	//myEditField->SetText("Просто Text1");
-	myTab->form()->pScrollPanel->AddControl(*myEditField);
 
-	myTab->form()->YPos+=120;
-*/
 	pItem = new OptionListItem(this);
     pItem->Construct(100);
     pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
@@ -49,22 +37,14 @@ void StringOptionView::_createItem() {
     //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
+	groupIndex = myTab->form()->GroupCount-1;
+	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
 
+    __pKeypad = new Keypad();
+    __pKeypad->Construct(KEYPAD_STYLE_NORMAL, KEYPAD_MODE_ALPHA);
+    __pKeypad->AddTextEventListener(*this);
 
-
-/*	myLineEdit = new QLineEdit(myTab->widget());
-	myLineEdit->setEchoMode(myPasswordMode ? QLineEdit::Password : QLineEdit::Normal);
-	myWidgets.push_back(myLineEdit);
-	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
-	if (!ZLOptionView::name().empty()) {
-		QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
-		myWidgets.push_back(label);
-		int width = myToColumn - myFromColumn + 1;
-		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 2, myToColumn);
-	} else {
-		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
-	}*/
 	reset();
 }
 
@@ -74,34 +54,32 @@ void StringOptionView::_setActive(bool active) {
 
 void StringOptionView::_onAccept() const {
 	AppLog("StringOptionView::_onAccept");
-//	((ZLStringOptionEntry&)*myOption).onAccept((const char*)myLineEdit->text().toUtf8());
+	//((ZLStringOptionEntry&)*myOption).onAccept((const char*)myLineEdit->text().toUtf8());
+	((ZLStringOptionEntry&)*myOption).onAccept(myValue);
 }
 
 void StringOptionView::reset() {
-	AppLog("StringOptionView::reset initialValue = %s",(((ZLStringOptionEntry&)*myOption).initialValue()).c_str());
-	const char *text = (((ZLStringOptionEntry&)*myOption).initialValue()).c_str();
-//	myEditField->SetText(String(text));
-	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(text));
-/*	if (myLineEdit == 0) {
-		return;
-	}
-	myLineEdit->setText(::qtString(((ZLStringOptionEntry&)*myOption).initialValue()));
-	myLineEdit->cursorForward(false, -myLineEdit->text().length());
-*/}
+	myValue = ((ZLStringOptionEntry&)*myOption).initialValue();
+	AppLog("StringOptionView::reset initialValue = %s",myValue.c_str());
+	//const char *text = (((ZLStringOptionEntry&)*myOption).initialValue()).c_str();
+	__pKeypad->SetText(String(myValue.c_str()));
+	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(myValue.c_str()));
+}
 
 void StringOptionView::OnActionPerformed( int actionId)
 {
 	AppLog("StringOptionView::OnActionPerformed %d",actionId);
+	ShowKeypad();
     switch (actionId)
     {
 	case ID_BUTTON_CHECKED:
 	        // Todo:
-	    	AppLog("ComboOptionView::ID_BUTTON_CHECKED");
+	    	AppLog("StringOptionView::ID_BUTTON_CHECKED");
 	    	//myTab->form()->ShowComboOptionPopup(this);
 	    	//onStateChanged(true);
 	        break;
 	case ID_BUTTON_UNCHECKED:
-	    	AppLog("ComboOptionView::ID_BUTTON_UNCHECKED");
+	    	AppLog("StringOptionView::ID_BUTTON_UNCHECKED");
 	    	//onStateChanged(false);
 	        // Todo:
 	        break;
@@ -115,3 +93,45 @@ void StringOptionView::OnActionPerformed( int actionId)
 //		o.onValueEdited((const char*)value.toUtf8());
 //	}
 //}
+
+// Implements an ITextEventListener
+void StringOptionView::OnTextValueChanged(const Control& source)
+{
+    // Todo:
+	AppLog("OnTextValueChanged");
+	CustomListItem* pItem = new OptionListItem(this);
+    pItem->Construct(100);
+    pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
+    pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
+	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, __pKeypad->GetText());
+
+
+	myTab->form()->__pCustomList->SetItemAt(groupIndex,itemIndex, *pItem, ID_LIST_ITEM);
+
+	 ByteBuffer* bb = Osp::Base::Utility::StringUtil:: StringToUtf8N(__pKeypad->GetText());
+	 myValue = std::string((char *)bb->GetPointer());
+	 AppLog( "pKeypad->GetText %s",myValue.c_str());
+
+
+}
+
+void StringOptionView::OnTextValueChangeCanceled(const Control& source)
+{
+    // Todo:
+	AppLog("OnTextValueChangeCanceled");
+}
+
+void StringOptionView::ShowKeypad()
+{
+    // Changes to desired show state
+    __pKeypad->SetShowState(true);
+
+    // Calls Show() of the control
+   // if (show == true)
+        __pKeypad->Show();
+    // Calls Show() of the container
+   // else
+   //     Show();
+}
+
+

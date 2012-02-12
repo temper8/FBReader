@@ -45,7 +45,8 @@ protected:
 	void _hide();
 
 protected:
-
+	int groupIndex;
+	int itemIndex;
 	int myRow, myFromColumn, myToColumn;
 public :
 	ZLbadaDialogContent *myTab;
@@ -108,7 +109,8 @@ private:
 //	Osp::Ui::Controls::CheckButton *myCheckButton;
 };
 
-class StringOptionView :  public ZLbadaOptionView {
+class StringOptionView :  public ZLbadaOptionView,
+						  public Osp::Ui::ITextEventListener {
 
 public:
 	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLbadaDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myPasswordMode(passwordMode) {}
@@ -125,8 +127,13 @@ private:
 private:
 //	Osp::Ui::Controls::EditField* myEditField;
 	//char *myLineEdit;
+	Osp::Ui::Controls::Keypad *__pKeypad;
 	OptionListItem* pItem;
 	const bool myPasswordMode;
+	std::string myValue;
+    virtual void OnTextValueChanged(const Osp::Ui::Control& source);
+    virtual void OnTextValueChangeCanceled(const Osp::Ui::Control& source);
+    void ShowKeypad();
 };
 
 class SpinOptionView : public ZLbadaOptionView, public Osp::Ui::IAdjustmentEventListener  {
@@ -332,8 +339,7 @@ private:
         void _onAccept() const;
 
 private:
-    	int groupIndex;
-    	int itemIndex;
+
     	const  std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
         ButtonAction* myBottonActions[4];
         shared_ptr<ZLImage> myImage;

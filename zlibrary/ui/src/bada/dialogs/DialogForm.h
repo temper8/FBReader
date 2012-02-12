@@ -34,6 +34,7 @@
 #define ID_LIST_TEXT_BITMAP2  		112
 #define ID_LIST_TEXT_BITMAP3  		113
 #define ID_LIST_TEXT_BITMAP4  		114
+#define ID_LIST_BACKGROUND  		115
 
 class ComboOptionPopup;
 class ComboOptionView;
@@ -78,7 +79,8 @@ public:
     Osp::Ui::Controls::GroupedList* __pCustomList;
    // Osp::Ui::Controls::CustomList* __pCustomList;
     Osp::Ui::Controls::CustomListItemFormat* __pStringViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat1;
+    Osp::Ui::Controls::CustomListItemFormat* __pSpinViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pBooleanListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat2;
     Osp::Ui::Controls::CustomListItemFormat* __pColorListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pImageViewListItemFormat;

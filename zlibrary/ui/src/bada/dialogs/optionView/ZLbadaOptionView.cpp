@@ -60,7 +60,7 @@ void BooleanOptionView::_createItem() {
 
 	OptionListItem* pItem = new OptionListItem(this);
     pItem->Construct(100);
-    pItem->SetItemFormat(*myTab->form()->__pCustomListItemFormat1);
+    pItem->SetItemFormat(*myTab->form()->__pBooleanListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 	//    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
 	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
@@ -122,7 +122,7 @@ void Boolean3OptionView::_createItem() {
 
 	OptionListItem* pItem = new OptionListItem(this);
 	    pItem->Construct(100);
-	    pItem->SetItemFormat(*myTab->form()->__pCustomListItemFormat1);
+	    pItem->SetItemFormat(*myTab->form()->__pCustomListItemFormat2);
 	    pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 		//    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
 		//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
@@ -228,7 +228,7 @@ void ChoiceOptionView::_createItem() {
 		AppLog("choice title = %s",((ZLChoiceOptionEntry&)*myOption).text(i).c_str());
 		OptionListItem* pItem = new OptionListItem(this);
 	    pItem->Construct(100);
-	    pItem->SetItemFormat(*myTab->form()->__pCustomListItemFormat1);
+	    pItem->SetItemFormat(*myTab->form()->__pCustomListItemFormat2);
 	    pItem->SetElement(ID_LIST_TEXT_TITLE,String(((ZLChoiceOptionEntry&)*myOption).text(i).c_str()));
 		//    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
 		//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
@@ -277,38 +277,11 @@ void SpinOptionView::_createItem() {
 	AppLog("SpinOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
 	ZLSpinOptionEntry &entry = (ZLSpinOptionEntry&)*myOption;
 	String str;
-	str.Format(25, L"Value %d ",entry.initialValue());
-	/*	myEditField = new EditField();
-	myEditField->Construct(Rectangle(5, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
-			EDIT_FIELD_STYLE_NORMAL, INPUT_STYLE_FULLSCREEN,   true, 100, GROUP_STYLE_SINGLE );
-	myEditField->SetGuideText("GuideText1");
-	myEditField->SetKeypadEnabled(false);
-	//myEditField->AddTouchEventListener(*this);
-	//myEditField->AddActionEventListener(*this);
-  //  const char *titleText = ZLOptionView::name().c_str();
-	//mySpinBox->setValue(entry.initialValue());
+	str.Format(25, L"%d ",entry.initialValue());
 
-	myEditField->SetTitleText(String(ZLOptionView::name().c_str()));
-
-	myEditField->SetText(str);
-	myTab->form()->pScrollPanel->AddControl(*myEditField);
-	myTab->form()->YPos+=120;
-
-	// Creates a Slider.
-	pSlider = new Slider();
-	pSlider->Construct(Rectangle(5, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
-						BACKGROUND_STYLE_DEFAULT, false, entry.minValue(), entry.maxValue());
-
-    pSlider->SetValue(entry.initialValue());
-	pSlider->AddAdjustmentEventListener(*this);
-
-	    //Add a Slider to the Form.
-	myTab->form()->pScrollPanel->AddControl(*pSlider);
-	myTab->form()->YPos+=120;
-*/
 	pItem = new OptionListItem(this);
     pItem->Construct(100);
-    pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
+    pItem->SetItemFormat(*myTab->form()->__pSpinViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, str);
 	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
@@ -316,23 +289,6 @@ void SpinOptionView::_createItem() {
     //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
-
-	/*
-
-	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
-	mySpinBox = new QSpinBox(myTab->widget());
-
-	myWidgets.push_back(label);
-	myWidgets.push_back(mySpinBox);
-
-	mySpinBox->setMinimum(entry.minValue());
-	mySpinBox->setMaximum(entry.maxValue());
-	mySpinBox->setSingleStep(entry.step());
-	mySpinBox->setValue(entry.initialValue());
-	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-	myTab->addItem(mySpinBox, myRow, myFromColumn + width / 2, myToColumn);
-	*/
 }
 
 void SpinOptionView::_onAccept() const {
