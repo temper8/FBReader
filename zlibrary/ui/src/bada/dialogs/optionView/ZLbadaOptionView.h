@@ -32,7 +32,7 @@
 #include "../ZLbadaDialogContent.h"
 //class ZLbadaDialogContent;
 
-
+class SpinOptionView;
 class ComboOptionView;
 class ColorOptionView;
 
@@ -136,21 +136,54 @@ private:
     void ShowKeypad();
 };
 
+class SpinOptionPopup	: public Osp::Ui::Controls::Popup,
+						  public Osp::Ui::IAdjustmentEventListener,
+						  public Osp::Ui::IActionEventListener{
+public:
+	SpinOptionPopup(void);
+	virtual ~SpinOptionPopup(void);
+	result Construct(const Osp::Ui::Controls::Form* pParentForm, SpinOptionView* parentSpinOptionView);
+
+protected:
+	static const int ID_BUTTON_CREATE = 100;
+	static const int ID_BUTTON_CANCEL = 101;
+	int tmpValue;
+public:
+	static const int categoryNameMaxLength = 100;	// The maximum length of category name is 100 characters.
+
+public:
+//	Osp::Ui::Controls::Slider* pSlider;
+	Osp::Ui::Controls::Form* 		__pParentForm;
+	SpinOptionView* 		__parentSpinOptionView;
+
+private:
+    virtual void OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment);
+	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+
+};
+
 class SpinOptionView : public ZLbadaOptionView, public Osp::Ui::IAdjustmentEventListener  {
 
 public:
 	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
-
+	const std::string &title() const {return ZLOptionView::name();};
+	int initialValue() const {return ((ZLSpinOptionEntry&)*myOption).initialValue();};
+	int minValue() const {return ((ZLSpinOptionEntry&)*myOption).minValue();};
+	int maxValue() const {return ((ZLSpinOptionEntry&)*myOption).maxValue();};
+	int step() const {return ((ZLSpinOptionEntry&)*myOption).step();};
 protected:
 	void _createItem();
+	int myValue;
 	void _onAccept() const;
     void OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment);
     virtual void OnActionPerformed(int actionId);
 private:
+    void UpdateItem();
 //	Osp::Ui::Controls::EditField* myEditField;
 //	Osp::Ui::Controls::Slider* pSlider;
-	OptionListItem* pItem;
+//	OptionListItem* pItem;
 	//QSpinBox *mySpinBox;
+	friend class SpinOptionPopup;
 };
 
 

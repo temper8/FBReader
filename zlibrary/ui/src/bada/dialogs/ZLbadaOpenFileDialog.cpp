@@ -17,10 +17,12 @@
  * 02110-1301, USA.
  */
 
-//#include <qfiledialog.h>
+
 #include <FBase.h>
 #include "ZLbadaOpenFileDialog.h"
-#include "DialogApp.h"
+#include <FUi.h>
+
+
 using namespace Osp::Base;
 using namespace Osp::Base::Collection;
 using namespace Osp::Ui::Controls;

@@ -273,60 +273,6 @@ void ChoiceOptionView::OnActionPerformed(int actionId){
 
 
 
-void SpinOptionView::_createItem() {
-	AppLog("SpinOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
-	ZLSpinOptionEntry &entry = (ZLSpinOptionEntry&)*myOption;
-	String str;
-	str.Format(25, L"%d ",entry.initialValue());
-
-	pItem = new OptionListItem(this);
-    pItem->Construct(100);
-    pItem->SetItemFormat(*myTab->form()->__pSpinViewListItemFormat);
-    pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
-	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, str);
-	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
- //   pItem->SetCheckBox(ID_LIST_CHECKBOX);
-    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
-	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
-
-}
-
-void SpinOptionView::_onAccept() const {
-	AppLog("SpinOptionView::_onAccept()");
-	//((ZLSpinOptionEntry&)*myOption).onAccept(mySpinBox->value());
-}
-
-void SpinOptionView::OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment) {
-//	AppLog("SpinOptionView::OnAdjustmentValueChanged() %d %d",pSlider->GetValue(), adjustment);
-	String str;
-//	str.Format(25, L"Value %d ",pSlider->GetValue());
-//	myEditField->SetText(str);
-//	myEditField->Draw();
-//	myEditField->Show();
-}
-
-
-void SpinOptionView::OnActionPerformed( int actionId)
-{
-	AppLog("SpinOptionView::OnActionPerformed %d",actionId);
-    switch (actionId)
-    {
-	case ID_BUTTON_CHECKED:
-	        // Todo:
-	    	AppLog("ComboOptionView::ID_BUTTON_CHECKED");
-	    //	myTab->form()->ShowComboOptionPopup(this);
-	    	//onStateChanged(true);
-	        break;
-	case ID_BUTTON_UNCHECKED:
-	    	AppLog("ComboOptionView::ID_BUTTON_UNCHECKED");
-	    	//onStateChanged(false);
-	        // Todo:
-	        break;
-    default:
-        break;
-    }
-}
-
 /*
 class KeyLineEdit : public QLineEdit {
 

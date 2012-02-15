@@ -68,6 +68,7 @@ DialogForm::~DialogForm() {
 	delete buttonBmp;
 	delete buttonBmp2;
 	AppLog("delete __pCustomListItemFormat...");
+	delete __pComboViewListItemFormat;
 	delete __pSpinViewListItemFormat;
 	delete __pStringViewListItemFormat;
 	delete __pBooleanListItemFormat;
@@ -99,49 +100,43 @@ result DialogForm::OnInitializing(void)
 
 	Osp::Media::Image *pImage = new Osp::Media::Image();
     r = pImage->Construct();
-	//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
 	buttonBmp = pImage->DecodeN("/Res/icons/button-220x50.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-
 	buttonBmp2 = pImage->DecodeN("/Res/icons/button-220x50s.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
 
 	AppLog("pImage->DecodeN");
 
 
-  //  __pCustomList = new CustomList();
-	  __pCustomList = new GroupedList();
-	  GroupCount = 0;
-		//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
+    __pCustomList = new GroupedList();
+	GroupCount = 0;
+	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
 	__pCustomList->Construct(Rectangle(0, 0, 480, 790), CUSTOM_LIST_STYLE_MARK);
 //	__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_MARK_WITH_DIVIDER);
 	//__pCustomList->AddCustomItemEventListener(*this);
 	__pCustomList->AddGroupedItemEventListener(*this);
 	  AddControl(*__pCustomList);
-/*
-	    Button* pButton = new Button();
-	    pButton->Construct(Rectangle(5, 695, 200, 50), L"Download Demo");
-	   // pButton->SetActionId(ID_BUTTON);
-	  //  pButton->AddActionEventListener(*this);
-	    AddControl(*pButton);
 
-	    pButton = new Button();
-	    pButton->Construct(Rectangle(230, 695, 150, 50), L"Bay 234 руб");
-	   // pButton->SetActionId(ID_BUTTON);
-	  //  pButton->AddActionEventListener(*this);
+// ----------------   Creates an item format of the CustomList -------------------
 
-	    AddControl(*pButton);
-*/
-	// Creates an item format of the CustomList
-
-
+//---------------------- __pSpinViewListItemFormat -------------------------------
 	  __pSpinViewListItemFormat = new CustomListItemFormat();
 	  __pSpinViewListItemFormat->Construct();
 
-	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 400, 80), 30, Color(0, 191, 255), Color(0, 191, 255));
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 400, 80), 30, Color::COLOR_GREY, Color::COLOR_GREY);
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(420, 25, 400, 80), 30);
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 
+//---------------------- __pComboViewListItemFormat --------------------------------
 
+	  __pComboViewListItemFormat = new CustomListItemFormat();
+	  __pComboViewListItemFormat->Construct();
+
+	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(10, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
+	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(10, 50, 400, 80), 28);
+	  __pComboViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
+	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+
+//---------------------- __pComboViewListItemFormat --------------------------------
 
 	  __pStringViewListItemFormat = new CustomListItemFormat();
 	  __pStringViewListItemFormat->Construct();
@@ -150,17 +145,21 @@ result DialogForm::OnInitializing(void)
 	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 50, 400, 80), 30);
 	  __pStringViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pStringViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
-	//  AddControl(*__pCustomList);
+
+//---------------------- __pBooleanListItemFormat --------------------------------
 
 		// Creates an item format of the CustomList
 	__pBooleanListItemFormat = new CustomListItemFormat();
 	__pBooleanListItemFormat->Construct();
 
-	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(20, 25, 400, 80), 30);
+	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(20, 10, 400, 80), 28, Color::COLOR_GREY, Color::COLOR_GREY);
 	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(20, 55, 400, 80), 20);
 	__pBooleanListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	__pBooleanListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 	__pBooleanListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
+
+
+//---------------------- __pCustomListItemFormat2 --------------------------------
 
 	__pCustomListItemFormat2 = new CustomListItemFormat();
 	__pCustomListItemFormat2->Construct();
@@ -171,6 +170,8 @@ result DialogForm::OnInitializing(void)
 	__pCustomListItemFormat2->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 //	__pCustomListItemFormat2->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
+
+//---------------------- __pColorListItemFormat --------------------------------
 
 	__pColorListItemFormat = new CustomListItemFormat();
 	__pColorListItemFormat->Construct();
@@ -184,6 +185,8 @@ result DialogForm::OnInitializing(void)
 	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
 
+//---------------------- __pImageViewListItemFormat --------------------------------
+
 	__pImageViewListItemFormat = new CustomListItemFormat();
 	__pImageViewListItemFormat->Construct();
 
@@ -194,18 +197,6 @@ result DialogForm::OnInitializing(void)
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP3, Osp::Graphics::Rectangle(240, 175, 220, 52));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP4, Osp::Graphics::Rectangle(240, 250, 220, 52));
 
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_BITMAP1, Osp::Graphics::Rectangle(240, 35, 220, 52), 25, Color::COLOR_BLACK, Color::COLOR_BLUE);
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_BITMAP2, Osp::Graphics::Rectangle(240, 110, 220, 52), 25, Color::COLOR_BLACK, Color::COLOR_BLUE);
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_BITMAP3, Osp::Graphics::Rectangle(240, 185, 220, 52), 25, Color::COLOR_BLACK, Color::COLOR_BLUE);
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_BITMAP4, Osp::Graphics::Rectangle(240, 260, 220, 52), 25, Color::COLOR_BLACK, Color::COLOR_BLUE);
-
-
-
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 300, 80), 30, Color::COLOR_RED, Color::COLOR_RED);
-//	__pImageViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(105, 55, 300, 80), 30);
-//	__pImageViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 10, 90, 90));
-//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_TITLE, true);
-//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_SUBTITLE, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BACKGROUND, false);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP1, true);
@@ -214,6 +205,7 @@ result DialogForm::OnInitializing(void)
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
 
 
+//---------------------- __pButtonViewListItemFormat --------------------------------
 
 	  __pButtonViewListItemFormat = new CustomListItemFormat();
 	  __pButtonViewListItemFormat->Construct();
@@ -223,6 +215,9 @@ result DialogForm::OnInitializing(void)
 	  __pButtonViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(10, 12, 250, 80), 30, Color::COLOR_WHITE, Color::COLOR_BLUE);
 	  __pButtonViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(300, 12, 180, 50), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
 	  __pButtonViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+
+
+//---------------------- __pStaticTextListItemFormat --------------------------------
 
 	  __pStaticTextListItemFormat = new CustomListItemFormat();
 	  __pStaticTextListItemFormat->Construct();
@@ -334,7 +329,7 @@ void DialogForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection
 		{
 
 			pFrame->SetCurrentForm(*this);
-			DeleteComboOptionPopup();
+			DeleteOptionPopup();
 			//pFrame->RequestRedraw();
 			Draw();
 			Show();
@@ -359,8 +354,14 @@ void DialogForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection
 
 }
 
-void DialogForm::DeleteComboOptionPopup(){
+void DialogForm::DeleteOptionPopup(){
 	//DeleteCreateCategoryPopup();
+	if(__pSpinOptionPopup)
+	{
+		delete __pSpinOptionPopup;
+		__pSpinOptionPopup = null;
+	}
+
 	if(__pComboOptionPopup)
 	{
 		delete __pComboOptionPopup;
@@ -382,6 +383,16 @@ void DialogForm::ShowColorComboOptionPopup(ColorOptionView* pColorOptionView){
 	__pColorComboOptionPopup->Construct(this, pColorOptionView);
 	__pColorComboOptionPopup->Show();
 }
+
+void DialogForm::ShowSpinOptionPopup(SpinOptionView* pSpinOptionView){
+	//DeleteCreateCategoryPopup();
+
+	__pSpinOptionPopup = new SpinOptionPopup();
+	//AddControl(*__pComboOptionPopup);
+	__pSpinOptionPopup->Construct(this, pSpinOptionView);
+	__pSpinOptionPopup->Show();
+}
+
 
 void DialogForm::ShowComboOptionPopup(ComboOptionView* pComboOptionView){
 	//DeleteCreateCategoryPopup();

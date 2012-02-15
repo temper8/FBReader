@@ -30,7 +30,7 @@ void ComboOptionView::_createItem() {
 
 	pItem = new OptionListItem(this);
     pItem->Construct(100);
-    pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
+    pItem->SetItemFormat(*myTab->form()->__pComboViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 
 	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);

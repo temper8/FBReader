@@ -36,6 +36,9 @@
 #define ID_LIST_TEXT_BITMAP4  		114
 #define ID_LIST_BACKGROUND  		115
 
+
+class SpinOptionPopup;
+class SpinOptionView;
 class ComboOptionPopup;
 class ComboOptionView;
 class ColorComboOptionPopup;
@@ -69,6 +72,7 @@ public:
 //	Osp::Ui::Controls::ScrollPanel* pScrollPanel;
 	Osp::Ui::Controls::Form*	pPreviousForm;
 	//Osp::Graphics::Rectangle clientArea;
+	SpinOptionPopup* __pSpinOptionPopup;
 	ComboOptionPopup*	__pComboOptionPopup;
 	ColorComboOptionPopup*	__pColorComboOptionPopup;
 	//shared_ptr<ZLOptionsDialog>
@@ -78,6 +82,7 @@ public:
    int GroupCount;
     Osp::Ui::Controls::GroupedList* __pCustomList;
    // Osp::Ui::Controls::CustomList* __pCustomList;
+    Osp::Ui::Controls::CustomListItemFormat* __pComboViewListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pStringViewListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pSpinViewListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pBooleanListItemFormat;
@@ -100,7 +105,9 @@ public:
     void 	OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
 	void ShowComboOptionPopup(ComboOptionView* pComboOptionView);
 	void ShowColorComboOptionPopup(ColorOptionView* pColorOptionView);
-	void DeleteComboOptionPopup();
+	void ShowSpinOptionPopup(SpinOptionView* pSpinOptionView);
+
+	void DeleteOptionPopup();
 
 };
 
