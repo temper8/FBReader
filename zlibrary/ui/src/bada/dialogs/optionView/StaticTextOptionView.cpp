@@ -41,9 +41,6 @@ int stringLength(const char *str, int len){
 void StaticTextOptionView::_createItem() {
 	std::string myText = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
 	const char *text = myText.c_str();
-//	QLabel *label = new QLabel(::qtString(text), myTab->widget());
-//	myWidgets.push_back(label);
-//	myTab->addItem(label, myRow, myFromColumn, myToColumn);
 	std::string caption = ZLOptionView::name()+ ": ";
 
 	AppLog("StaticTextOptionView::_createItem()");
@@ -51,28 +48,28 @@ void StaticTextOptionView::_createItem() {
 	AppLog("myText.length = %d",myText.length());
 	int len = stringLength(text, myText.length());
 	AppLog("myText.length = %d",len);
+	//TODO переделать эту фигню
 	int n = len / 20;
 	int h = 45;
 	if (n>1) h=n*45;
 	int textHeight;
 	size_t found=caption.find("????");
 	AppLog("found = %d",found);
-	 if (found)  textHeight=initText(caption.c_str(),myText, 2000);
+	if (found)  textHeight=initText(caption.c_str(),myText, 2000);
 	 	 	 else textHeight=initText(null,myText, 2000);
 	AppLog("textHeight = %d",textHeight);
 	pItem->Construct(textHeight+10);
 
     pItem->SetItemFormat(*myTab->form()->__pStaticTextListItemFormat);
- //   pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
-//	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(text));
-	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
- //   pItem->SetCheckBox(ID_LIST_CHECKBOX);
+//   pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
+//   pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(text));
+//   pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
+//   pItem->SetCheckBox(ID_LIST_CHECKBOX);
     pItem->SetElement(ID_LIST_CUSTOM, *this);
-	AppLog("	SetElement ID_LIST_CUSTOM		");
-	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
-	int groupIndex = myTab->form()->GroupCount-1;
-	int itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
+	groupIndex = myTab->form()->GroupCount-1;
+	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
 	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,false);
 }
 

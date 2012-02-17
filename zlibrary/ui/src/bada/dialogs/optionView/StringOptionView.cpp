@@ -54,7 +54,6 @@ void StringOptionView::_setActive(bool active) {
 
 void StringOptionView::_onAccept() const {
 	AppLog("StringOptionView::_onAccept");
-	//((ZLStringOptionEntry&)*myOption).onAccept((const char*)myLineEdit->text().toUtf8());
 	((ZLStringOptionEntry&)*myOption).onAccept(myValue);
 }
 

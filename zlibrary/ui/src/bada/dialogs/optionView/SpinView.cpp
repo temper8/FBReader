@@ -29,8 +29,6 @@ using namespace Osp::Content;
 using namespace Osp::Graphics;
 using namespace Osp::Base::Runtime;
 
-
-
 void SpinOptionView::_createItem() {
 	AppLog("SpinOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
 	myValue = initialValue();
@@ -49,6 +47,7 @@ void SpinOptionView::_createItem() {
 	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
 	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
 }
+
 void SpinOptionView::UpdateItem(){
 	CustomListItem* pItem = new OptionListItem(this);
 	String str;
@@ -60,9 +59,8 @@ void SpinOptionView::UpdateItem(){
 	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, str);
 
 	myTab->form()->__pCustomList->SetItemAt(groupIndex,itemIndex, *pItem, ID_LIST_ITEM);
-
-
 }
+
 void SpinOptionView::_onAccept() const {
 	AppLog("SpinOptionView::_onAccept()");
 	((ZLSpinOptionEntry&)*myOption).onAccept(myValue);
@@ -134,7 +132,6 @@ result SpinOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentForm, Sp
 	AddControl(*pCancelButton);
 	pCancelButton->SetActionId(ID_BUTTON_CANCEL);
 	pCancelButton->AddActionEventListener(*this);
-
 
     // Creates a Slider.
 	Slider* pSlider = new Slider();
