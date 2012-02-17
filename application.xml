@@ -8,7 +8,7 @@
     <Vendor>Geometer Plus</Vendor>
     <Description/>
     <Icons>
-        <MainMenu>B2App_type4.png<Type1>B2App_type4.png</Type1>
+        <MainMenu>64x64.png<Type1>64x64.png</Type1>
             <Type2>FBReader_type2.png</Type2>
         </MainMenu>
         <Setting/>
