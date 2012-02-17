@@ -59,7 +59,7 @@ LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLR
 	myFormatPage = new FormatOptionsPage(dialog.createTab(ZLResourceKey("Format")));
 	myStylePage = new StyleOptionsPage(dialog.createTab(ZLResourceKey("Styles")), *fbreader.context());
 
-	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("Colors"));
+/*	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("Colors"));
 	ZLResourceKey colorKey("colorFor");
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
@@ -85,5 +85,5 @@ LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLR
 	colorsTab.addOption(resource["highlighted"].value(),"",new ZLSimpleColorOptionEntry( options.colorOption(ZLTextStyle::HIGHLIGHTED_TEXT)));
 	colorsTab.addOption(resource["treeLines"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption(ZLTextStyle::TREE_LINES)));
 	colorsTab.addOption(resource["indicator"].value(),"", new ZLSimpleColorOptionEntry((FBView::commonIndicatorInfo().ColorOption)));
-
+*/
 }

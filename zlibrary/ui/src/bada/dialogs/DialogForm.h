@@ -35,7 +35,7 @@
 #define ID_LIST_TEXT_BITMAP3  		113
 #define ID_LIST_TEXT_BITMAP4  		114
 #define ID_LIST_BACKGROUND  		115
-
+#define ID_LIST_COLOR  			116
 
 class SpinOptionPopup;
 class SpinOptionView;

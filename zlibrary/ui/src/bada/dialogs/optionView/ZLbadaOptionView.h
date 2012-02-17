@@ -278,6 +278,7 @@ friend class KeyLineEdit;
 };
 */
 class ColorComboOptionPopup	: public Osp::Ui::Controls::Popup,
+							  public Osp::Ui::IAdjustmentEventListener,
 							  public Osp::Ui::IActionEventListener{
 public:
 	ColorComboOptionPopup(void);
@@ -297,20 +298,26 @@ public:
 	Osp::Ui::Controls::List*		__pComboList;
 
 private:
-
+	ZLColor tmpColor;
+	Osp::Ui::Controls::Slider* sliderR;
+	Osp::Ui::Controls::Slider* sliderG;
+	Osp::Ui::Controls::Slider* sliderB;
+	Osp::Ui::Controls::Panel* panelColor;
 	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+    virtual void OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment);
 
 };
 
 
 
 class ColorOptionView : public ZLbadaOptionView,
+						public Osp::Ui::Controls::ICustomListElement,
 						public Osp::Ui::IActionEventListener,
 						public Osp::Ui::IItemEventListener  {
 
 public:
 	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
-
+	void Update();
 private:
 	void _createItem();
 	void _onAccept() const;
@@ -331,6 +338,8 @@ private:
 	static void initVectors();
 //	QSlider *myRSlider, *myGSlider, *myBSlider;
 //	QLabel *myColorBar;
+	ZLColor myColor;
+	result DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus);
 	friend class ColorComboOptionPopup;
 };
 

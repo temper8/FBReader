@@ -176,13 +176,13 @@ result DialogForm::OnInitializing(void)
 	__pColorListItemFormat = new CustomListItemFormat();
 	__pColorListItemFormat->Construct();
 
-	__pColorListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 300, 80), 30, Color::COLOR_GREY, Color::COLOR_GREY);
+	__pColorListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 300, 80), 30, Color::COLOR_GREY, Color::COLOR_GREY);
 	__pColorListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(105, 55, 300, 80), 30);
 	__pColorListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(15, 45, 80, 40));
-	__pColorListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 10, 90, 90));
+	__pColorListItemFormat->AddElement(ID_LIST_COLOR, Osp::Graphics::Rectangle(370, 20, 100, 45));
 //	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_TITLE, true);
 //	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_SUBTITLE, true);
-	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
+	//__pColorListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
 
 //---------------------- __pImageViewListItemFormat --------------------------------

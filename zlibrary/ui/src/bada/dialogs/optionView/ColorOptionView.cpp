@@ -55,91 +55,67 @@ void ColorOptionView::initVectors() {
 	}
 }
 
+result ColorOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus)
+{
+	result r = E_SUCCESS;
+	AppLog("DrawElement");
+	Osp::Graphics::Canvas* pCanvas = const_cast<Osp::Graphics::Canvas*>(&canvas);
+	AppLog("pCanvas");
+	pCanvas->SetLineWidth(5);
+
+	if (pCanvas->FillRectangle(Color(myColor.Red,myColor.Green,myColor.Blue),rect)!= E_SUCCESS)
+		return r;
+	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+	if (pCanvas->DrawRectangle(rect) != E_SUCCESS)
+		return r;
+/*
+	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_WHITE);
+	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+20, rect.y+5), *pEnrichedText) != E_SUCCESS)
+		return r;
+*/
+	return r;
+}
+
 void ColorOptionView::_createItem() {
 	AppLog("ComboOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
 	initVectors();
 	pItem = new OptionListItem(this);
-    pItem->Construct(100);
+    pItem->Construct(90);
     pItem->SetItemFormat(*myTab->form()->__pColorListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
     const ZLColor &color = ((ZLColorOptionEntry&)*myOption).color();
-    Bitmap BitmapNormal;
-    Osp::Graphics::Canvas canvas;
-    canvas.Construct(Rectangle(0,0,10,10));
-    canvas.FillRectangle(Color(color.Red,color.Green,color.Blue),Rectangle(0,0,10,10));
-    BitmapNormal.Construct(canvas,Rectangle(0,0,10,10));
+    myColor = ((ZLColorOptionEntry&)*myOption).color();
+
 //	const char *text = (((ZLColorOptionEntry&)*myOption).initialValue()).c_str();
 	//myEditField->SetText(String(text));
-	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String("color"));
+//	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String("color"));
 
-	pItem->SetElement(ID_LIST_BITMAP, BitmapNormal, &BitmapNormal);
+//	pItem->SetElement(ID_LIST_BITMAP, BitmapNormal, &BitmapNormal);
   //  pItem->SetCheckBox(ID_LIST_CHECKBOX);
-	pItem->SetElement(ID_LIST_CHECKBOX, BitmapNormal, &BitmapNormal);
+	pItem->SetElement(ID_LIST_COLOR, *this);
     //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
-
-
-
-	/*
-	QWidget *widget = new QWidget(myTab->widget());
-	myWidgets.push_back(widget);
-	QGridLayout *layout = new QGridLayout(widget);
-	const ZLColor &color = ((ZLColorOptionEntry&)*myOption).color();
-	const ZLResource &resource = ZLResource::resource(ZLDialogManager::COLOR_KEY);
-	myRSlider = createColorSlider(layout, 0, resource["red"], color.Red);
-	myGSlider = createColorSlider(layout, 1, resource["green"], color.Green);
-	myBSlider = createColorSlider(layout, 2, resource["blue"], color.Blue);
-
-	myColorBar = new QLabel("                  ", widget);
-	QPalette palette = myColorBar->palette();
-	palette.setColor(myColorBar->backgroundRole(), QColor(color.Red, color.Green, color.Blue));
-	myColorBar->setPalette(palette);
-	myColorBar->setFrameStyle(QFrame::Panel | QFrame::Plain);
-	layout->addWidget(myColorBar, 0, 2, 3, 1);
-	myColorBar->setAutoFillBackground(true);
-
-	myTab->addItem(widget, myRow, myFromColumn, myToColumn);
-	*/
+	groupIndex = myTab->form()->GroupCount-1;
+	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
 }
 
 void ColorOptionView::reset() {
-	/*
-	if (myColorBar == 0) {
-		return;
-	}
-	ZLColorOptionEntry &colorEntry = (ZLColorOptionEntry&)*myOption;
-	colorEntry.onReset(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
-	const ZLColor &color = colorEntry.color();
-	myRSlider->setValue(color.Red);
-	myGSlider->setValue(color.Green);
-	myBSlider->setValue(color.Blue);
-	QPalette palette = myColorBar->palette();
-	palette.setColor(myColorBar->backgroundRole(), QColor(color.Red, color.Green, color.Blue));
-	myColorBar->setPalette(palette);
-	*/
+
 }
-/*
-void ColorOptionView::onSliderMove(int) {
-	QPalette palette = myColorBar->palette();
-	palette.setColor(myColorBar->backgroundRole(), QColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
-	myColorBar->setPalette(palette);
-}
-*/
+
 void ColorOptionView::_onAccept() const {
-	//((ZLColorOptionEntry&)*myOption).onAccept(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+	((ZLColorOptionEntry&)*myOption).onAccept(myColor);
 }
 
 void ColorOptionView::OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status){
-//	onValueSelected(index);
-//	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*this->option();
-//	const std::vector<std::string> &values = comboOption.values();
-//	const char *text = (values[index].c_str());
-//	myEditField->SetText(String(text));
-//	AppLog("pItem->SetElement(ID_LIST_TEXT_SUBTITLE %s", text);
-//	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(text));
 	AppLog("myTab->form()->SendUserEvent");
 	myTab->form()->SendUserEvent(0, null);
 }
+
+void ColorOptionView::Update() {
+	myTab->form()->__pCustomList->RefreshItem(groupIndex, itemIndex);
+}
+
 
 void ColorOptionView::OnActionPerformed(int actionId)
 {
@@ -167,11 +143,16 @@ ColorComboOptionPopup::ColorComboOptionPopup(void){}
 ColorComboOptionPopup::~ColorComboOptionPopup(void){}
 
 result ColorComboOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentForm,  ColorOptionView* parentColorOptionView) {
-	result r = Popup::Construct(true, Dimension(465,750));
+	int PopupHeight = 450;
+    int sliderWidth = 310;
+    int sliderHeight = 80;
+    int dx = 150;
+
+	result r = Popup::Construct(true, Dimension(465,PopupHeight));
 	if(IsFailed(r))
 		return r;
 	__parentColorOptionView = parentColorOptionView;
-
+	  tmpColor = __parentColorOptionView->myColor;
 	//SetTitleText(String(parentColorOptionView->title().c_str()));
 	SetTitleText(String("Select color"));
 	__pParentForm = const_cast<Form*>(pParentForm);
@@ -180,69 +161,59 @@ result ColorComboOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentFo
 		return E_FAILURE;
 
 	Button* pCreateButton = new Button();
-	pCreateButton->Construct(Rectangle(20, 580, 200, 70), L"Select");
+	pCreateButton->Construct(Rectangle(20, PopupHeight - 180, 200, 70), L"OK");
 	AddControl(*pCreateButton);
 	pCreateButton->SetActionId(ID_BUTTON_CREATE);
 	pCreateButton->AddActionEventListener(*this);
 
 
 	Button* pCancelButton = new Button();
-	pCancelButton->Construct(Rectangle(230, 580, 200, 70), L"Cancel");
+	pCancelButton->Construct(Rectangle(230, PopupHeight - 180, 200, 70), L"Cancel");
 	AddControl(*pCancelButton);
 	pCancelButton->SetActionId(ID_BUTTON_CANCEL);
 	pCancelButton->AddActionEventListener(*this);
 
+	panelColor = new Panel();
+	panelColor->Construct(Rectangle(10, 15, dx-10, 3*sliderHeight-20));
+	panelColor->SetBackgroundColor(Osp::Graphics::Color(tmpColor.Red,tmpColor.Green, tmpColor.Blue));
+	//panelColor->SetCompositeEnabled(false);
+    //Adds a Panel to the Form
+    AddControl(*panelColor);
+
+
+
 	   // Creates a ColorPicker.
-	ColorPicker* pColorPicker = new ColorPicker();
-	pColorPicker->Construct(Point(0,0));
+    // Creates a Slider.
+	sliderR = new Slider();
+	sliderR->Construct(Rectangle(dx, 05, sliderWidth, sliderHeight), BACKGROUND_STYLE_NONE, false, 0, 255);
+	sliderR->SetValue(tmpColor.Red);
+	sliderR->AddAdjustmentEventListener(*this);
+    AddControl(*sliderR);
 
-	// Adds a ColorChangeEvent listener.
-	// pColorPicker->AddColorChangeEventListener(*this);
+	sliderG = new Slider();
+	sliderG->Construct(Rectangle(dx, 05+sliderHeight, sliderWidth, sliderHeight), BACKGROUND_STYLE_NONE, false, 0, 255);
+	sliderG->SetValue(tmpColor.Green);
+	sliderG->AddAdjustmentEventListener(*this);
+    AddControl(*sliderG);
 
-	 // Adds a ColorPicker to the Form.
-	 AddControl(*pColorPicker);
+	sliderB = new Slider();
+	sliderB->Construct(Rectangle(dx, 05+2*sliderHeight, sliderWidth, sliderHeight), BACKGROUND_STYLE_NONE, false, 0, 255);
+	sliderB->SetValue(tmpColor.Blue);
+	sliderB->AddAdjustmentEventListener(*this);
+    AddControl(*sliderB);
 
-
-	__pComboList = new List();
-	Osp::Graphics::Rectangle rect = GetBounds();
-	__pComboList->Construct(Rectangle(20, 310, 480, 250), LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_IMAGE_TEXT, 45, 0, 100, 300);
-		//pList->Construct(rect, LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 100, 0, rect.width, 0);
-	//const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*__parentColorOptionView->option();
-//	const std::vector<std::string> &values = comboOption.values();
-//	const std::string &initial = comboOption.initialValue();
-	int selectedIndex = -1;
-	int index = 0;
-	String itemText("text");
-
-	for (int i = 0; i<__parentColorOptionView->ourStrings.size(); i++)
-	{
-	    const ZLColor &color = __parentColorOptionView->ourColors[i];
-	    Bitmap BitmapNormal;
-	    Osp::Graphics::Canvas canvas;
-	    canvas.Construct(Rectangle(0,0,10,10));
-	    canvas.FillRectangle(Color(color.Red,color.Green,color.Blue),Rectangle(0,0,10,10));
-	    BitmapNormal.Construct(canvas,Rectangle(0,0,10,10));
-		itemText = String(__parentColorOptionView->ourStrings[i].c_str());
-		__pComboList->AddItem(&itemText, null, &BitmapNormal, null );
-	}
-
-
-
-	/*for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
-		String itemText((*it).c_str());
-		__pComboList->AddItem(&itemText, null, null, null );
-		if (*it == initial) {
-			selectedIndex = index;
-		}
-	}*/
-
-	if (selectedIndex >= 0) {
-		//myComboBox->setCurrentIndex(selectedIndex);
-	}
-	__pComboList->AddItemEventListener(*__parentColorOptionView);
-    AddControl(*__pComboList);
 
 	return E_SUCCESS;
+}
+
+void ColorComboOptionPopup::OnAdjustmentValueChanged(const Osp::Ui::Control& source, int adjustment){
+	//tmpValue = adjustment;
+	tmpColor = ZLColor(sliderR->GetValue(),sliderG->GetValue(),sliderB->GetValue());
+	panelColor->SetBackgroundColor(Osp::Graphics::Color(tmpColor.Red,tmpColor.Green, tmpColor.Blue));
+	panelColor->Draw();
+	Draw();
+	this->RequestRedraw(true);
+	AppLog("adjustment %d",adjustment);
 }
 
 void ColorComboOptionPopup::OnActionPerformed(const Control& source, int actionId)
@@ -251,7 +222,9 @@ void ColorComboOptionPopup::OnActionPerformed(const Control& source, int actionI
 	{
 		case ID_BUTTON_CREATE:
 			//if(CreateCategory() == true)
+			__parentColorOptionView->myColor = tmpColor;
 			__pParentForm->SendUserEvent(0, null);
+			__parentColorOptionView->Update();
 			break;
 		case ID_BUTTON_CANCEL:
 			__pParentForm->SendUserEvent(0, null);
