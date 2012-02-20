@@ -2,5 +2,6 @@
 *.d
 *.pyc
 .Target-Debug
+.Target-Release
 DebugInfo
-fbreader/FBReader
+
