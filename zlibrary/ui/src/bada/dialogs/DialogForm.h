@@ -79,6 +79,7 @@ public:
 	shared_ptr<ZLOptionsDialog> __badaOptionsDialog;
 	Osp::Graphics::Bitmap* buttonBmp;
 	Osp::Graphics::Bitmap* buttonBmp2;
+	Osp::Graphics::Bitmap* arrowDownBmp;
    int GroupCount;
     Osp::Ui::Controls::GroupedList* __pCustomList;
    // Osp::Ui::Controls::CustomList* __pCustomList;
