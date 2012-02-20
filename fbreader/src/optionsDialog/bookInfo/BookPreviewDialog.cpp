@@ -18,7 +18,7 @@
 #include <optionEntries/ZLLanguageOptionEntry.h>
 
 #include "BookInfoDialog.h"
-
+#include "../../libraryTree/LibraryNodes.h"
 #include "../../library/Library.h"
 #include "../../encodingOption/EncodingOptionEntry.h"
 #include "../../library/Book.h"
@@ -108,10 +108,6 @@ void BookOpenAction::run() {
 	//AppLog("BookOpenAction %s",book.title().c_str());
 }
 */
-class AuthorFunctor {
-public:
-    std::string operator()(shared_ptr<Author> author) const;
-};
 
 BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	// TODO Auto-generated constructor stub
