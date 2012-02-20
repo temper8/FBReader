@@ -7,12 +7,15 @@
 #include "OpenFileForm.h"
 #include "../dialogs/DialogForm.h"
 #include "badaForm.h"
+#include <FSystem.h>
+
 
 using namespace Osp::App;
 using namespace Osp::Base;
+using namespace Osp::Base::Collection;
 using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
-using namespace Osp::Base::Collection;
+using namespace Osp::System;
 
 result badaForm::OnDraw(void)
 {
@@ -79,6 +82,7 @@ void badaForm::OnTouchPressed(const Control &source, const Point &currentPositio
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchReleased");
+	AppLog("currentPosition x=%d, y=%d",currentPosition.x, currentPosition.y);
 	//myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
 	if (Math::Abs(currentPosition.y-400)<100) {
 			if (__pOptionMenu != null){
@@ -143,7 +147,9 @@ result badaForm::OnInitializing(void)
 {
 	AppLog("badaForm::OnInitializing()");
 	result r = E_SUCCESS;
-
+	RuntimeInfo::GetValue("ScreenHeight", ScreenHeight);
+	RuntimeInfo::GetValue("ScreenWidth", ScreenWidth);
+	AppLog("ScreenHeight=%d, ScreenWidth=%d",ScreenHeight, ScreenWidth);
 	// TODO: Add your initialization code here
 	AddTouchEventListener(*this);
 	AddOrientationEventListener(*this);

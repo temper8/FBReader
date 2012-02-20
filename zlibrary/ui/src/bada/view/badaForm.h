@@ -41,6 +41,8 @@ protected:
 	std::string ActionIdList[16];
 
 public:
+	int ScreenHeight;
+	int ScreenWidth;
 //	DialogForm* CreateDalogForm(const char* name);
 	DialogForm* CreateDalogForm(void);
     void AddMenuItem(const std::string &name,const  std::string &id);
