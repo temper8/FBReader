@@ -27,7 +27,7 @@
 #include <ZLImageManager.h>
 #include <ZLImage.h>
 #include <ZLRunnable.h>
-#include <ZLTreeTitledNode.h>
+//#include <ZLTreeTitledNode.h>
 #include <FBase.h>
 class ZLOptionView;
 
@@ -260,7 +260,7 @@ class ZLPictureOptionEntry : public ZLOptionEntry {
 public:
         ZLPictureOptionEntry(shared_ptr<ZLImage> image,const std::vector<shared_ptr<ZLRunnableWithKey> > &actions );
         ZLPictureOptionEntry();
-		ZLPictureOptionEntry(ZLTreeTitledNode* node);
+	//	ZLPictureOptionEntry(ZLTreeTitledNode* node);
        ZLOptionKind kind() const;
        const shared_ptr<ZLImage> image() const;
        const std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
@@ -353,7 +353,7 @@ inline const shared_ptr<ZLImage> ZLPictureOptionEntry::image() const { return my
 inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image, const std::vector<shared_ptr<ZLRunnableWithKey> > &actions ): myImage(image),	myActions(actions){	}
 
 //inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLTreeTitledNode> node): myNode(node),myImage(0) { }
-inline ZLPictureOptionEntry::ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()),	myActions(node->actions()){	}
+//inline ZLPictureOptionEntry::ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()),	myActions(node->actions()){	}
 inline ZLPictureOptionEntry::ZLPictureOptionEntry(): myImage(null), myActions(bookActions){	}
 
 //inline const shared_ptr<ZLTreeTitledNode> ZLPictureOptionEntry::node() const { AppLog("ZLPictureOptionEntry::node()"); return myNode; }
