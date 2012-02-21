@@ -143,10 +143,11 @@ ColorComboOptionPopup::ColorComboOptionPopup(void){}
 ColorComboOptionPopup::~ColorComboOptionPopup(void){}
 
 result ColorComboOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentForm,  ColorOptionView* parentColorOptionView) {
-	int PopupHeight = 450;
+    int PopupHeight = 460;
     int sliderWidth = 310;
-    int sliderHeight = 80;
+    int sliderHeight = 90;
     int dx = 150;
+
 
 	result r = Popup::Construct(true, Dimension(465,PopupHeight));
 	if(IsFailed(r))
