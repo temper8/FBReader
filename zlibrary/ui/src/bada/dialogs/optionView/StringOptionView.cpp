@@ -32,25 +32,18 @@ void StringOptionView::_createItem() {
     pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 
-	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
- //   pItem->SetCheckBox(ID_LIST_CHECKBOX);
-    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
-	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
+//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
+//   pItem->SetCheckBox(ID_LIST_CHECKBOX);
+//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
+
+    myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
 	groupIndex = myTab->form()->GroupCount-1;
 	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
 	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
-
-    __pKeypad = new Keypad();
-    __pKeypad->Construct(KEYPAD_STYLE_NORMAL, KEYPAD_MODE_ALPHA);
-    __pKeypad->AddTextEventListener(*this);
-
 	reset();
 }
 
-void StringOptionView::_setActive(bool active) {
-//	myLineEdit->setReadOnly(!active);
-}
 
 void StringOptionView::_onAccept() const {
 	AppLog("StringOptionView::_onAccept");
@@ -61,7 +54,7 @@ void StringOptionView::reset() {
 	myValue = ((ZLStringOptionEntry&)*myOption).initialValue();
 	AppLog("StringOptionView::reset initialValue = %s",myValue.c_str());
 	//const char *text = (((ZLStringOptionEntry&)*myOption).initialValue()).c_str();
-	__pKeypad->SetText(String(myValue.c_str()));
+
 	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(myValue.c_str()));
 }
 
@@ -122,15 +115,16 @@ void StringOptionView::OnTextValueChangeCanceled(const Control& source)
 
 void StringOptionView::ShowKeypad()
 {
-    // Changes to desired show state
-    __pKeypad->SetShowState(true);
-
-    // Calls Show() of the control
-   // if (show == true)
-        __pKeypad->Show();
-    // Calls Show() of the container
-   // else
-   //     Show();
+	if (!__pKeypad)
+	{
+		AppLog("new Keypad()");
+    __pKeypad = new Keypad();
+    __pKeypad->Construct(KEYPAD_STYLE_NORMAL, KEYPAD_MODE_ALPHA);
+    __pKeypad->AddTextEventListener(*this);
+	}
+	__pKeypad->SetText(String(myValue.c_str()));
+  //  __pKeypad->SetShowState(true);
+    __pKeypad->Show();
 }
 
 
