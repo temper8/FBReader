@@ -102,11 +102,11 @@ void ComboOptionView::reset() {
 	}
 	*/
 }
-
+/*
 void ComboOptionView::_setActive(bool active) {
 //	myComboBox->setEnabled(active);
 }
-
+*/
 
 void ComboOptionView::_onAccept() const {
 	AppLog("ComboOptionView::_onAccept %s",comboValue.c_str());

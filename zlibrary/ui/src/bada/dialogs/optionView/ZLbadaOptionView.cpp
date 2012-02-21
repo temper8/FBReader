@@ -43,17 +43,22 @@ using namespace Osp::Base::Runtime;
 
 void ZLbadaOptionView::_show() {
 	AppLog("BooleanOptionView::_show()");
-//	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
-//		(*it)->show();
-//	}
+	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,true);
+	myTab->form()->RequestRedraw(true);
 }
 
 void ZLbadaOptionView::_hide() {
-	AppLog("BooleanOptionView::_hide()");
-//	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
-//		(*it)->hide();
-//	}
+	AppLog("ZLbadaOptionView::_hide()");
+	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
+	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,false);
+	myTab->form()->RequestRedraw(true);
 }
+
+void ZLbadaOptionView::_setActive(bool active) {
+	AppLog("StringOptionView::_setActive %s",(active)?"true":"false");
+	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,active);
+}
+
 
 void BooleanOptionView::_createItem() {
 	AppLog("BooleanOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
@@ -68,23 +73,15 @@ void BooleanOptionView::_createItem() {
   //  pItem->SetValue(50);
     //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
-	int groupIndex = myTab->form()->GroupCount-1;
-	int itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	groupIndex = myTab->form()->GroupCount-1;
+	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+	AppLog("BooleanOptionView groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
 	//myTab->form()->__pCustomList->GetLastCheckedItemIndex( groupIndex, itemIndex);
 	checkState = ((ZLBooleanOptionEntry&)*myOption).initialState();
 	myTab->form()->__pCustomList->SetItemChecked(groupIndex,itemIndex,checkState);
 	AppLog("BooleanOptionView:: %d, %d",groupIndex,itemIndex );
-	/*myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
-	myCheckBox->setChecked(((ZLBooleanOptionEntry&)*myOption).initialState());
-	myWidgets.push_back(myCheckBox);
-	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
-	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));*/
 }
 
-
-void BooleanOptionView::_setActive(bool active) {
-	// myCheckButton->SetSelected(active);
-}
 
 void BooleanOptionView::_onAccept() const {
 	AppLog("BooleanOptionView::_onAccept");
@@ -99,21 +96,8 @@ void BooleanOptionView::onStateChanged(bool state) {
 
 void BooleanOptionView::OnActionPerformed(int actionId)
 {
-    switch (actionId)
-    {
-	case ID_BUTTON_CHECKED:
-	        // Todo:
-	    	AppLog("BooleanOptionView::ID_BUTTON_CHECKED");
-	    	onStateChanged(!checkState);
-	        break;
-	case ID_BUTTON_UNCHECKED:
-	    	AppLog("BooleanOptionView::ID_BUTTON_UNCHECKED");
-	    	onStateChanged(false);
-	        // Todo:
-	        break;
-    default:
-        break;
-    }
+	AppLog("BooleanOptionView::OnActionPerformed %d", actionId);
+	onStateChanged(!checkState);
 }
 
 
@@ -129,7 +113,9 @@ void Boolean3OptionView::_createItem() {
 	    pItem->SetCheckBox(ID_LIST_CHECKBOX);
 	    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 		myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
-		AppLog("BooleanOptionView::_createItem() end");
+		groupIndex = myTab->form()->GroupCount-1;
+		itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
+		AppLog("Boolean3OptionView groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
 
  /*   myCheckButton = new CheckButton();
     myCheckButton->Construct(Rectangle(5, myTab->form()->YPos, myTab->form()->clientArea.width-10, 80),
@@ -157,10 +143,6 @@ void Boolean3OptionView::_createItem() {
 	//connect(myCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
 }
 
-void Boolean3OptionView::_setActive(bool active) {
-	// myCheckButton->SetSelected(active);
-}
-
 void Boolean3OptionView::_onAccept() const {
 	AppLog("Boolean3OptionView::_onAccept");
 	/*
@@ -182,6 +164,7 @@ void Boolean3OptionView::_onAccept() const {
 
 void Boolean3OptionView::OnActionPerformed(int actionId)
 {
+	AppLog("Boolean3OptionView::OnActionPerformed");
     switch (actionId)
     {
 	case ID_BUTTON_CHECKED:
@@ -237,25 +220,12 @@ void ChoiceOptionView::_createItem() {
 		myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
 	}
-/*
-	myGroupBox = new QGroupBox(::qtString(ZLOptionView::name()));
-	myWidgets.push_back(myGroupBox);
-	QVBoxLayout *layout = new QVBoxLayout(myGroupBox);
-	myButtons = new QRadioButton*[((ZLChoiceOptionEntry&)*myOption).choiceNumber()];
-	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
-		myButtons[i] = new QRadioButton(myGroupBox);
-		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry&)*myOption).text(i)));
-		layout->addWidget(myButtons[i]);
-	}
-	myButtons[((ZLChoiceOptionEntry&)*myOption).initialCheckedIndex()]->setChecked(true);
-	myTab->addItem(myGroupBox, myRow, myFromColumn, myToColumn);
-	*/
 }
-
+/*
 void ChoiceOptionView::_setActive(bool active) {
 //	myGroupBox->setEnabled(active);
 }
-
+*/
 void ChoiceOptionView::_onAccept() const {
 /*	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		if (myButtons[i]->isChecked()) {
@@ -372,19 +342,7 @@ void KeyOptionView::onValueChanged(int index) {
 		((ZLKeyOptionEntry&)*myOption).onValueChanged(myCurrentKey, index);
 	}
 }
-
-QSlider *ColorOptionView::createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value) {
-	layout->addWidget(new QLabel(::qtString(resource.value()), layout->parentWidget()), index, 0);
-	QSlider *slider = new QSlider(Qt::Horizontal, layout->parentWidget());
-	layout->addWidget(slider, index, 1);
-	slider->setMinimum(0);
-	slider->setMaximum(255);
-	slider->setSingleStep(5);
-	slider->setTracking(true);
-	slider->setValue(value);
-	connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(onSliderMove(int)));
-	return slider;
-}
 */
+
 
 

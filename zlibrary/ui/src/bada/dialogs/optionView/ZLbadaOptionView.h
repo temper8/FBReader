@@ -43,12 +43,14 @@ protected:
 
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 
 protected:
 	int groupIndex;
 	int itemIndex;
 	int myRow, myFromColumn, myToColumn;
 public :
+
 	ZLbadaDialogContent *myTab;
 	virtual void OnActionPerformed(int actionId) = 0;
 	//std::vector<QWidget*> myWidgets;
@@ -62,7 +64,7 @@ public:
 
 protected:
 	void _createItem();
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
 
 private:
@@ -76,11 +78,9 @@ class BooleanOptionView : public ZLbadaOptionView {
 public:
 	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
 
-
-
 protected:
 	void _createItem();
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
     bool checkState;
 private:
@@ -99,7 +99,7 @@ public:
 
 protected:
 	void _createItem();
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
 	virtual void OnActionPerformed(int actionId);
 //private Q_SLOTS:
@@ -117,7 +117,7 @@ public:
 
 private:
 	void _createItem();
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
 	virtual void OnActionPerformed(int actionId);
@@ -225,7 +225,7 @@ public:
 
 private:
 	void _createItem();
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
 	OptionListItem* pItem;
