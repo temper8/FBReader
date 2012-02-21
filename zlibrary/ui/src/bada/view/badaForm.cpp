@@ -147,9 +147,9 @@ result badaForm::OnInitializing(void)
 {
 	AppLog("badaForm::OnInitializing()");
 	result r = E_SUCCESS;
-	RuntimeInfo::GetValue("ScreenHeight", ScreenHeight);
-	RuntimeInfo::GetValue("ScreenWidth", ScreenWidth);
-	AppLog("ScreenHeight=%d, ScreenWidth=%d",ScreenHeight, ScreenWidth);
+//	RuntimeInfo::GetValue("ScreenHeight", ScreenHeight);
+//	RuntimeInfo::GetValue("ScreenWidth", ScreenWidth);
+//	AppLog("ScreenHeight=%d, ScreenWidth=%d",ScreenHeight, ScreenWidth);
 	// TODO: Add your initialization code here
 	AddTouchEventListener(*this);
 	AddOrientationEventListener(*this);
