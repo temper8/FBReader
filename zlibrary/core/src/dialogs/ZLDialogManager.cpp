@@ -95,6 +95,7 @@ shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResou
 
 void ZLDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
 	AppLog("createProgressDialog");
+	AppLog("createProgressDialog run %s",key.Name.c_str());
 //TODO
 	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
 	if (!dialog.isNull()) {
