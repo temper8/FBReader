@@ -154,7 +154,7 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	size_t length;
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
-		AppLog(" ZLXMLReader::readDocument length = %d", length);
+	//	AppLog(" ZLXMLReader::readDocument length = %d", length);
 		if (!readFromBuffer(myParserBuffer, length)) {
 			AppLog(" ZLXMLReader::readDocument break");
 			break;
