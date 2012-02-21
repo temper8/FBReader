@@ -159,8 +159,8 @@ void   TreeViewForm::updateItem(ZLTreeTitledNode &node, int index){
 	    result r =__pCustomList->SetItemAt(index, *pItem, ID_LIST_TEXT_TITLE);
 	    if (r==E_SUCCESS) AppLog("SetItemAt E_SUCCESS");
 	    		else AppLog("SetItemAt error");
-	 __pCustomList->RefreshItem(index);
-
+	    __pCustomList->RefreshItem(index);
+	 	RequestRedraw(true);
 }
 result TreeViewForm::AddListItem(CustomList& customList, String title,String subTitle, Bitmap* pBitmapNormal)
 {
