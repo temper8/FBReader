@@ -86,7 +86,9 @@ Object* ZLbadaTreeDialog::Run(void){
 }
 
 bool ZLbadaTreeDialog::back() {
+	AppLog("ZLbadaTreeDialog::back()");
 	if (__pThread) {
+		 AppLog("wait terminateThread ");
 		terminateThread = true;
 		__pThread->Join();
 		 AppLog("Join");
@@ -122,6 +124,7 @@ void ZLbadaTreeDialog::treadTerminator(){
 bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
 	 AppLog("enter node");
 	if (__pThread) {
+		 AppLog("wait terminateThread ");
 		terminateThread = true;
 		__pThread->Join();
 		 AppLog("Join");
