@@ -365,7 +365,7 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 			AppLog("xmlCreatePushParserCtxt контекст создать не удалось");
 	     return;
 	 }
-
+//	int r = xmlCtxtUseOptions(ctxt, 524288);XML_PARSE_HUGE = 524288
 	// int r = xmlCtxtUseOptions(ctxt, XML_PARSE_SAX1);
 	// AppLog("xmlCtxtUseOptions  r=%d",r);
 	myInitialized = false;
@@ -375,7 +375,7 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 	AppLog("XML_ParserFree");
     xmlParseChunk(ctxt, 0, 0, 1);
     xmlFreeParserCtxt(ctxt);
-	xmlCleanupParser();
+//	xmlCleanupParser();
 //	XML_ParserFree(myParser);
 }
 
