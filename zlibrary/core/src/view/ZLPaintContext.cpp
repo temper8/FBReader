@@ -29,7 +29,7 @@ ZLPaintContext::~ZLPaintContext() {
 
 const std::vector<std::string> &ZLPaintContext::fontFamilies() const {
 	if (myFamilies.empty()) {
-//		fillFamiliesList(myFamilies);
+		fillFamiliesList(myFamilies);
 	}
 	return myFamilies;
 }

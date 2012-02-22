@@ -14,8 +14,7 @@ using namespace Osp::Graphics;
 
 class ZLbadaPaintContext: public ZLPaintContext {
 private:
-	//QPainter *myPainter;
-	//QPixmap *myPixmap;
+
 	mutable int mySpaceWidth;
 	int myDescent;
 
@@ -28,8 +27,13 @@ private:
 	Osp::Graphics::Color FillColor;
 
 
+protected:
+
+	virtual void fillFamiliesList(std::vector<std::string> &families) const;
+
 public:
 
+    virtual const std::string realFontFamilyName(std::string &fontFamily) const;
 	virtual void clear(ZLColor color);
 	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE);
 	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL);
