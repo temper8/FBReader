@@ -48,8 +48,6 @@ public:
 	// Can decide whether it can be run or not by returning true or false.
 	// If this method returns false, the thread is terminated immediately.
 	bool OnStart(void);
-
-
 	// Called after the Run() method is called.
 	void OnStop(void);
 	// Called when the timer expires.

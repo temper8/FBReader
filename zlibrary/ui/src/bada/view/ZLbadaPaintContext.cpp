@@ -15,7 +15,7 @@ using namespace Osp::Base;
 using namespace Osp::Text;
 
 void ZLbadaPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	AppLog( "fillFamiliesList");
+//	AppLog( "fillFamiliesList");
     Osp::Base::Collection::IList* FontList;
     FontList = Osp::Graphics::Font::GetSystemFontListN();
 	int Count = FontList->GetCount();
@@ -26,7 +26,7 @@ void ZLbadaPaintContext::fillFamiliesList(std::vector<std::string> &families) co
 		Utf8Encoding utf8;
 		ByteBuffer* pBB = utf8.GetBytesN(*f);
 		std::string  family(( const char*)pBB->GetPointer(),f->GetLength());
-		AppLog( "family name = %s",family.c_str()) ;
+	//	AppLog( "family name = %s",family.c_str()) ;
 		//if (family == HELVETICA) {
 		//	helveticaFlag = true;
 		//}
@@ -39,7 +39,7 @@ void ZLbadaPaintContext::fillFamiliesList(std::vector<std::string> &families) co
 }
 
 const std::string ZLbadaPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	AppLog( "realFontFamilyName %s",fontFamily.c_str());
+//	AppLog( "realFontFamilyName %s",fontFamily.c_str());
 	/*
 	QString fullName = QFontInfo(QFont(fontFamily.c_str())).family();
 	if (fullName.isNull() || fullName.isEmpty()) {
@@ -52,7 +52,7 @@ const std::string ZLbadaPaintContext::realFontFamilyName(std::string &fontFamily
 }
 
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	AppLog( "setFont %s",family.c_str());
+//	AppLog( "setFont %s",family.c_str());
 	//  AppLog("ZLbadaPaintContext::setFont %d",size );
 //TODO не понял этот кусок из qt-версии, и потому заремарил
 /*	if (myPainter->device() == 0) {

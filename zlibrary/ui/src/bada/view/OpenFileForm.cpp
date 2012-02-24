@@ -7,7 +7,7 @@
 
 #include "OpenFileForm.h"
 #include <FIo.h>
- #include <FMedia.h>
+#include <FMedia.h>
 
 #include "badaForm.h"
 #include "../../../../fbreader/src/fbreader/FBReader.h"
