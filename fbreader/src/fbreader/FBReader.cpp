@@ -59,6 +59,9 @@
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../library/Book.h"
 
+#include "../options/ColorProfile.h"
+#include "SwitchProfileAction.h"
+
 static const std::string OPTIONS = "Options";
 
 const std::string FBReader::PageIndexParameter = "pageIndex";
@@ -114,6 +117,9 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
 	AppLog("Создаем addAction");
+	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
+	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
+
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryTreeAction);
