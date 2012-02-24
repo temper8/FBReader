@@ -28,21 +28,23 @@ public:
 // Implementation
 protected:
 	int MenuItemCount;
-	static const int ID_BUTTON_OK = 101;
+	//static const int ID_BUTTON_OK = 101;
 	Osp::Ui::Controls::Button *__pButtonOk;
 	static const int ID_OPTIONKEY = 100;
 	static const int ID_OPTIONMENU_ITEM0 = 200;
-	static const int ID_OPTIONMENU_ITEM1 = 201;
-	static const int ID_OPTIONMENU_ITEM2 = 202;
-	static const int ID_OPTIONMENU_ITEM3 = 203;
-	static const int ID_OPTIONMENU_ITEM4 = 204;
-	static const int ID_OPTIONMENU_ITEM5 = 205;
+
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
 	std::string ActionIdList[16];
+	Osp::Graphics::Canvas* myCanvas;
+	Osp::Graphics::Canvas* capturedCanvas;
+	Osp::Graphics::Bitmap* pCapturedBitmap;
+	Osp::Graphics::Bitmap* pNextPageBitmap;
+	Osp::Graphics::Point startTouchPosition;
 
 public:
 	int ScreenHeight;
 	int ScreenWidth;
+	bool showNewPage;
 //	DialogForm* CreateDalogForm(const char* name);
 	DialogForm* CreateDalogForm(void);
     void AddMenuItem(const std::string &name,const  std::string &id);

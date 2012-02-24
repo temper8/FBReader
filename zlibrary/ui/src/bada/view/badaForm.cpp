@@ -8,7 +8,8 @@
 #include "../dialogs/DialogForm.h"
 #include "badaForm.h"
 #include <FSystem.h>
-
+#include "../../../../../fbreader/src/fbreader/FBReader.h"
+#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
 
 using namespace Osp::App;
 using namespace Osp::Base;
@@ -20,18 +21,18 @@ using namespace Osp::System;
 result badaForm::OnDraw(void)
 {
 	AppLog("badaForm::OnDraw(void)");
-	//shared_ptr<ZLView> myView = myHolder.view();
-
 	ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder.view()->context();
-//	ZLbadaPaintContext &context = myView->context();
-//	if (!myView->isNull())
-//	{
-		Control& control = *this;
-		context.pCanvas = control.GetCanvasN();
-		myHolder.view()->paint();
-		context.pCanvas->Show();
-//	}
-	return E_SUCCESS;
+	myCanvas->Clear();
+	context.pCanvas = myCanvas;
+	myHolder.view()->paint();
+	if (showNewPage)
+	{
+		Osp::Graphics::Canvas* pCanvas = GetCanvasN();
+		pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+		pCanvas->Show();
+		delete pCanvas;
+	}
+
 }
 
 //virtual bool onStylusPress(int x, int y);
@@ -70,37 +71,67 @@ void badaForm::OnTouchLongPressed(const Control &source, const Point &currentPos
 void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchMoved");
-	myHolder.view()->onStylusMove(currentPosition.x, currentPosition.y);
+	int x = currentPosition.x - startTouchPosition.x;
+	int y = currentPosition.y - startTouchPosition.y;
+	int r = 50;
+	if (showNewPage)
+	{
+		capturedCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+		showNewPage = false;
+		if (x<0) FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+		else FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
+	}
+	Canvas* pCanvas = GetCanvasN();
+if (x<0){
+	pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+	pCanvas->Copy(Point(x,0),*capturedCanvas,Rectangle(0,0,480,800));
+}
+else {
+	pCanvas->Copy(Point(0,0),*capturedCanvas,Rectangle(0,0,480,800));
+	pCanvas->Copy(Point(x-480,0),*myCanvas,Rectangle(0,0,480,800));
+}
+	pCanvas->Show();
+	delete pCanvas;
+
+//	myHolder.view()->onStylusMove(currentPosition.x, currentPosition.y);
 }
 
 void badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchPressed");
-	myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
+  startTouchPosition = currentPosition;
+
+ myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
 }
 
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchReleased");
-	AppLog("currentPosition x=%d, y=%d",currentPosition.x, currentPosition.y);
-	//myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
-	if (Math::Abs(currentPosition.y-400)<100) {
-			if (__pOptionMenu != null){
-				__pOptionMenu->SetShowState(true);
-				__pOptionMenu->Show();
-			}
+	if (!showNewPage) {
+		Canvas* pCanvas = GetCanvasN();
+		pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+		pCanvas->Show();
+		delete pCanvas;
+		showNewPage = true;
 	}
 	else
-		{
-		myHolder.view()->onFingerTap(currentPosition.x, currentPosition.y);
-		OnDraw();
-		}
+	{
+		AppLog("currentPosition x=%d, y=%d",currentPosition.x, currentPosition.y);
+			//myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
+			if (Math::Abs(currentPosition.y-400)<100) {
+					if (__pOptionMenu != null){
+						__pOptionMenu->SetShowState(true);
+						__pOptionMenu->Show();
+					}
+			}
+			else
+				{
+				myHolder.view()->onFingerTap(currentPosition.x, currentPosition.y);
+				//OnDraw();
+				}
 
+	}
 
-//	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-//	FormMgr* pFormMgr = static_cast<FormMgr *>(pFrame->GetControl("FormMgr"));
-//	if (pFormMgr != null)
-//		pFormMgr->SendUserEvent(FormMgr::REQUEST_DETECTFORM, null);
 }
 
 void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::OrientationStatus  orientationStatus ){
@@ -108,7 +139,7 @@ void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::
 	AppLog("OnOrientationChanged");
 }
 
-badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0){
+badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true){
 
 }
 
@@ -132,13 +163,12 @@ bool badaForm::Initialize()
 	// Create an OptionMenu
 	__pOptionMenu = new OptionMenu();
 	__pOptionMenu->Construct();
-	//__pOptionMenu->AddItem("Библиотека",ID_OPTIONMENU_ITEM1);
-	//__pOptionMenu->AddItem("Открыть",ID_OPTIONMENU_ITEM2);
-	//__pOptionMenu->AddItem("Поиск",ID_OPTIONMENU_ITEM3);
-	//__pOptionMenu->AddItem("Настройки",ID_OPTIONMENU_ITEM4);
-	//__pOptionMenu->AddItem("О программе",ID_OPTIONMENU_ITEM5);
-	//__pOptionMenu->AddItem("Содержание",ID_OPTIONMENU_ITEM6);
 	__pOptionMenu->AddActionEventListener(*this);
+
+	myCanvas = new Canvas();
+	myCanvas->Construct();
+	capturedCanvas = new Canvas();
+	capturedCanvas->Construct();
 
 	return true;
 }
@@ -153,16 +183,6 @@ result badaForm::OnInitializing(void)
 	// TODO: Add your initialization code here
 	AddTouchEventListener(*this);
 	AddOrientationEventListener(*this);
-	// Get a button via resource ID
-	/*__pButtonOk = static_cast<Button *>(GetControl(L"IDC_BUTTON_OK"));
-	if (__pButtonOk != null)
-	{
-		__pButtonOk->SetActionId(ID_BUTTON_OK);
-		__pButtonOk->AddActionEventListener(*this);
-
-
-	}
-*/
 //	((GView*)myHolder.myApplication)->ReadImage();
 	return r;
 }
@@ -183,7 +203,7 @@ void badaForm::AddMenuItem(const std::string &name, const  std::string &id){
 	AppLog("badaForm::AddMenuItem MenuItemCount=%d",MenuItemCount);
 
 	if (count == 5) {
-		__pOptionMenu->AddItem("more...",ID_OPTIONMENU_ITEM0 + MenuItemCount);
+		__pOptionMenu->AddItem("more...",ID_OPTIONMENU_ITEM0 -1);
 		ActionIdList[MenuItemCount] = id;
 		__pOptionMenu->AddSubItem(5,name.c_str(),ID_OPTIONMENU_ITEM0 + MenuItemCount);
 	}
@@ -201,47 +221,14 @@ void badaForm::AddMenuItem(const std::string &name, const  std::string &id){
 void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 {
     int indx;
-	switch(actionId)
-	{
-	case ID_BUTTON_OK:
-		{
-			AppLog("OK Button is clicked! \n");
-			ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder.view()->context();
-			Control& control = *this;
-			context.pCanvas = control.GetCanvasN();
+    AppLog("actionId %d",actionId);
+    indx = actionId - ID_OPTIONMENU_ITEM0;//__pOptionMenu->GetItemIndexFromActionId(actionId);
+    if (indx<0) return;
+    AppLog("OPTIONMENU %d",indx);
+    AppLog("FB Action %s",  ActionIdList[indx].c_str());
 
-			myHolder.view()->paint();
-		}
-		break;
-	case ID_OPTIONKEY:
-		{
-			// Display the OptionMenu
-			if (__pOptionMenu != null)
-				__pOptionMenu->SetShowState(true);
-			__pOptionMenu->Show();
-		}
-		break;
+  	myHolder.doAction(ActionIdList[indx]);
 
-
-	case ID_OPTIONMENU_ITEM0:
-	case ID_OPTIONMENU_ITEM1:
-	case ID_OPTIONMENU_ITEM2:
-	case ID_OPTIONMENU_ITEM3:
-	case ID_OPTIONMENU_ITEM4:
-	case ID_OPTIONMENU_ITEM5:
-		indx = __pOptionMenu->GetItemIndexFromActionId(actionId);
-    	AppLog("OPTIONMENU %d",indx);
-        //if (indx==2) { 	AppLog("go open file");		goOpenFileForm();  }
-        //else {
-        	AppLog("делаем что-то другое");
-        	myHolder.doAction(ActionIdList[indx]);
-        //};
-
-		break;
-
-	default:
-		break;
-	}
 }
 
 DialogForm* badaForm::CreateDalogForm(void){
