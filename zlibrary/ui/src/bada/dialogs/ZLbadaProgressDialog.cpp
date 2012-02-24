@@ -10,11 +10,21 @@
 
 #include <FBase.h>
 #include <FUi.h>
+#include <FMedia.h>
 
+using namespace Osp::App;
+using namespace Osp::Base;
+using namespace Osp::Base::Collection;
+using namespace Osp::Ui;
+using namespace Osp::Ui::Controls;
+//using namespace Osp::Content;
+using namespace Osp::Graphics;
+using namespace Osp::Base::Runtime;
+using namespace Osp::Media;
 
 /*
 LoadingIcon::LoadingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
-    const int ICON_WIDTH = 60;
+    const int ICON_WIDT H = 60;
     const int ICON_HEIGHT = ICON_WIDTH;
     QString iconFile = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
                        QString::fromStdString(ZLibrary::FileNameDelimiter) +
@@ -78,20 +88,88 @@ Osp::Base::Object* ZLbadaProgressDialog::Run(void){
 	return null;
 }
 
+void ZLbadaProgressDialog::ConstructAnimationFrameList(void){
+	Image *pImage = new Image();
+	result r = pImage->Construct();
+		//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
+		Bitmap *pBitmap1 = pImage->DecodeN("/Res/icons/ani/progressing00.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap2 = pImage->DecodeN("/Res/icons/ani/progressing01.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap3 = pImage->DecodeN("/Res/icons/ani/progressing02.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap4 = pImage->DecodeN("/Res/icons/ani/progressing03.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap5 = pImage->DecodeN("/Res/icons/ani/progressing04.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap6 = pImage->DecodeN("/Res/icons/ani/progressing05.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap7 = pImage->DecodeN("/Res/icons/ani/progressing06.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap8 = pImage->DecodeN("/Res/icons/ani/progressing07.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+
+		// Creates AnimationFrame.
+		AnimationFrame *pAniFrame1 = new AnimationFrame(*pBitmap1, 100);
+		AnimationFrame *pAniFrame2 = new AnimationFrame(*pBitmap2, 100);
+		AnimationFrame *pAniFrame3 = new AnimationFrame(*pBitmap3, 100);
+		AnimationFrame *pAniFrame4 = new AnimationFrame(*pBitmap4, 100);
+		AnimationFrame *pAniFrame5 = new AnimationFrame(*pBitmap5, 100);
+		AnimationFrame *pAniFrame6 = new AnimationFrame(*pBitmap6, 100);
+		AnimationFrame *pAniFrame7 = new AnimationFrame(*pBitmap7, 100);
+		AnimationFrame *pAniFrame8 = new AnimationFrame(*pBitmap8, 100);
+
+
+		__pAnimationFrameList = new ArrayList();
+		__pAnimationFrameList->Construct();
+		__pAnimationFrameList->Add(*pAniFrame1);
+		__pAnimationFrameList->Add(*pAniFrame2);
+		__pAnimationFrameList->Add(*pAniFrame3);
+		__pAnimationFrameList->Add(*pAniFrame4);
+		__pAnimationFrameList->Add(*pAniFrame5);
+		__pAnimationFrameList->Add(*pAniFrame6);
+		__pAnimationFrameList->Add(*pAniFrame7);
+		__pAnimationFrameList->Add(*pAniFrame8);
+
+}
+
+void ZLbadaProgressDialog::OnAnimationStopped(const Control& source)
+{
+	AppLog("OnAnimationStopped");
+	if(__pAnimation)
+		__pAnimation->Play();
+}
+bool ZLbadaProgressDialog::OnStart(void){
+	AppLog("ZLbadaProgressDialog::OnStart()");
+	return true;
+}
+
+//bool ZLbadaProgressDialog::OnStop(void){
+//	AppLog("ZLbadaProgressDialog::OnStart()");
+//}
+
 void ZLbadaProgressDialog::run(ZLRunnable &runnable) {
 	AppLog("ZLbadaProgressDialog run");
 	result r;
 	//myRunnable = &runnable;
 	Osp::Ui::Controls::Popup* __pPopup = new Osp::Ui::Controls::Popup();
 	if (__pPopup) {
-			r = __pPopup->Construct(true, Osp::Graphics::Dimension(400,200));
+			r = __pPopup->Construct(true, Osp::Graphics::Dimension(400,250));
 			AppLog("r = %d",r);
 			r =__pPopup->SetTitleText(L"Please wait...");
 			AppLog("r = %d",r);
+			//ConstructAnimationFrameList();
+			//Rectangle popupFormArea = __pPopup->GetClientAreaBounds();
+			//__pAnimation = new Animation();
+			//__pAnimation->Construct(Rectangle(popupFormArea.width/2-60, 20, 120, 120), *__pAnimationFrameList);
+			//__pAnimation->AddAnimationEventListener(*this);
+			//__pPopup->AddControl(*__pAnimation);
 			r = __pPopup->SetShowState(true);
 			AppLog("r = %d",r);
 			r = __pPopup->Show();
 			AppLog("r = %d",r);
+			if (r==0)	{
+					//	 Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
+					//	  Start();
+			 	 	 //	 __pAnimation->Play();
+						}
+			else {
+				delete __pPopup;
+				__pPopup = null;
+				AppLog("delete __pPopup");
+			}
 	}
 	/*if (r == E_SUCCESS) {
 		__pThread = new Osp::Base::Runtime::Thread();
@@ -101,23 +179,14 @@ void ZLbadaProgressDialog::run(ZLRunnable &runnable) {
 	else
 		*/
 		runnable.run();
-
+		AppLog("ZLbadaProgressDialog f");
 	if (__pPopup)  {
+					//if (r==0) Stop();
 					__pPopup->SetShowState(false);
 					delete __pPopup;
 					AppLog("delete __pPopup");
 	}
 
-	//myDialog = new ZLQtWaitDialog(messageText());
-
-		//ThreadRunnable threadRunnable(&runnable);
-		//QObject::connect(&threadRunnable, SIGNAL(finished()), myDialog, SLOT(close()));
-		//threadRunnable.start();
-
-		//myDialog->exec();
-
-		//delete myDialog;
-		//myDialog = 0;
 }
 /*
 void ZLbadaProgressDialog::run(TreeActionListener* listener) {

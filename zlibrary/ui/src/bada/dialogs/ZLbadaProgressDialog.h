@@ -50,7 +50,9 @@ friend class ZLbadaProgressDialog;
 */
 
 class ZLbadaProgressDialog : public ZLProgressDialog,
-							 public Osp::Base::Runtime::IRunnable
+							 public Osp::Ui::IAnimationEventListener,
+							 public Osp::Base::Runtime::Thread
+							 //public Osp::Base::Runtime::IRunnable
 							 {
 public:
 		ZLbadaProgressDialog(const ZLResourceKey &key);
@@ -61,6 +63,10 @@ public:
 		void setMessage(const std::string &message);
 
 private:
+		virtual void OnAnimationStopped(const Osp::Ui::Control& source);
+		void ConstructAnimationFrameList(void);
+		Osp::Ui::Controls::Animation* 		__pAnimation;
+		Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
 		ZLRunnable* myRunnable;
 		Osp::Base::Object* Run(void);
 		//ZLQtWaitDialog* myDialog;
@@ -68,7 +74,8 @@ private:
 	    Osp::Base::Runtime::Thread* 		__pThread;
 		//Osp::Ui::Controls::Animation* 		__pAnimation;
 		//Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
-
+		bool OnStart(void);
+	//	void OnStop(void);
 };
 
 /*
