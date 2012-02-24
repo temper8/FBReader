@@ -35,13 +35,14 @@
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../optionsDialog/bookInfo/BookPreviewDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
 #include "../optionsDialog/network/NetworkOptionsDialog.h"
 #include "../optionsDialog/system/SystemOptionsDialog.h"
 #include "../optionsDialog/reading/ReadingOptionsDialog.h"
 #include "../optionsDialog/lookAndFeel/OptionsPage.h"
 #include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
-//#include "../optionsDialog/mainOptionsDialog/MainOptionsDialog.h"
+
 #include "../optionsDialog/OptionsDialogTreeNodes.h"
 
 #include "../bookmodel/BookModel.h"
@@ -259,7 +260,8 @@ void ShowBookInfoAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	shared_ptr<Book> book = fbreader.myModel->book();
-	if (BookInfoDialog(book).dialog().run()) {
+///	if (BookInfoDialog(book).dialog().run()) {
+	if (BookPreviewDialog(book).dialog().run()) {
 	//	fbreader.openBook(book);
 	//	fbreader.refreshWindow();
 	}
