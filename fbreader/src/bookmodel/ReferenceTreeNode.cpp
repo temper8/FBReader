@@ -18,9 +18,9 @@ void ReferenceTreeNode::createChildren() {
 	for (size_t index=0; index < children.size(); ++index) {
 		ZLTextTreeParagraph* paragraph = children.at(index);
 		if (paragraph->children().size() == 0) {
-		//	insert(new ReferenceNode(*paragraph), index);
+			insert(new ReferenceNode(*paragraph), index);
 		} else {
-		//	insert(new ReferenceTreeNode(*paragraph), index);
+			insert(new ReferenceTreeNode(*paragraph), index);
 		}
 	}
 }
