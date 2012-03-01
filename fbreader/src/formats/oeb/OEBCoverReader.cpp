@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include <ZLFile.h>
 #include <ZLFileImage.h>
 
@@ -56,6 +56,7 @@ OEBCoverReader::OEBCoverReader() {
 }
 
 shared_ptr<ZLImage> OEBCoverReader::readCover(const ZLFile &file) {
+	AppLog("OEBCoverReader::readCover");
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 	myReadGuide = false;
 	myImage = 0;
@@ -64,10 +65,12 @@ shared_ptr<ZLImage> OEBCoverReader::readCover(const ZLFile &file) {
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(myCoverXHTML);
 	if (!myCoverXHTML.empty()) {
 		ZLFile coverFile(myCoverXHTML);
+		AppLog("coverFile");
 		const std::string ext = coverFile.extension();
 		if (ext == "gif" || ext == "jpeg" || ext == "jpg") {
 			myImage = new ZLFileImage(ZLFile(myCoverXHTML), 0);
 		} else {
+			AppLog("XHTMLImageFinder");
 			XHTMLImageFinder(*this).readDocument(coverFile);
 		}
 	}

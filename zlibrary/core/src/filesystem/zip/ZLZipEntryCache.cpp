@@ -19,14 +19,19 @@
 
 #include "ZLZip.h"
 #include "ZLZipHeader.h"
+#include <FBase.h>
 
 ZLZipEntryCache::Info::Info() : Offset(-1) {
 }
 
+
+
 const ZLZipEntryCache &ZLZipEntryCache::cache(ZLInputStream &stream) {
-	static const std::string zipEntryMapKey = "zipEntryMap";
+    static const std::string zipEntryMapKey = "zipEntryMap";
 	shared_ptr<ZLUserData> data = stream.getUserData(zipEntryMapKey);
+	//AppLog("zipEntryMap");
 	if (data.isNull()) {
+		//AppLog("new ZLZipEntryCache");
 		data = new ZLZipEntryCache(stream);
 		stream.addUserData(zipEntryMapKey, data);
 	}
@@ -37,13 +42,15 @@ ZLZipEntryCache::ZLZipEntryCache(ZLInputStream &baseStream) {
 	if (!baseStream.open()) {
 		return;
 	}
-
+//	AppLog("ZLZipEntryCache");
 	ZLZipHeader header;
 	while (header.readFrom(baseStream)) {
 		Info *infoPtr = 0;
 		if (header.Signature == ZLZipHeader::SignatureLocalFile) {
 			std::string entryName(header.NameLength, '\0');
+
 			if ((unsigned int)baseStream.read((char*)entryName.data(), header.NameLength) == header.NameLength) {
+			//	AppLog("entryName %s",entryName.c_str());
 				Info &info = myInfoMap[entryName];
 				info.Offset = baseStream.offset() + header.ExtraLength;
 				info.CompressionMethod = header.CompressionMethod;

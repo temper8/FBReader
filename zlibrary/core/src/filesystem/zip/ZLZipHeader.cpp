@@ -27,14 +27,14 @@ const int ZLZipHeader::SignatureLocalFile = 0x04034B50;
 const int ZLZipHeader::SignatureData = 0x08074B50;
 
 bool ZLZipHeader::readFrom(ZLInputStream &stream) {
-	AppLog("ZLZipHeader::readFrom 1");
+//	AppLog("ZLZipHeader::readFrom 1");
 	size_t startOffset = stream.offset();
 	Signature = readLong(stream);
 	switch (Signature) {
 		default:
 			return false;
 		case SignatureLocalFile:
-			AppLog("ZLZipHeader::readFrom SignatureLocalFile");
+			//AppLog("ZLZipHeader::readFrom SignatureLocalFile");
 			Version = readShort(stream);
 			Flags = readShort(stream);
 			CompressionMethod = readShort(stream);
@@ -51,7 +51,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			ExtraLength = readShort(stream);
 			return stream.offset() == startOffset + 30 && NameLength != 0;
 		case SignatureData:
-			AppLog("ZLZipHeader::readFrom SignatureData");
+		//	AppLog("ZLZipHeader::readFrom SignatureData");
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
 			UncompressedSize = readLong(stream);
@@ -60,6 +60,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			return stream.offset() == startOffset + 16;
 	}
 }
+const size_t BUFFER_SIZE = 2048*16;
 
 void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 	switch (header.Signature) {
@@ -68,15 +69,16 @@ void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 		case SignatureLocalFile:
 			if (header.Flags & 0x08) {
 				stream.seek(header.ExtraLength, false);
+				//AppLog("decompressor %d", (size_t)-1);
 				ZLZDecompressor decompressor((size_t)-1);
 				size_t size;
 				do {
-					AppLog("ZLZipHeader::skipEntry 1");
-					size = decompressor.decompress(stream, 0, 2048);
-					AppLog("ZLZipHeader::skipEntry 1");
+					//AppLog("ZLZipHeader::skipEntry 1");
+					size = decompressor.decompress(stream, 0, BUFFER_SIZE);
+					//AppLog("decompress size=%d",size);
 					header.UncompressedSize += size;
-				} while (size == 2048);
-				AppLog("ZLZipHeader::skipEntry 1");
+				} while (size == BUFFER_SIZE);
+				AppLog("header.UncompressedSize %d",header.UncompressedSize);
 				//stream.seek(16, false);
 			} else {
 				stream.seek(header.ExtraLength + header.CompressedSize, false);

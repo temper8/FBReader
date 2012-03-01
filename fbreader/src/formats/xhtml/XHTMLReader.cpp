@@ -544,7 +544,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	addStyleEntry(sTag, sClass);
 	const char *style = attributeValue(attributes, "style");
 	if (style != 0) {
-		AppLog("parseString(style) = %s", style);
+		//AppLog("parseString(style) = %s", style);
 		shared_ptr<ZLTextStyleEntry> entry = myStyleParser.parseString(style);
 		myModelReader.addControl(*entry);
 		myStyleEntryStack.push_back(entry);
@@ -554,6 +554,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 
 void XHTMLReader::endElementHandler(const char *tag) {
 	for (int i = myCSSStack.back(); i > 0; --i) {
+		//AppLog("myCSSStack.back() = %d", i);
 		myModelReader.addControl(REGULAR, false);
 	}
 	myStylesToRemove = myCSSStack.back();

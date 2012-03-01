@@ -73,7 +73,7 @@ private:
 BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
     myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
 	//registerAction(new ReadBookAction(this));
-
+	AppLog("BookNode::BookNode");
 	//registerAction(new BookReadAction(myBook));
 	registerAction(new BookEditInfoAction(myBook));
 	//registerAction(new BookRemoveAction(myBook));

@@ -41,6 +41,7 @@ public:
 	void addUserData(const std::string &key, shared_ptr<ZLUserData> data);
 	void removeUserData(const std::string &key);
 	shared_ptr<ZLUserData> getUserData(const std::string &key) const;
+    void printDataMap();
 
 private:
 	ZLUserDataHolder &operator =(const ZLUserDataHolder &other);

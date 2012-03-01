@@ -33,6 +33,7 @@ ZLZipInputStream::~ZLZipInputStream() {
 
 bool ZLZipInputStream::open() {
 //	AppLog("ZLZipInputStream::open();");
+//	myBaseStream->printDataMap();
 	close();
 //	AppLog("ZLZipInputStream::open() 1");
 	const ZLZipEntryCache &cache = ZLZipEntryCache::cache(*myBaseStream);
@@ -71,7 +72,7 @@ bool ZLZipInputStream::open() {
 }
 
 size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
-	if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
+	//if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
 	size_t realSize = 0;
 	if (myIsDeflated) {
 		realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
@@ -81,15 +82,14 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 		myAvailableSize -= realSize;
 		myOffset += realSize;
 	}
-	if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
-	AppLog("ZLZipInputStream::read 4");
+	//if (!myBaseStream.isNull()) {AppLog("!myBaseStream.isNull()");}
+	//AppLog("ZLZipInputStream::read 4");
 	return realSize;
 }
 
 void ZLZipInputStream::close() {
 	AppLog(" ZLZipInputStream::close()");
 	if (myDecompressor) delete myDecompressor;
-	AppLog(" delete myDecompressor;");
 	myDecompressor = 0;
 	//AppLog(" myDecompressor = 0;");
 	if (!myBaseStream.isNull()) {

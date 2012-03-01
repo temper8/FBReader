@@ -26,6 +26,7 @@
 #include "../library/Tag.h"
 #include "../library/Library.h"
 #include "../libraryActions/LibraryTagActions.h"
+#include <FBase.h>
 
 const ZLTypeId TagNode::TYPE_ID(FBNode::TYPE_ID);
 
@@ -35,10 +36,13 @@ const ZLTypeId &TagNode::typeId() const {
 
 TagNode::TagNode(shared_ptr<Tag> tag): myTag(tag) {
 	//TODO add support for subtags here
+	AppLog("TagNode");
 	const BookList &books = Library::Instance().books(myTag);
 	//TODO add code for series retrieving here
+	AppLog("TagNode 2");
 	size_t index = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
+		AppLog("insert BookNode");
                 insert(new BookNode(*it, BookNode::SHOW_AUTHORS),index++);
 	}
 }

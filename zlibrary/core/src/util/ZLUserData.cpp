@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
+#include <FBase.h>
 #include "ZLUserData.h"
 
 ZLUserData::~ZLUserData() {
@@ -43,4 +43,14 @@ void ZLUserDataHolder::removeUserData(const std::string &key) {
 shared_ptr<ZLUserData> ZLUserDataHolder::getUserData(const std::string &key) const {
 	std::map<std::string,shared_ptr<ZLUserData> >::const_iterator it = myDataMap.find(key);
 	return (it != myDataMap.end()) ? it->second : 0;
+}
+
+void ZLUserDataHolder::printDataMap(){
+	std::string str;
+	AppLog("print map");
+for (std::map<std::string,shared_ptr<ZLUserData> >::const_iterator it = myDataMap.begin();it != myDataMap.end(); ++it) {
+	str = it->first;
+	AppLog("map %s", str.c_str());
+}
+
 }

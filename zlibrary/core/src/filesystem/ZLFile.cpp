@@ -120,11 +120,14 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		stream = ourPlainStreamCache[myPath];
+	//	AppLog("ourPlainStreamCache  size = %d",ourPlainStreamCache.size());
+
+		AppLog("ourPlainStreamCache %s",myPath.c_str());
 		if (stream.isNull()) {
 			if (isDirectory()) {
 				return 0;
 			}
-			//AppLog("createPlainInputStream");
+			AppLog("createPlainInputStream");
 			//std::cerr << "Create stream " << myPath << std::endl;
 			stream = ZLFSManager::Instance().createPlainInputStream(myPath);
 			//AppLog("createPlainInputStream 1");
@@ -132,9 +135,14 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 			//AppLog("createPlainInputStream 2");
 			ourPlainStreamCache[myPath] = stream;
 		}
+		else {
+			AppLog("Stream был в кэше");
+		}
 	} else {
 		ZLFile baseFile(myPath.substr(0, index));
+		AppLog("baseFile %s",myPath.c_str());
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
+		base->printDataMap();
 		if (!base.isNull()) {
 			if (baseFile.myArchiveType & ZIP) {
 				stream = new ZLZipInputStream(base, myPath.substr(index + 1));

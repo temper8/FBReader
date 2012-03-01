@@ -131,12 +131,22 @@ bool OEBBookReader::readBook(const ZLFile &file) {
 	myModelReader.setMainTextModel();
 	myModelReader.pushKind(REGULAR);
     int n=0;
+    AppLog("myFilePrefix %s", myFilePrefix.c_str());
+    std::string firstFile;
+    firstFile = myFilePrefix + myHtmlFileNames[0];
+    AppLog("firstFile %s", firstFile.c_str());
+    //ZLFile tempFile = ZLFile(firstFile);
+	//shared_ptr<ZLInputStream> tempStream = tempFile.inputStream();
+	//  AppLog("tempStream created");
 	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
 		if (it != myHtmlFileNames.begin()) {
 			myModelReader.insertEndOfSectionParagraph();
 		}
-		AppLog("xhtmlReader.readFile ");
+	//	AppLog("xhtmlReader.readFile ");
 		XHTMLReader xhtmlReader(myModelReader);
+		std::string fn;
+		fn = *it;
+		AppLog("it = %s", fn.c_str());
 		xhtmlReader.readFile(ZLFile(myFilePrefix + *it), *it);
 		//if (++n>5) break;
 	}
