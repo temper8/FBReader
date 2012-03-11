@@ -40,18 +40,6 @@ bool DialogForm::Initialize(const char *title, bool showApplyButton)
 	SetSoftkeyActionId(SOFTKEY_1, ID_ACT_CLOSE);
 	SetSoftkeyText(SOFTKEY_1, L"Back");
 
-//	clientArea = GetClientAreaBounds();
-  //  clientArea.x+= 10;
-//    clientArea.y+= 00;
-   // clientArea.width-= 20;
-   // clientArea.height-= 20;
-//    YPos=0;
-	result r = E_SUCCESS;
-
-//   pScrollPanel = new ScrollPanel();
-//    pScrollPanel->Construct(Rectangle(0, 400, 480, 800));
- //   AddControl(*pScrollPanel);
-
 	return true;
 }
 
@@ -104,8 +92,6 @@ result DialogForm::OnInitializing(void)
 	buttonBmp2 = pImage->DecodeN("/Res/icons/button-220x50s.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
 	arrowDownBmp = pImage->DecodeN("/Res/icons/arrow_down.png", BITMAP_PIXEL_FORMAT_ARGB8888);
 	AppLog("pImage->DecodeN");
-
-
     __pCustomList = new GroupedList();
 	GroupCount = 0;
 	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
@@ -182,7 +168,7 @@ result DialogForm::OnInitializing(void)
 	__pColorListItemFormat->AddElement(ID_LIST_COLOR, Osp::Graphics::Rectangle(370, 20, 100, 45));
 //	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_TITLE, true);
 //	__pColorListItemFormat->SetElementEventEnabled(ID_LIST_TEXT_SUBTITLE, true);
-	//__pColorListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
+//  __pColorListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
 
 //---------------------- __pImageViewListItemFormat --------------------------------
@@ -190,14 +176,14 @@ result DialogForm::OnInitializing(void)
 	__pImageViewListItemFormat = new CustomListItemFormat();
 	__pImageViewListItemFormat->Construct();
 
-	__pImageViewListItemFormat->AddElement(ID_LIST_BACKGROUND, Osp::Graphics::Rectangle(0, 0, 480, 300));
+	__pImageViewListItemFormat->AddElement(ID_LIST_BACKGROUND, Osp::Graphics::Rectangle(0, 0, 480, 330));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 15, 200, 300));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP1, Osp::Graphics::Rectangle(240, 25, 220, 52));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP2, Osp::Graphics::Rectangle(240, 100, 220, 52));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP3, Osp::Graphics::Rectangle(240, 175, 220, 52));
 	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP4, Osp::Graphics::Rectangle(240, 250, 220, 52));
 
-	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BACKGROUND, false);
+	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BACKGROUND, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP1, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP2, true);
@@ -234,26 +220,10 @@ result DialogForm::OnInitializing(void)
 result  DialogForm::AddTab(const char *title){
 	AppLog("DialogForm::AddTab %s", title);
 	result r = E_SUCCESS;
-/*	Label* pTempLabel = new Label;
-	pTempLabel->Construct(Rectangle(00,YPos,clientArea.width,100), String(title));
-	pTempLabel->SetTextColor(Color::COLOR_RED);
-	pTempLabel->SetTextHorizontalAlignment(ALIGNMENT_LEFT);
-	pScrollPanel->AddControl(*pTempLabel);
-	YPos+=100;
-*/
+
     __pCustomList->AddGroup(String(title), null);
     GroupCount++;
-//	CustomListItem* pItem = new CustomListItem();
-  //  pItem->Construct(100);
-//    pItem->SetItemFormat(*__pCustomListItemFormat2);
-  //  pItem->SetElement(ID_LIST_TEXT_TITLE,String(title));
-	//    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
-	//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
-	//    pItem->SetCheckBox(ID_LIST_CHECKBOX);
 
-	    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
-
- //  __pCustomList->AddItem(GroupCount-1, *pItem, ID_LIST_ITEM);
 }
 
 result DialogForm::OnTerminating(void)
@@ -416,6 +386,7 @@ void  DialogForm::OnItemStateChanged (const Osp::Ui::Control &source, int groupI
 void  DialogForm::OnItemStateChanged (const Osp::Ui::Control &source, int groupIndex, int itemIndex, int itemId, int elementId, Osp::Ui::ItemStatus status)
 {
 	AppLog("DialogForm::OnItemStateChanged 2");
+	AppLog("groupIndex=%d, itemIndex=%d", groupIndex, itemIndex);
 	OptionListItem* pItem = (OptionListItem*)__pCustomList->GetItemAt(groupIndex, itemIndex);
 	pItem->OnActionPerformed(elementId);
 

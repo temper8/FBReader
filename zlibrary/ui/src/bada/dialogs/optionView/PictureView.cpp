@@ -233,6 +233,7 @@ void PictureView::_createItem() {
 	OptionListItem* pItem = new OptionListItem(this);
 	pItem->Construct(330);
 	pItem->SetItemFormat(*myTab->form()->__pImageViewListItemFormat);
+	pItem->SetElement(ID_LIST_BACKGROUND, String(""));
 	pItem->SetElement(ID_LIST_BITMAP1, *myBottonActions[0]);
 	pItem->SetElement(ID_LIST_BITMAP2, *myBottonActions[1]);
 	pItem->SetElement(ID_LIST_BITMAP3, *myBottonActions[2]);
@@ -268,7 +269,7 @@ void PictureView::OnActionPerformed(const Control& source, int actionId)
 
 void PictureView::OnActionPerformed(int actionId){
 	AppLog("PictureView::OnActionPerformed 2 %d",actionId);
-	bool exitFlag;
+	bool exitFlag=false;
 	bool needUpdate= false;
 	   switch (actionId)
 	    {
