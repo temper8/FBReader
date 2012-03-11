@@ -66,27 +66,20 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 
 	bool fontChanged = false;
 	Osp::Graphics::Font *pFont = pCanvas->GetFontN();
-	/*Osp::Base::String f = pFont->GetFaceName();
-	Utf8Encoding utf8;
-	ByteBuffer* pBB = utf8.GetBytesN(f);
-	std::string  oldfamily(( const char*)pBB->GetPointer(),f.GetLength());
-	AppLog( "oldfamily name = %s",oldfamily.c_str()) ;*/
-//	Osp::Graphics::Font font;
-	// TOD font.family отключил за непонятностью что делать со шрифтами
 	if (myStoredFamily != family) fontChanged = true;
 
 
 	int style = ( bold ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN) | ( italic ? FONT_STYLE_ITALIC : 0);
 
 	if ((pFont->IsItalic() != italic)|(pFont->IsBold() != bold)|(pFont->GetSize() != size)) {
-		//pFont->Construct(style,size);
 		fontChanged = true;
 	}
 
 
 	if (fontChanged) {
 		Osp::Graphics::Font font;
-		font.Construct(String(family.c_str()),style,size);
+		if (font.Construct(String(family.c_str()),style,size) != E_SUCCESS)
+										font.Construct(style,size);
 		pCanvas->SetFont(font);
 		mySpaceWidth = -1;
 		myDescent = font.GetDescender();
