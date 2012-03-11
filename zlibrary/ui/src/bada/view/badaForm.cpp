@@ -22,17 +22,21 @@ result badaForm::OnDraw(void)
 {
 	AppLog("badaForm::OnDraw(void)");
 	ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder.view()->context();
-	myCanvas->Clear();
-	context.pCanvas = myCanvas;
-	myHolder.view()->paint();
-	if (showNewPage)
-	{
-		Osp::Graphics::Canvas* pCanvas = GetCanvasN();
-		pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
-		pCanvas->Show();
-		delete pCanvas;
-	}
+	Osp::Graphics::Canvas* pCanvas = GetCanvasN();
 
+	Rectangle newRect = GetBounds();
+	if (newRect.width==formRect.width)
+	{
+		myCanvas->Clear();
+		context.pCanvas = myCanvas;
+		myHolder.view()->paint();
+		if (showNewPage)
+		{
+			pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+			pCanvas->Show();
+		}
+	}
+	delete pCanvas;
 }
 
 //virtual bool onStylusPress(int x, int y);
@@ -61,34 +65,34 @@ void badaForm::OnTouchLongPressed(const Control &source, const Point &currentPos
 	AppLog("OnTouchLongPressed");
 
 	// Display the OptionMenu
-	if (__pOptionMenu != null){
+/*	if (__pOptionMenu != null){
 		__pOptionMenu->SetShowState(true);
 		__pOptionMenu->Show();
 	}
-
+*/
 }
 
 void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchMoved");
+//	Rectangle rect = GetClientAreaBounds();
 	int x = currentPosition.x - startTouchPosition.x;
 	int y = currentPosition.y - startTouchPosition.y;
-	int r = 50;
 	if (showNewPage)
 	{
-		capturedCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+		capturedCanvas->Copy(Point(0,0),*myCanvas,formRect);
 		showNewPage = false;
 		if (x<0) FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
 		else FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
 	}
 	Canvas* pCanvas = GetCanvasN();
 if (x<0){
-	pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
-	pCanvas->Copy(Point(x,0),*capturedCanvas,Rectangle(0,0,480,800));
+	pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+	pCanvas->Copy(Point(x,0),*capturedCanvas,formRect);//Rectangle(0,0,480,800));
 }
 else {
-	pCanvas->Copy(Point(0,0),*capturedCanvas,Rectangle(0,0,480,800));
-	pCanvas->Copy(Point(x-480,0),*myCanvas,Rectangle(0,0,480,800));
+	pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
+	pCanvas->Copy(Point(currentPosition.x-formRect.width,0),*myCanvas,formRect);
 }
 	pCanvas->Show();
 	delete pCanvas;
@@ -98,10 +102,9 @@ else {
 
 void badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
-	AppLog("OnTouchPressed");
+  AppLog("OnTouchPressed");
   startTouchPosition = currentPosition;
-
- myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
+  myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
 }
 
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
@@ -109,7 +112,7 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 	AppLog("OnTouchReleased");
 	if (!showNewPage) {
 		Canvas* pCanvas = GetCanvasN();
-		pCanvas->Copy(Point(0,0),*myCanvas,Rectangle(0,0,480,800));
+		pCanvas->Copy(Point(0,0),*myCanvas,formRect);
 		pCanvas->Show();
 		delete pCanvas;
 		showNewPage = true;
@@ -118,11 +121,18 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 	{
 		AppLog("currentPosition x=%d, y=%d",currentPosition.x, currentPosition.y);
 			//myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
-			if (Math::Abs(currentPosition.y-400)<100) {
+			if (Math::Abs(2*currentPosition.y-formRect.height)<200) {
+				if (Math::Abs(2*currentPosition.x-formRect.width)<200){
 					if (__pOptionMenu != null){
 						__pOptionMenu->SetShowState(true);
 						__pOptionMenu->Show();
 					}
+				}
+				else
+				{
+				if (2*currentPosition.x>formRect.width) FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+				else FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
+				}
 			}
 			else
 				{
@@ -137,6 +147,29 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::OrientationStatus  orientationStatus ){
 
 	AppLog("OnOrientationChanged");
+	formRect = GetClientAreaBounds();
+	int tmp;
+	switch(this->GetOrientation()) {
+		case ORIENTATION_STATUS_PORTRAIT:
+			break;
+		case ORIENTATION_STATUS_LANDSCAPE:
+			tmp = formRect.width;
+			formRect.width = formRect.height;
+			formRect.height = tmp;
+			break;
+		case ORIENTATION_STATUS_PORTRAIT_REVERSE:
+			break;
+		case ORIENTATION_STATUS_LANDSCAPE_REVERSE:
+			break;
+
+	}
+	if (myCanvas) delete myCanvas;
+	myCanvas = new Canvas();
+	myCanvas->Construct(formRect);
+	if (capturedCanvas) delete capturedCanvas;
+	capturedCanvas = new Canvas();
+	capturedCanvas->Construct(formRect);
+	OnDraw();
 }
 
 badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true){
@@ -155,21 +188,36 @@ bool badaForm::Initialize()
 	//Construct(FORM_STYLE_NORMAL);FORM_STYLE_TITLE||FORM_STYLE_INDICATOR
 	Construct(FORM_STYLE_NORMAL);
 	//SetName(L"IDF_FORM1");
-	SetTitleText(L"FBReader Form");
-	// Create an OptionKey
-	//SetOptionkeyActionId(ID_OPTIONKEY);
-	//AddOptionkeyActionListener(*this);
-
+	//SetTitleText(L"FBReader Form");
 	// Create an OptionMenu
 	__pOptionMenu = new OptionMenu();
 	__pOptionMenu->Construct();
 	__pOptionMenu->AddActionEventListener(*this);
 
+
+	formRect = GetClientAreaBounds();
+	int tmp;
+	switch(this->GetOrientation()) {
+		case ORIENTATION_STATUS_PORTRAIT:
+			break;
+		case ORIENTATION_STATUS_LANDSCAPE:
+			tmp = formRect.width;
+			formRect.width = formRect.height;
+			formRect.height = tmp;
+			break;
+		case ORIENTATION_STATUS_PORTRAIT_REVERSE:
+			break;
+		case ORIENTATION_STATUS_LANDSCAPE_REVERSE:
+			break;
+
+	}
+	AppLog("formRect.width=%d",formRect.width);
+	AppLog("formRect.height=%d",formRect.height);
+
 	myCanvas = new Canvas();
 	myCanvas->Construct();
 	capturedCanvas = new Canvas();
 	capturedCanvas->Construct();
-
 	return true;
 }
 

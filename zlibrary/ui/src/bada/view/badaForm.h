@@ -40,7 +40,7 @@ protected:
 	Osp::Graphics::Bitmap* pCapturedBitmap;
 	Osp::Graphics::Bitmap* pNextPageBitmap;
 	Osp::Graphics::Point startTouchPosition;
-
+	Osp::Graphics::Rectangle formRect;
 public:
 	int ScreenHeight;
 	int ScreenWidth;
