@@ -25,14 +25,14 @@ ZLbadaFileInputStream::ZLbadaFileInputStream(const std::string &name) : myName(n
 }
 
 ZLbadaFileInputStream::~ZLbadaFileInputStream() {
-	//close();
+	close();
 	if (myFile != 0) {
 		fclose(myFile);
 	}
 }
 
 bool ZLbadaFileInputStream::open() {
-	//close();
+	close();
 	if (myFile == 0) {
 		myFile = fopen(myName.c_str(), "rb");
 		AppLog("fopen %s", myName.c_str() );
@@ -66,10 +66,10 @@ size_t ZLbadaFileInputStream::read(char *buffer, size_t maxSize) {
 }
 
 void ZLbadaFileInputStream::close() {
-	//if (myFile != 0) {
-	//	fclose(myFile);
-	//	myFile = 0;
-	//}
+	if (myFile != 0) {
+		fclose(myFile);
+		myFile = 0;
+}
 }
 
 size_t ZLbadaFileInputStream::sizeOfOpened() {
