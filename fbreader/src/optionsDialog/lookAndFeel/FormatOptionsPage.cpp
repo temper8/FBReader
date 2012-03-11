@@ -109,4 +109,5 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	}
 
 	myComboEntry->onValueSelected(0);
+	myComboEntry->setActive(false);
 }

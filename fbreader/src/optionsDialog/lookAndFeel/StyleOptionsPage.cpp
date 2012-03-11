@@ -124,4 +124,5 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 	}
 
 	myComboEntry->onValueSelected(0);
+	myComboEntry->setActive(false);
 }
