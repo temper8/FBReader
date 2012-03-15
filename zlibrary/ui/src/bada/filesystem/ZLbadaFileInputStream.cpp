@@ -46,6 +46,7 @@ bool ZLbadaFileInputStream::open() {
 
 size_t ZLbadaFileInputStream::read(char *buffer, size_t maxSize) {
 //	AppLog(" ZLbadaFileInputStream::read %d",maxSize);
+//	AppLog(" myFile %d",myFile);
 	if (buffer != 0) {
 		if (myNeedRepositionToStart) {
 			fseek(myFile, 0, SEEK_SET);
@@ -66,9 +67,10 @@ size_t ZLbadaFileInputStream::read(char *buffer, size_t maxSize) {
 }
 
 void ZLbadaFileInputStream::close() {
+//	AppLog(" ZLbadaFileInputStream::close myFile %d",myFile);
 	if (myFile != 0) {
 		fclose(myFile);
-		myFile = 0;
+    	myFile = 0;
 }
 }
 
@@ -89,9 +91,11 @@ void ZLbadaFileInputStream::seek(int offset, bool absoluteOffset) {
 		absoluteOffset = true;
 		myNeedRepositionToStart = false;
 	}
+//	AppLog(" myFile %d",myFile);
 	fseek(myFile, offset, absoluteOffset ? SEEK_SET : SEEK_CUR);
 }
 
 size_t ZLbadaFileInputStream::offset() const {
+//	AppLog(" ZLbadaFileInputStream::offset ");
 	return myNeedRepositionToStart ? 0 : ftell(myFile);
 }

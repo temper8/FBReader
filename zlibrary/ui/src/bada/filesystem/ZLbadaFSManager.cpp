@@ -79,7 +79,7 @@ shared_ptr<ZLMimeType> ZLbadaFSManager::mimeType(const std::string &path) const 
 
 static std::string getPwdDir() {
 	char *pwd = getenv("PWD");
-	return "Home";//(pwd != 0) ? pwd : "";
+	return "/Home";//(pwd != 0) ? pwd : "";
 }
 
 static std::string getHomeDir() {
@@ -193,41 +193,9 @@ ZLFSDir *ZLbadaFSManager::createNewDirectory(const std::string &path) const {
 
 	result r = Osp::Io::Directory::Create  (Osp::Base::String(path.c_str()), true);
 	if (r == E_SUCCESS) {
-//		AppLog("E_SUCCESS ");
 		return createPlainDirectory(path);
 	}
-//	AppLog("no E_SUCCESS ");
 	return 0;
-	/*
-	std::vector<std::string> subpaths;
-	std::string current = path;
-
-	while (current.length() > 1) {
-		AppLog("current %s",current.c_str());
-		struct stat fileStat;
-		if (stat(current.c_str(), &fileStat) == 0) {
-			if (!S_ISDIR(fileStat.st_mode)) {
-				return 0;
-			}
-			break;
-		} else {
-			subpaths.push_back(current);
-			int index = current.rfind('/');
-			if (index == -1) {
-				return 0;
-			}
-			current.erase(index);
-		}
-	}
-	AppLog("while end %d", subpaths.size());
-	for (int i = subpaths.size() - 1; i >= 0; --i) {
-		AppLog("mkdir %s", subpaths[i].c_str());
-		if (mkdir(subpaths[i].c_str(), 0x1FF) != 0) {
-			return 0;
-		}
-	}
-	return createPlainDirectory(path);
-	*/
 }
 
 ZLFSDir *ZLbadaFSManager::createPlainDirectory(const std::string &path) const {
@@ -243,6 +211,7 @@ ZLOutputStream *ZLbadaFSManager::createOutputStream(const std::string &path) con
 }
 
 bool ZLbadaFSManager::removeFile(const std::string &path) const {
+	AppLog("removeFile %s",path.c_str());
 	return unlink(path.c_str()) == 0;
 }
 
@@ -269,7 +238,7 @@ std::string ZLbadaFSManager::parentPath(const std::string &path) const {
 }
 
 bool ZLbadaFSManager::canRemoveFile(const std::string &path) const {
-//	AppLog("ZLbadaFSManager::canRemoveFile %s",path.c_str());
+	AppLog("ZLbadaFSManager::canRemoveFile %s",path.c_str());
 	result r = E_SUCCESS;
 	FileAttributes attr;
     r = File::GetAttributes(path.c_str(), attr);
