@@ -25,6 +25,8 @@
 #include <shared_ptr.h>
 #include <ZLUserData.h>
 
+
+class ZLInputStreamDecorator;
 class ZLInputStream : public ZLUserDataHolder {
 
 protected:
@@ -39,18 +41,20 @@ public:
 	virtual void seek(int offset, bool absoluteOffset) = 0;
 	virtual size_t offset() const = 0;
 	virtual size_t sizeOfOpened() = 0;
-
 private:
 	// disable copying
 	ZLInputStream(const ZLInputStream&);
 	const ZLInputStream &operator = (const ZLInputStream&);
+private:
+	unsigned int decoratorsCounter;
+	friend class ZLInputStreamDecorator;
 };
 
 class ZLInputStreamDecorator : public ZLInputStream {
 
 public:
 	ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee);
-
+	~ZLInputStreamDecorator();
 private:
 	bool open();
 	size_t read(char *buffer, size_t maxSize);
@@ -65,7 +69,7 @@ private:
 	size_t myBaseOffset;
 };
 
-inline ZLInputStream::ZLInputStream() {}
+inline ZLInputStream::ZLInputStream(): decoratorsCounter(0) {}
 inline ZLInputStream::~ZLInputStream() {}
 
 #endif /* __ZLINPUTSTREAM_H__ */

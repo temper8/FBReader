@@ -18,23 +18,19 @@
  */
 
 #include "ZLInputStream.h"
-#include <FBase.h>
+//#include <FBase.h>
 
 ZLInputStreamDecorator::ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee) : myBaseStream(decoratee), myBaseOffset(0) {
-//	AppLog("  ZLInputStreamDecorator::ZLInputStreamDecorator");
-//	myBaseStream->printDataMap();
+	myBaseStream->decoratorsCounter++;
 	static const std::string zipEntryMapKey = "zipEntryMap";
 	shared_ptr<ZLUserData> data = decoratee->getUserData(zipEntryMapKey);
-//	AppLog("zipEntryMap");
 	if (!data.isNull()) {
-			//AppLog("!data.isNull()");
-			//data = new ZLZipEntryCache(stream);
 			addUserData(zipEntryMapKey, data);
 		}
-
-
 }
-
+ZLInputStreamDecorator::~ZLInputStreamDecorator(){
+	myBaseStream->decoratorsCounter--;
+}
 bool ZLInputStreamDecorator::open() {
 	bool result = myBaseStream->open();
 	myBaseOffset = myBaseStream->offset();
@@ -42,7 +38,6 @@ bool ZLInputStreamDecorator::open() {
 }
 
 size_t ZLInputStreamDecorator::read(char *buffer, size_t maxSize) {
-	//AppLog("  ZLInputStreamDecorator::read");
 	myBaseStream->seek(myBaseOffset, true);
 	size_t result = myBaseStream->read(buffer, maxSize);
 	myBaseOffset = myBaseStream->offset();
@@ -50,16 +45,15 @@ size_t ZLInputStreamDecorator::read(char *buffer, size_t maxSize) {
 }
 
 void ZLInputStreamDecorator::close() {
-	myBaseStream->close();
+	if (myBaseStream->decoratorsCounter < 2) 	{
+		myBaseStream->close();
+	}
 }
 
 void ZLInputStreamDecorator::seek(int offset, bool absoluteOffset) {
-//	AppLog("  ZLInputStreamDecorator::seek %d",offset);
 	if (absoluteOffset) {
-	//	AppLog("  ZLInputStreamDecorator::seek 1");
 		myBaseStream->seek(offset, true);
 	} else {
-	//	AppLog("  ZLInputStreamDecorator::seek 2");
 		myBaseStream->seek(myBaseOffset + offset, true);
 	}
 	myBaseOffset = myBaseStream->offset();
