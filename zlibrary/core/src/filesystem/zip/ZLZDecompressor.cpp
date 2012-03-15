@@ -24,19 +24,25 @@
 #include "../ZLInputStream.h"
 #include "ZLZDecompressor.h"
 
-const size_t IN_BUFFER_SIZE = 2048;
-const size_t OUT_BUFFER_SIZE = 32768;
+const size_t IN_BUFFER_SIZE = 2048*2;
+const size_t OUT_BUFFER_SIZE = 32768*2;
 
 ZLZDecompressor::ZLZDecompressor(size_t size) : myAvailableSize(size) {
-	AppLog("ZLZDecompressor::ZLZDecompressor size=%d",size);
+//	AppLog("ZLZDecompressor::ZLZDecompressor size=%d",size);
 	myZStream = new z_stream;
 	memset(myZStream, 0, sizeof(z_stream));
 	inflateInit2(myZStream, -MAX_WBITS);
-	AppLog("ZLZDecompressor::inflateInit2");
+//	AppLog("ZLZDecompressor::inflateInit2");
 	myInBuffer = new char[IN_BUFFER_SIZE];
 	myOutBuffer = new char[OUT_BUFFER_SIZE];
-	AppLog("ZLZDecompressor::ZLZDecompressor end");
+//	AppLog("ZLZDecompressor::ZLZDecompressor end");
 
+//	myZStream2 = new z_stream;
+//	memset(myZStream2, 0, sizeof(z_stream));
+//	inflateInit2(myZStream2, -MAX_WBITS);
+//	AppLog("ZLZDecompressor::inflateInit2");
+//	myInBuffer2 = new char[IN_BUFFER_SIZE];
+//	myOutBuffer2 = new char[OUT_BUFFER_SIZE];
 }
 
 ZLZDecompressor::~ZLZDecompressor() {
@@ -44,17 +50,27 @@ ZLZDecompressor::~ZLZDecompressor() {
 	delete[] myOutBuffer;
 	//inflateEnd
     inflateEnd(myZStream);
-	// вылетает на мобильнике с bada 1.0
+
 	delete myZStream;
+
+/*	delete[] myInBuffer2;
+	delete[] myOutBuffer2;
+	//inflateEnd
+    inflateEnd(myZStream2);
+
+	delete myZStream2;*/
 }
 
 size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t maxSize) {
-	AppLog("ZLZDecompressor::decompress myBuffer.length()=%d",myBuffer.length());
+//	AppLog("ZLZDecompressor::decompress myBuffer.length()=%d",myBuffer.length());
 	while ((myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
 		size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
 
 		myZStream->next_in = (Bytef*)myInBuffer;
 		myZStream->avail_in = stream.read(myInBuffer, size);
+	//	AppLog("stream.read=%d",myZStream->avail_in);
+	//	memcpy(myInBuffer2,myInBuffer,myZStream->avail_in);
+
 		if (myZStream->avail_in == size) {
 			myAvailableSize -= size;
 		} else {
@@ -64,16 +80,42 @@ size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t m
 			break;
 		}
 		while (myZStream->avail_in > 0) {
+		/*	myZStream2->next_in = (Bytef*)myInBuffer2;
+			myZStream2->avail_in = myZStream->avail_in;
+			myZStream2->avail_out = OUT_BUFFER_SIZE;
+			myZStream2->next_out = (Bytef*)myOutBuffer2;
+*/
+		//	AppLog("avail_in=%d",myZStream->avail_in);
+
 			myZStream->avail_out = OUT_BUFFER_SIZE;
 			myZStream->next_out = (Bytef*)myOutBuffer;
 
 			int code = ::inflate(myZStream, Z_SYNC_FLUSH);
 			if ((code != Z_OK) && (code != Z_STREAM_END)) {
+	//			AppLog("break 1");
 				break;
 			}
 			if (OUT_BUFFER_SIZE == myZStream->avail_out) {
+	//			AppLog("break 2");
 				break;
 			}
+	//		AppLog("inflate myZStream avail_out=%d",myZStream->avail_out);
+
+	/*		int code2 = ::inflate(myZStream2, Z_SYNC_FLUSH);
+			if ((code2 != Z_OK) && (code2 != Z_STREAM_END)) {
+	//			AppLog("break 3");
+				break;
+			}
+			if (OUT_BUFFER_SIZE == myZStream2->avail_out) {
+	//			AppLog("break 4");
+				break;
+			}*/
+			int iSize = OUT_BUFFER_SIZE - myZStream->avail_out;
+/*			bool test = true;
+			for (int i=0;i<iSize;i++){
+				if (myOutBuffer[i]!=myOutBuffer2[i]) test=false;
+			}*/
+	//		AppLog("iSize= %d Undecompress test %s",iSize,(test)?"true":"false");
 			myBuffer.append(myOutBuffer, OUT_BUFFER_SIZE - myZStream->avail_out);
 			if (code == Z_STREAM_END) {
 				myAvailableSize = 0;

@@ -37,9 +37,12 @@ public:
 
 private:
 	z_stream *myZStream;
+//	z_stream *myZStream2;
 	size_t myAvailableSize;
 	char *myInBuffer;
 	char *myOutBuffer;
+//	char *myInBuffer2;
+//	char *myOutBuffer2;
 	std::string myBuffer;
 };
 
