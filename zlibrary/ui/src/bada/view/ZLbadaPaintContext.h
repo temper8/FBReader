@@ -10,6 +10,8 @@
 
 #include "ZLPaintContext.h"
 #include <FGraphics.h>
+#include <map>
+
 using namespace Osp::Graphics;
 
 class ZLbadaPaintContext: public ZLPaintContext {
@@ -23,16 +25,26 @@ private:
 	int myStoredSize;
 	bool myStoredBold;
 	bool myStoredItalic;
-
+	bool defaultFontLoaded;
+	std::string defaultFont;
 	Osp::Graphics::Color FillColor;
-
-
+	Osp::Graphics::Font* myFont;
+	Osp::Base::ByteBuffer* fontData;
+	Osp::Graphics::Font* loadExternalFont(const std::string &family, const std::string &path, int style, int size);
+	void printFaceName(Osp::Graphics::Font* font);
+	Osp::Graphics::Font* loadDefaultFont( int style, int size);
+	void DrawEnrichedTex(int x, int y, Osp::Base::String &text );
 protected:
+	std::map<std::string, std::string> fontsCache;
+	std::map<std::string, std::string> myFontsList;
+	void collectFiles(std::map<std::string, std::string> &names, const char* path );
+	void initMyFontsList();
 
 	virtual void fillFamiliesList(std::vector<std::string> &families) const;
+	void setFont2(const std::string &family, int size, bool bold, bool italic);
 
 public:
-
+	//void init();
     virtual const std::string realFontFamilyName(std::string &fontFamily) const;
 	virtual void clear(ZLColor color);
 	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE);
