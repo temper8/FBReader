@@ -97,9 +97,7 @@ void CoverUpdaterRunner::run() {
 	}
 }
 
-
-
-ZLTreeDialog::ZLTreeDialog(const ZLResource &resource):myResource(resource) {
+ZLTreeDialog::ZLTreeDialog(const ZLResource &resource):myResource(resource),noIcons(false) {
 }
 
 ZLTreeDialog::~ZLTreeDialog() {

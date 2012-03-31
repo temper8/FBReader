@@ -26,6 +26,7 @@ public:
 	virtual void onNodeUpdated(ZLTreeNode *node) = 0;
 
 public:
+	bool noIcons;
 	virtual bool back();
 	virtual void updateNode(ZLTreeTitledNode &node, int index) = 0;
 	virtual bool enter(ZLTreeNode* node)=0;

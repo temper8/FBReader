@@ -96,6 +96,7 @@ void ShowOptionsDialogAction::run() {
 	AppLog("ShowOptionsDialogAction::run() SystemOptionsDialog");
 	//FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("PreferencesTreeDialog"));
+	dialog->noIcons = true;
 	size_t index = 0;
 
 	dialog->rootNode().insert(new ReadingOptionsDialogNode, index++);
@@ -152,6 +153,7 @@ void ShowTOCTreeAction::run() {
 	AppLog("ShowTOCTreeAction::run() ");
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("TOCTreeDialog"));
 	AppLog("ShowTOCTreeAction::createTreeDialog() ");
+	dialog->noIcons = true;
 	shared_ptr<ZLTextModel> contentsModel = FBReader::Instance().myModel->contentsModel();
 	AppLog("ShowTOCTreeAction::contentsModel() ");
 	const ZLTextTreeParagraph& rootParagraph = ((ContentsModel&)*contentsModel).getRootParagraph();
