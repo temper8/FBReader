@@ -35,12 +35,16 @@ protected:
 
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
 	std::string ActionIdList[16];
+	Osp::Graphics::Canvas* pCanvas;
 	Osp::Graphics::Canvas* myCanvas;
 	Osp::Graphics::Canvas* capturedCanvas;
 	Osp::Graphics::Bitmap* pCapturedBitmap;
 	Osp::Graphics::Bitmap* pNextPageBitmap;
 	Osp::Graphics::Point startTouchPosition;
 	Osp::Graphics::Rectangle formRect;
+	Osp::Graphics::Rectangle srcRect;
+	int touchMove;
+
 public:
 	int ScreenHeight;
 	int ScreenWidth;

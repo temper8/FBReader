@@ -33,7 +33,6 @@ private:
 	Osp::Graphics::Font* loadExternalFont(const std::string &family, const std::string &path, int style, int size);
 	void printFaceName(Osp::Graphics::Font* font);
 	Osp::Graphics::Font* loadDefaultFont( int style, int size);
-	void DrawEnrichedTex(int x, int y, Osp::Base::String &text );
 protected:
 	std::map<std::string, std::string> fontsCache;
 	std::map<std::string, std::string> myFontsList;
@@ -45,6 +44,10 @@ protected:
 
 public:
 	//void init();
+	int myWidth;
+	int myHeight;
+	void deleteMyFont();
+	void restoreFont();
     virtual const std::string realFontFamilyName(std::string &fontFamily) const;
 	virtual void clear(ZLColor color);
 	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE);

@@ -66,31 +66,11 @@ Osp::Graphics::Font* ZLbadaPaintContext::loadExternalFont(const std::string &fam
 	{
 	Osp::Graphics::Font* pFont;
 	pFont = new Osp::Graphics::Font;
-	File file;
-/*	if (fontData!=0) 	{
-		AppLog("delete fontData;");
-	  	 delete fontData;
-	}
-if (fontData ==0 )
-{
-	fontData = new Osp::Base::ByteBuffer;
-	result r = E_SUCCESS;
-    r = file.Construct( Osp::Base::String(path.c_str()), L"rb");
-    file.Seek(FILESEEKPOSITION_END,0);
-    int fileSize = file.Tell();
-    file.Seek(FILESEEKPOSITION_BEGIN,0);
-    //if(IsFailed(r))  goto CATCH;
-    AppLog("fileSize = %d",fileSize);
-    fontData->Construct(fileSize);
-    r = file.Read(*fontData);
-    //if(IsFailed(r))  goto CATCH;
 
-    AppLog("r = %d",r);
-}*/
+
     AppLog("loadExternalFont size = %d",size);
     AppLog("loadExternalFont style = %d",style);
 
-//	if (pFont->Construct(*fontData,style,size) != E_SUCCESS){
 	if (pFont->Construct(Osp::Base::String(path.c_str()),style,size) != E_SUCCESS){
 				AppLog("loadExternalFont not E_SUCCESS");
 				delete pFont;
@@ -98,34 +78,7 @@ if (fontData ==0 )
 				fontData = 0;
 				return null;
 			}
-
-	AppLog("loadExternalFont E_SUCCESS");
-/*    ByteBuffer* bb;
-	Osp::Base::String fontFaceName;
-	 fontFaceName=pFont->GetFaceName();
-	 AppLog("GetFaceName");
-	 bb = Osp::Base::Utility::StringUtil::StringToUtf8N(fontFaceName);
-	 AppLog( "fontFaceName1 %s",(char *)bb->GetPointer());
-			//	AppLog("add font to cache");
-	 AppLog("add font to cache");
-	 int fountCount = fontsCache.size();
-	 std::string userFontName;
-	 switch(fountCount){
-		case  0: userFontName = "UserMemoryFont0"; break;
-		case  1: userFontName = "UserMemoryFont1"; break;
-		case  2: userFontName = "UserMemoryFont2"; break;
-		case  3: userFontName = "UserMemoryFont3"; break;
-		case  4: userFontName = "UserMemoryFont4"; break;
-		case  5: userFontName = "UserMemoryFont5"; break;
-		case  6: userFontName = "UserMemoryFont6"; break;
-		case  7: userFontName = "UserMemoryFont7"; break;
-		case  8: userFontName = "UserMemoryFont8"; break;
-	 }
-
-	 AppLog("userFontName %s",userFontName.c_str());
-	 fontsCache.insert(std::make_pair(family,userFontName));
-	 */
-	 return pFont;
+ return pFont;
 }
 
 void ZLbadaPaintContext::printFaceName(Osp::Graphics::Font* font){
@@ -140,18 +93,26 @@ delete bb;
 void ZLbadaPaintContext::setFont2(const std::string &family, int size, bool bold, bool italic){
 	setFont2(defaultFont,size,bold,italic);
 }
+void ZLbadaPaintContext::restoreFont(){
+	setFont(myStoredFamily,myStoredSize,myStoredBold,myStoredItalic);
+}
+
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 //	AppLog( "setFont %s",family.c_str());
-//	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
-//	AppLog( "setFont family %s",family.c_str());
+	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
+	AppLog( "setFont family %s",family.c_str());
 	bool fontChanged = false;
 
 	if (myStoredFamily != family) fontChanged = true;
 	int style = ( bold ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN) | ( italic ? FONT_STYLE_ITALIC : 0);
-	if ((myStoredItalic != italic)|(myStoredBold != bold)|(myStoredSize != size)) {
+	if ((myStoredItalic != italic)||(myStoredBold != bold)||(myStoredSize != size)) {
 		fontChanged = true;
 	}
-	if (!fontChanged) { return;}
+	if (!fontChanged) {
+		 if ((myFont!=0)&&(pCanvas!=0))  {pCanvas->SetFont(*myFont);
+		  return;
+		 }
+	}
 
 
 	myStoredSize = size;
@@ -163,7 +124,7 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 	std::map<std::string, std::string>::const_iterator it = myFontsList.find(family);
 	if (it != myFontsList.end()) {
 		fontPath = it->second;
-		//AppLog("fontFamily %s",fontPath.c_str());
+		AppLog("fontFamily %s",fontPath.c_str());
 		font = new Osp::Graphics::Font;
 		if (font->Construct(Osp::Base::String(fontPath.c_str()),style,size) != E_SUCCESS){
 					AppLog("font == NULL");
@@ -188,21 +149,20 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 		}
    }
 
-	font->SetCharSpace(2);
+	//font->SetCharSpace(1);
 	//AppLog("getCharSpace %d",font->GetCharSpace());
 	//AppLog("maxh=%d, getsize=%d, getas=%d, getdes=%d", font->GetMaxHeight(), font->GetSize(), font->GetAscender(), font->GetDescender());
-//	pCanvas->SetFont(*font);
 	mySpaceWidth = -1;
 	myDescent = font->GetDescender();
 	myStoredFamily = family;
-//	AppLog("add font to cache");
-	//fontsCache.insert(std::make_pair(family,font));
-	 if (myFont!=0) delete myFont;
-	 myFont = font;
-	// pCanvas->SetFont();
-	 if (myFont!=0)  pCanvas->SetFont(*myFont);
+    if (myFont!=0) delete myFont;
+	myFont = font;
+	if ((myFont!=0)&&(pCanvas!=0))  pCanvas->SetFont(*myFont);
 }
-
+void ZLbadaPaintContext::deleteMyFont(){
+	 if (myFont!=0) delete myFont;
+	 myFont = 0;
+}
 
 Osp::Graphics::Font* ZLbadaPaintContext::loadDefaultFont( int style, int size){
 	AppLog("ZLbadaPaintContext::loadDefaultFont()");
@@ -224,17 +184,19 @@ Osp::Graphics::Font* ZLbadaPaintContext::loadDefaultFont( int style, int size){
 
 
 int ZLbadaPaintContext::width() const {
-	if (!pCanvas) {
-		return 0;
-	}
-	return pCanvas->GetBounds().width;
+//	if (!pCanvas) {
+//		return 0;
+//	}
+//	return pCanvas->GetBounds().width;
+	return myWidth;
 }
 
 int ZLbadaPaintContext::height() const {
-	if (!pCanvas) {
+	/*if (!pCanvas) {
 		return 0;
 	}
-	return pCanvas->GetBounds().height;
+	return pCanvas->GetBounds().height;*/
+	return  myHeight;
 }
 
 void ZLbadaPaintContext::clear(ZLColor color){
@@ -272,7 +234,7 @@ int ZLbadaPaintContext::stringWidth(const char *str, int len, bool) const {
     myFont->GetTextExtent(bada_str, charCount, dim);
     //pCanvas->GetFontN()->GetTextExtent(bada_str, charCount, dim);
 //    AppLog("ZLbadaPaintContext::stringWidth %d",dim.width );
-	return dim.width;//+charCount;
+	return dim.width;//+2*charCount;
 }
 
 int ZLbadaPaintContext::spaceWidth() const {
@@ -281,11 +243,13 @@ int ZLbadaPaintContext::spaceWidth() const {
 	else
 	{
 		Dimension dim;
-	//	AppLog("spaceWidth");
+		//AppLog("spaceWidth");
 		myFont->GetTextExtent(L" ", 1, dim);
 		//pCanvas->GetFontN()->GetTextExtent(L" ", 1, dim);
-		mySpaceWidth = dim.width;
+
+		mySpaceWidth = dim.width+1;
 	}
+	//AppLog("spaceWidth %d",mySpaceWidth);
 	return mySpaceWidth;
 }
 
@@ -317,54 +281,14 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
  //   AppLog("charCount = %d : len = %d", charCount,len);
  //   DrawEnrichedTex(x, y-myFont->GetMaxHeight(),bada_str );
 
- /*   Canvas* pDrawingCanvas = new Canvas;
-    pDrawingCanvas->Construct();
-    pDrawingCanvas->SetBackgroundColor(Color::COLOR_WHITE);
-    pDrawingCanvas->SetForegroundColor(Color::COLOR_BLACK);
-    pDrawingCanvas->Clear();
-    if (myFont!=0)  pDrawingCanvas->SetFont(*myFont);
-    pDrawingCanvas->DrawText(Point(0, 0), bada_str);
 
-    pCanvas->Copy(Point(x,y),*pDrawingCanvas,Rectangle(0,0,100,25));
-    delete pDrawingCanvas;*/
-
-	pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str);
+    //Osp::Graphics::Color clr = Osp::Graphics::Color::COLOR_GREEN;
+    pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str);
+	//pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str, Osp::Graphics::Color::COLOR_WHITE);
 //	pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str, charCount);
 //	pCanvas->DrawText(Point(x, y), bada_str,charCount);
 }
 
-void ZLbadaPaintContext::DrawEnrichedTex(int x, int y,Osp::Base::String &text ){
-    result r = E_SUCCESS;
-    EnrichedText* pEnrichedText = null;
-    TextElement* pTextElement1 = null;
-    pEnrichedText = new EnrichedText();
-    r = pEnrichedText->Construct(Dimension(300, 100));
-    pEnrichedText->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT );
-     pEnrichedText->SetVerticalAlignment(TEXT_ALIGNMENT_TOP);
-     pEnrichedText->SetTextWrapStyle(TEXT_WRAP_CHARACTER_WRAP);
-     pEnrichedText->SetTextAbbreviationEnabled(true);
-
-
-    pTextElement1 = new TextElement();
-    r = pTextElement1->Construct(text);
-   // if (IsFailed(r))  {  goto CATCH;  }
-    pTextElement1->SetTextColor(Color::COLOR_BLUE);
-
-       //   Font font;
-      //    font.Construct(FONT_STYLE_BOLD, 40);
-    pTextElement1->SetFont(*myFont);
-
-   pEnrichedText->Add(*pTextElement1);
-   int width, height;
-   pEnrichedText->GetSize(width, height);
-   pCanvas->FillRectangle(Color::COLOR_GREY, Rectangle(x, y, width, 1));
-
-
-
-   pCanvas->DrawText(Point(x, y), *pEnrichedText);
-   pEnrichedText->RemoveAll(true);
-   delete pEnrichedText;
-}
 
 void ZLbadaPaintContext::fillRectangle(int x0, int y0, int x1, int y1){
 	pCanvas->FillRectangle(FillColor, Rectangle(x0, y0, x1-x0+1, y1-y0+1));

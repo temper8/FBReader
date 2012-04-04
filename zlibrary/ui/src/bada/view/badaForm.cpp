@@ -24,19 +24,56 @@ result badaForm::OnDraw(void)
 	ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder.view()->context();
 	Osp::Graphics::Canvas* pCanvas = GetCanvasN();
 
-	Rectangle newRect = GetBounds();
-	if (newRect.width==formRect.width)
-	{
-		myCanvas->Clear();
-		context.pCanvas = myCanvas;
-		myHolder.view()->paint();
-		if (showNewPage)
-		{
+//	pCanvas->Clear();
+	//if (pCanvas == null) pCanvas = GetClientAreaCanvasN ();
+  if (touchMove!=0){
+	   pCanvas->Clear();
+		if (touchMove == 1){
 			pCanvas->Copy(Point(0,0),*myCanvas,formRect);
-			pCanvas->Show();
+			AppLog("OnTouchMoved 1");
+			//srcRect(-x,0,formRect.width+x,formRect.height);
+			pCanvas->Copy(Point(0,0),*capturedCanvas,srcRect);
+			AppLog("OnTouchMoved 2");
 		}
-	}
-	delete pCanvas;
+		else {
+			pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
+			//Rectangle srcRect(formRect.width-currentPosition.x,0,currentPosition.x,formRect.height);
+			pCanvas->Copy(Point(0,0),*myCanvas,srcRect);
+		}
+		AppLog("pCanvas->Show");
+		pCanvas->Show();
+   }
+   else
+   {
+	   Rectangle newRect = GetBounds();
+	   	if (newRect.width==formRect.width)
+	   	{
+
+
+	   			Osp::Graphics::Canvas* tmpCanvas = new Canvas;
+	   			tmpCanvas->Construct();
+	   			tmpCanvas->Clear();
+		   		context.pCanvas = tmpCanvas;
+		   		context.myHeight = formRect.height;
+		   		context.myWidth = formRect.width;
+		   		//context.restoreFont();
+		   		myHolder.view()->paint();
+		   		myCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
+		   		if (showNewPage)   		{
+	   			AppLog("pCanvas->Copy");
+	   				pCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
+	   				AppLog("pCanvas->Show");
+	   				//tmpCanvas.Show();
+	   				pCanvas->Show();
+	   		}
+		   	context.pCanvas = 0;
+		   	//context.deleteMyFont();
+		   	delete tmpCanvas;
+	   	}
+   }
+
+ delete pCanvas;
+//delete tmpCanvas;
 }
 
 //virtual bool onStylusPress(int x, int y);
@@ -75,28 +112,34 @@ void badaForm::OnTouchLongPressed(const Control &source, const Point &currentPos
 void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	AppLog("OnTouchMoved");
-//	Rectangle rect = GetClientAreaBounds();
 	int x = currentPosition.x - startTouchPosition.x;
 	int y = currentPosition.y - startTouchPosition.y;
-	if (showNewPage)
-	{
+	if (showNewPage) {
 		capturedCanvas->Copy(Point(0,0),*myCanvas,formRect);
 		showNewPage = false;
 		if (x<0) FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
 		else FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
 	}
-	Canvas* pCanvas = GetCanvasN();
-if (x<0){
-	pCanvas->Copy(Point(0,0),*myCanvas,formRect);
-	pCanvas->Copy(Point(x,0),*capturedCanvas,formRect);//Rectangle(0,0,480,800));
-}
-else {
-	pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
-	pCanvas->Copy(Point(currentPosition.x-formRect.width,0),*myCanvas,formRect);
-}
-	pCanvas->Show();
-	delete pCanvas;
 
+ //  Canvas* pCanvas = source->GetCanvasN();
+	if (x<0){
+		touchMove = 1;
+		//pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+		AppLog("OnTouchMoved 1");
+		 srcRect = Rectangle(-x,0,formRect.width+x,formRect.height);
+		//pCanvas->Copy(Point(0,0),*capturedCanvas,srcRect);
+		AppLog("OnTouchMoved 2");
+	}
+	else {
+		touchMove = 2;
+		//pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
+		 srcRect = Rectangle(formRect.width-currentPosition.x,0,currentPosition.x,formRect.height);
+		//pCanvas->Copy(Point(0,0),*myCanvas,srcRect);
+	}
+	AppLog("pCanvas->Show");
+//	pCanvas->Show();*/
+//	delete pCanvas;
+	Draw();
 //	myHolder.view()->onStylusMove(currentPosition.x, currentPosition.y);
 }
 
@@ -109,6 +152,7 @@ void badaForm::OnTouchPressed(const Control &source, const Point &currentPositio
 
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
+	touchMove = 0;
 	AppLog("OnTouchReleased");
 	if (!showNewPage) {
 		Canvas* pCanvas = GetCanvasN();
@@ -172,7 +216,7 @@ void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::
 	OnDraw();
 }
 
-badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true){
+badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true), touchMove(0){
 
 }
 
@@ -213,7 +257,7 @@ bool badaForm::Initialize()
 	}
 	AppLog("formRect.width=%d",formRect.width);
 	AppLog("formRect.height=%d",formRect.height);
-
+	//__pCanvas = this->GetCanvasN();
 	myCanvas = new Canvas();
 	myCanvas->Construct();
 	capturedCanvas = new Canvas();
