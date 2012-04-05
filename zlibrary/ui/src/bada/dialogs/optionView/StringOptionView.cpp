@@ -32,10 +32,6 @@ void StringOptionView::_createItem() {
     pItem->SetItemFormat(*myTab->form()->__pStringViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 
-//    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
-//   pItem->SetCheckBox(ID_LIST_CHECKBOX);
-//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
-
     myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
 	groupIndex = myTab->form()->GroupCount-1;
