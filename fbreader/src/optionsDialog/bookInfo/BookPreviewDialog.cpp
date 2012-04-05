@@ -113,7 +113,7 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	// TODO Auto-generated constructor stub
 //	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookReadAction(myBook));
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
-	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
+	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
 	AppLog("myDialog->createTab");
 	shared_ptr<ZLImage> bookImage;
 
@@ -136,7 +136,7 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	BookInfoTab.addOption(ZLResourceKey("seriesTitle"), new StaticTextEntry(myBook->seriesTitle()));
 
 	//commonTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
-	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Summary"));
+	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Common"));
 	//SummaryTab.addOption(ZLResourceKey("title"), new StaticTextEntry(myBook.Summary));
 	SummaryTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	AppLog("commonTab.addOption file");

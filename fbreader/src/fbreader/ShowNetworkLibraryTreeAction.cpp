@@ -12,7 +12,7 @@
 
 
 void ShowNetworkLibraryTreeAction::run() {
-	shared_ptr<ZLTreeDialog>  myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("NetworkView"));
+	shared_ptr<ZLTreeDialog>  myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("NetworkTreeDialog"));
 	ZLTreeListener::RootNode &rootNode = myDialog->rootNode();
 	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
 	AppLog(" NetworkLinkCollection::Instance()");

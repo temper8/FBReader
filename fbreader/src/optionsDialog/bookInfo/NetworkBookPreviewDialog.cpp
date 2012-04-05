@@ -60,7 +60,7 @@ NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNod
 	// TODO Auto-generated constructor stub
 	//myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookOpenAction(myBook));
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
-	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
+	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
 	AppLog("myDialog->createTab");
 	const NetworkBookItem &book = node->book();
 	//shared_ptr<ZLImage> bookImage;
