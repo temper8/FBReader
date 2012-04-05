@@ -18,7 +18,7 @@
  */
 
 #include "FBOptions.h"
-
+#include <FBase.h>
 FBOptions* FBOptions::ourInstance = 0;
 
 static const std::string OPTIONS = "Options";
@@ -34,10 +34,10 @@ void FBOptions::setColorProfileName(const std::string& name) {
 }
 
 FBOptions::FBOptions() :
-	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 1000, 4),
-	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 1000, 4),
-	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 1000, 0),
-	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 1000, 4),
+	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 100, 4),
+	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 100, 4),
+	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 100, 0),
+	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 100, 4),
 	ColorProfileOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "ColorProfile", ColorProfile::DAY),
 	dayColorProfile(ColorProfile::DAY),
 	nightColorProfile(ColorProfile::NIGHT) {
@@ -52,5 +52,6 @@ ZLColorOption& FBOptions::regularTextColorOption() {
 }
 
 ZLColorOption &FBOptions::colorOption(const std::string &style) {
+//	AppLog("colorOption %s",style.c_str());
 	return getColorProfile().colorOption(style);
 }
