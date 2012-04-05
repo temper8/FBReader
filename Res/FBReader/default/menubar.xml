@@ -4,8 +4,7 @@
 	<item id="toc"/>
 	<item id="showNetLibrary"/>
 	<item id="preferences"/>
-	<item id="night"/>
-	<item id="day"/>
+	<item id="day-night"/>
 	<item id="increaseFont"/>
 	<item id="decreaseFont"/>
 	<item id="bookInfo"/>

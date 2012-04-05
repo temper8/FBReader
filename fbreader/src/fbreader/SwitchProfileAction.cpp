@@ -9,6 +9,16 @@ bool SwitchProfileAction::isVisible() const {
 }
 
 void SwitchProfileAction::run() {
-	FBOptions::Instance().setColorProfileName(myProfileName);
+	AppLog("SwitchProfileAction %s",myProfileName.c_str() );
+	if (myProfileName==ColorProfile::DAY_NIGHT) {
+		std::string currentProfile =  FBOptions::Instance().getColorProfileName();
+		AppLog("currentProfile %s",currentProfile.c_str() );
+		if (currentProfile==ColorProfile::DAY)
+			FBOptions::Instance().setColorProfileName(ColorProfile::NIGHT);
+		else
+			FBOptions::Instance().setColorProfileName(ColorProfile::DAY);
+	}
+	else
+		FBOptions::Instance().setColorProfileName(myProfileName);
 	FBReader::Instance().refreshWindow();
 }

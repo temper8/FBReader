@@ -1,11 +1,13 @@
 #include "ColorProfile.h"
-
+#include <FBase.h>
 const std::string ColorProfile::DAY("defaultLight");
 const std::string ColorProfile::NIGHT("defaultDark");
+const std::string ColorProfile::DAY_NIGHT("day-night");
 
 static const std::string COLORS = "Colors";
 
 ZLColorOption &ColorProfile::colorOption(const std::string &style) {
+//	AppLog("colorOption %s",style.c_str());
 	std::map<std::string,shared_ptr<ZLColorOption> >::const_iterator it =
 		myColorOptions.find(style);
 	return it != myColorOptions.end() ? *it->second : *RegularTextColorOption;
@@ -19,6 +21,7 @@ ColorProfile::ColorProfile(std::string name) {
 	//TODO all strings should be const static std::string
 	if (name == NIGHT) {
 		BackgroundColorOption = createOption(name, "Background", 0, 0, 0);
+		myColorOptions["background"] = BackgroundColorOption;
 		RegularTextColorOption = createOption(name, "Text", 192,192,192);
 		myColorOptions["internal"] = createOption(name, "Hyperlink", 60, 142, 224);
 		myColorOptions["external"] = createOption(name, "ExternalHyperlink", 60, 142, 224);
@@ -28,6 +31,7 @@ ColorProfile::ColorProfile(std::string name) {
 		myColorOptions[ZLTextStyle::TREE_LINES] = createOption(name, "TreeLines", 127, 127, 127);
 	} else {
 		BackgroundColorOption = createOption(name, "Background", 255, 255, 255);
+		myColorOptions["background"] = BackgroundColorOption;
 		RegularTextColorOption = createOption(name, "Text", 0,0,0);
 		myColorOptions["internal"] = createOption(name, "Hyperlink", 33, 96, 180);
 		myColorOptions["external"] = createOption(name, "ExternalHyperlink", 33, 96, 180);

@@ -14,6 +14,7 @@ class ColorProfile {
 public:
 	static const std::string DAY;
 	static const std::string NIGHT;
+	static const std::string DAY_NIGHT;
 public:
 	ColorProfile(std::string name);
 public:

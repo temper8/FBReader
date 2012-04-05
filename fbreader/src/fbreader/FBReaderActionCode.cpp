@@ -22,6 +22,7 @@
 
 const std::string ActionCode::SWITCH_TO_NIGHT_PROFILE = "night";
 const std::string ActionCode::SWITCH_TO_DAY_PROFILE = "day";
+const std::string ActionCode::SWITCH_DAY_NIGHT = "day-night";
 const std::string ActionCode::SHOW_READING = "showReading";
 const std::string ActionCode::SHOW_LIBRARY = "showLibrary";
 const std::string ActionCode::SHOW_NETWORK_LIBRARY = "showNetLibrary";

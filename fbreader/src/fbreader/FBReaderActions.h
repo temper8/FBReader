@@ -31,6 +31,7 @@ class ActionCode {
 public:
 	static const std::string SWITCH_TO_NIGHT_PROFILE;
 	static const std::string SWITCH_TO_DAY_PROFILE;
+	static const std::string SWITCH_DAY_NIGHT;
 	static const std::string SHOW_READING;
 	static const std::string SHOW_LIBRARY;
 	static const std::string SHOW_NETWORK_LIBRARY;

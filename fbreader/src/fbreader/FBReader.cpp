@@ -119,6 +119,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	AppLog("Создаем addAction");
 	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
 	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
+	addAction(ActionCode::SWITCH_DAY_NIGHT, new SwitchProfileAction(ColorProfile::DAY_NIGHT));
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
@@ -310,6 +311,7 @@ void FBReader::openBook(shared_ptr<Book> book) {
 	OpenBookRunnable runnable(book);
 	AppLog("runnable(book)");
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"), runnable);
+//	runnable.run();
 	AppLog("ZLDialogManager::Instance().wait");
 	resetWindowCaption();
 	AppLog("resetWindowCaption();");
