@@ -118,6 +118,7 @@
 		<node name="addBook" value="Add Book..."/>
 		<node name="night" value="Night" />
 		<node name="day" value="Day" />
+		<node name="day-night" value="Day/Night" />
 		<node name="increaseFont"  value="Increase Font"/>
 		<node name="decreaseFont"  value="Decrease Font"/>
 		<node name="library" value="Library">
@@ -438,6 +439,9 @@
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Book Info"/>
 			<node name="tab">
+				<node name="Cover" value="Cover image">
+					<node name="cover" value="cover image"/>
+				</node>
 				<node name="Common" value="Common">
 					<node name="file" value="File"/>
 					<node name="title" value="Title"/>
@@ -621,6 +625,11 @@
 			<node name="title" value="FBReader Library"/>
 			<node name="message" value="ghdfghdfgdh"/>
 		</node>
+		<node name="NetworkTreeDialog">
+			<node name="title" value="Network Library"/>
+			<node name="message" value="ghdfghdfgdh"/>
+		</node>
+
 		<node name="TOCTreeDialog">
 			<node name="title" value="Book Content"/>
 		</node>
