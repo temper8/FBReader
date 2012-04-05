@@ -37,7 +37,6 @@ using namespace Osp::Ui::Controls;
 
 
 
-
 ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(resource)
 {
 	AppLog("ZLbadaTreeDialog::ZLbadaTreeDialog()");
@@ -69,8 +68,6 @@ ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(re
 	r = pFrame->AddControl(*myForm);
 	r = pFrame->SetCurrentForm(*myForm);
 	//myForm->SetPreviousForm(PreviousForm);
-
-
      //   myView->setItemDelegate(new SubtitleDelegate);
 }
 
@@ -101,12 +98,14 @@ bool ZLbadaTreeDialog::back() {
 	myCurrentNode = myCurrentNode->parent();
 	 myForm->UpdateContent();
 	 AppLog("UpdateContent finish");
-	__pThread = new Thread();
-	__pThread->Construct(*this);
-		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
-		//__pListView->SetTextOfEmptyList(L"Loading...");
-	terminateThread = false;
-	__pThread->Start();
+	 if (!noIcons){
+		 __pThread = new Thread();
+		 __pThread->Construct(*this);
+		 //pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
+		 //__pListView->SetTextOfEmptyList(L"Loading...");
+		 terminateThread = false;
+		 __pThread->Start();
+	 }
 	return true;
 }
 
@@ -136,13 +135,14 @@ bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
 	 myCurrentNode->requestChildren(0);
 	 myForm->UpdateContent();
 	 AppLog("UpdateContent finish");
+	 if (!noIcons){
 	__pThread = new Thread();
 	__pThread->Construct(*this);
 		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
 		//__pListView->SetTextOfEmptyList(L"Loading...");
 	terminateThread = false;
 	__pThread->Start();
-
+	 }
 	return true;
 }
 
@@ -174,16 +174,16 @@ void ZLbadaTreeDialog::run() {
 	 //myCurrentNode = node;
 	// myCurrentNode->requestChildren(myWaitWidgetListener);
 	 myForm->UpdateContent();
+
 	 AppLog("UpdateContent finish");
-	__pThread = new Thread();
-	__pThread->Construct(*this);
-		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
-		//__pListView->SetTextOfEmptyList(L"Loading...");
-	terminateThread = false;
-	__pThread->Start();
-
-
-
+	 if (!noIcons){
+			__pThread = new Thread();
+			__pThread->Construct(*this);
+				//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
+				//__pListView->SetTextOfEmptyList(L"Loading...");
+			terminateThread = false;
+			__pThread->Start();
+		 }
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	r = pFrame->Draw();
 	AppLog("pFrame->Draw();");
