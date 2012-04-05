@@ -85,7 +85,7 @@ result DialogForm::OnInitializing(void)
 	AppLog("DialogForm::OnInitializing");
 
 	   // Creates CustomList
-
+	Rectangle formRect = GetClientAreaBounds();
 	Osp::Media::Image *pImage = new Osp::Media::Image();
     r = pImage->Construct();
 	buttonBmp = pImage->DecodeN("/Res/icons/button-220x50.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
@@ -95,7 +95,7 @@ result DialogForm::OnInitializing(void)
     __pCustomList = new GroupedList();
 	GroupCount = 0;
 	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
-	__pCustomList->Construct(Rectangle(0, 0, 480, 790), CUSTOM_LIST_STYLE_MARK);
+	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK);
 //	__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_MARK_WITH_DIVIDER);
 	//__pCustomList->AddCustomItemEventListener(*this);
 	__pCustomList->AddGroupedItemEventListener(*this);
@@ -122,15 +122,28 @@ result DialogForm::OnInitializing(void)
 	  __pComboViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 40, 40));
 
-//---------------------- __pComboViewListItemFormat --------------------------------
+//---------------------- __pStringViewListItemFormat --------------------------------
 
 	  __pStringViewListItemFormat = new CustomListItemFormat();
 	  __pStringViewListItemFormat->Construct();
 
 	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
-	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 50, 400, 80), 30);
+	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 45, 400, 80), 25);
 	  __pStringViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pStringViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+
+
+
+//---------------------- __pStaticTextListItemFormat --------------------------------
+
+  	  __pStaticTextListItemFormat = new CustomListItemFormat();
+  	  __pStaticTextListItemFormat->Construct();
+
+  	  __pStaticTextListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(90, 25, 300, 52));
+  	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, 400, 80), 55, Color::COLOR_BLUE, Color::COLOR_BLUE);
+  	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 30, 400, 80), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
+  	  __pStaticTextListItemFormat->AddElement(ID_LIST_CUSTOM, Osp::Graphics::Rectangle(0, 0, 480, 1300));
+
 
 //---------------------- __pBooleanListItemFormat --------------------------------
 
@@ -202,16 +215,6 @@ result DialogForm::OnInitializing(void)
 	  __pButtonViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(300, 12, 180, 50), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
 	  __pButtonViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 
-
-//---------------------- __pStaticTextListItemFormat --------------------------------
-
-	  __pStaticTextListItemFormat = new CustomListItemFormat();
-	  __pStaticTextListItemFormat->Construct();
-
-	  __pStaticTextListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(90, 25, 300, 52));
-	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, 400, 80), 55, Color::COLOR_BLUE, Color::COLOR_BLUE);
-	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 30, 400, 80), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
-	  __pStaticTextListItemFormat->AddElement(ID_LIST_CUSTOM, Osp::Graphics::Rectangle(0, 0, 480, 1300));
 
 	return r;
 }
