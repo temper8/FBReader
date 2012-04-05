@@ -1,6 +1,6 @@
 
 #include "TreeViewForm.h"
-#include "PageForm.h"
+//#include "PageForm.h"
 #include "ZLTreeNode.h"
 #include "ZLTreeTitledNode.h"
 #include <ZLTreeActionNode.h>
@@ -89,95 +89,96 @@ result TreeViewForm::OnInitializing(void)
 	SetSoftkeyText(SOFTKEY_1, L"Back");
 
 	AddOrientationEventListener(*this);
-
+	AppLog("TreeViewForm::OnInitializing height=%d",formArea.height);
    // Creates CustomList
     __pCustomList = new CustomList();
 	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
-	__pCustomList->Construct(Rectangle(0, 0, formArea.width, formArea.height - 10), CUSTOM_LIST_STYLE_MARK);
+	__pCustomList->Construct(Rectangle(0, 0, formArea.width, formArea.height), CUSTOM_LIST_STYLE_MARK);
 
 	__pCustomList->AddCustomItemEventListener(*this);
 
 	// Creates an item format of the CustomList
+	iconRect = Osp::Graphics::Rectangle(10, 5, 70, 90);
+
+	__pNoIconsListItemFormat = new CustomListItemFormat();
+	__pNoIconsListItemFormat->Construct();
+	__pNoIconsListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(10, 15, formArea.width - 10, 40), 30);
+	__pNoIconsListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(10, 55, formArea.width - 10, 80), 22);
+	__pNoIconsListItemFormat->AddElement(ID_LIST_BITMAP, iconRect);
+	__pNoIconsListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+
+
 	__pCustomListItemFormat = new CustomListItemFormat();
 	__pCustomListItemFormat->Construct();
-
-	__pCustomListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, formArea.width -90, 80), 30);
-	__pCustomListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 55, formArea.width -90, 80), 20);
-	__pCustomListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
+	__pCustomListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 12, formArea.width - 90, 40), 30);
+	__pCustomListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 52, formArea.width - 90, 80), 22);
+	__pCustomListItemFormat->AddElement(ID_LIST_BITMAP, iconRect);
 	__pCustomListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
-	//__pCustomListItemFormat->AddElement(ID_FORMAT_CUSTOM, Rectangle(320, 20, 80, 60));
-	//__pCustomListItemFormat->SetElementEventEnabled(ID_LIST_TEXT, true);
-	//__pCustomListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP, true);
-	//__pCustomListItemFormat->SetElementEventEnabled(ID_FORMAT_CUSTOM, true);
-
-
-
 
     AddControl(*__pCustomList);
-    UpdateContent();
 	CreateContextMenuListStyle();
-
-
 	return r;
 }
 
-void   TreeViewForm::updateItem(ZLTreeTitledNode &node, int index){
-		Bitmap *pBmp = new Bitmap;
-		pBmp->Construct(Dimension(70,90), BITMAP_PIXEL_FORMAT_ARGB8888);
+Bitmap* TreeViewForm::makeIcon(Bitmap* srcBmp){
+	Bitmap *pBmp = new Bitmap;
+	pBmp->Construct(Dimension(iconRect.width, iconRect.height), BITMAP_PIXEL_FORMAT_ARGB8888);
+	int imageWidth = srcBmp->GetWidth();
+	int imageHeight = srcBmp->GetHeight();
+	AppLog("makeIcon image w = %d, h = %d", imageWidth, imageHeight);
+	int dy = (iconRect.height - imageHeight) / 2;
+	int dx = (iconRect.width - imageWidth) / 2;
+	if ((dy<0)||(dx<0)) {
+		srcBmp->Scale(Dimension(iconRect.width, iconRect.height));
+		pBmp->Merge(Point(0,0), *srcBmp, Rectangle(0,0,iconRect.width,iconRect.height));
+	}
+	else
+		pBmp->Merge(Point(dx,dy), *srcBmp, Rectangle(0,0,imageWidth,imageHeight));
+	return pBmp;
+}
 
+void   TreeViewForm::updateItem(ZLTreeTitledNode &node, int index){
+		Bitmap *pBmp = null;
 		shared_ptr<ZLImage> cover =node.image();
-		if (cover.isNull()) {	AppLog("cover.isNull()");}
-			else
-			{
+		if (!cover.isNull()) 	{
 			shared_ptr<ZLImageData> coverData = ZLImageManager::Instance().imageData(*cover);
 			if (!coverData.isNull()) {
-			//pBitmapLeftIcon = 	((ZLbadaImageData&)coverData).pBitmap;
-			//Bitmap *pBmp;
-			ZLImageData &image = *coverData;
-			Bitmap *tmpBmp = 	((ZLbadaImageData&)image).pBitmap;
-			int imageWidth = tmpBmp->GetWidth();
-			int imageHeight = tmpBmp->GetHeight();
-			AppLog("image w = %d, h = %d", imageWidth, imageHeight);
-			pBmp->Merge(Point(0,0), *tmpBmp, Rectangle(0,0,imageWidth,imageHeight));
+				ZLImageData &image = *coverData;
+				Bitmap *tmpBmp = 	((ZLbadaImageData&)image).pBitmap;
+				pBmp = makeIcon(tmpBmp);
+				}
 			}
-			else
-		   {	AppLog("coverData.isNull()");}
-			}
-
 		String title = String(node.title().c_str());
-	    String t;
-	    if (title.GetLength()>25)  title.SubString(0,25,t);
-	    else t= title;
-
 	    CustomListItem* pItem = new CustomListItem();
 	    //CustomListItem* pItem = (CustomListItem*)__pCustomList->GetItemAt(index);
 	    pItem->Construct(100);
-	    pItem->SetItemFormat(*__pCustomListItemFormat);
-	    pItem->SetElement(ID_LIST_TEXT_TITLE, t);
+	    if (myTreeDialog->noIcons)
+	        pItem->SetItemFormat(*__pNoIconsListItemFormat);
+	    else
+	        pItem->SetItemFormat(*__pCustomListItemFormat);
+	    pItem->SetElement(ID_LIST_TEXT_TITLE, title);
 	    pItem->SetElement(ID_LIST_TEXT_SUBTITLE, String(node.subtitle().c_str()));
-	    pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
+	    if (pBmp!=null) pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
 	    result r =__pCustomList->SetItemAt(index, *pItem, ID_LIST_TEXT_TITLE);
 	    if (r==E_SUCCESS) AppLog("SetItemAt E_SUCCESS");
 	    		else AppLog("SetItemAt error");
 	    __pCustomList->RefreshItem(index);
 	 	RequestRedraw(true);
 }
+
 result TreeViewForm::AddListItem(CustomList& customList, String title,String subTitle, Bitmap* pBitmapNormal)
 {
     // Creates an item of the CustomList
     CustomListItem* pItem = new CustomListItem();
-    String t;
-    if (title.GetLength()>25)  title.SubString(0,25,t);
-    else t= title;
+
     pItem->Construct(100);
-    pItem->SetItemFormat(*__pCustomListItemFormat);
-    pItem->SetElement(ID_LIST_TEXT_TITLE,t);
+    if (myTreeDialog->noIcons)
+    	pItem->SetItemFormat(*__pNoIconsListItemFormat);
+    else
+    	pItem->SetItemFormat(*__pCustomListItemFormat);
+    pItem->SetElement(ID_LIST_TEXT_TITLE,title);
     pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
-    pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
-
-    //    pItem->SetCheckBox(ID_LIST_CHECKBOX);
-//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
-
+    if (pBitmapNormal!=null) pItem->SetElement(ID_LIST_BITMAP, *pBitmapNormal, pBitmapNormal);
     customList.AddItem(*pItem, ID_LIST_ITEM);
 
     return E_SUCCESS;
@@ -204,10 +205,6 @@ void TreeViewForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 	{
 	case ID_CONTEXT_ITEM:
 		AppLog("ID_CONTEXT_ITEM0 is clicked! \n");
-
-		//pFrame->SetCurrentForm(*pPreviousForm);
-	//	pPreviousForm->Draw();
-	//	pPreviousForm->Show();
 	    pPreviousForm->SendUserEvent(0, null);
 
 	case ID_CONTEXT_ITEM+1:
@@ -234,10 +231,6 @@ void TreeViewForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 				UpdateContent();
 			}
 			else	{
-				//Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-				//pFrame->SetCurrentForm(*pPreviousForm);
-				//pPreviousForm->Draw();
-				//pPreviousForm->Show();
 			    pPreviousForm->SendUserEvent(0, null);
 			}
 		}
@@ -262,12 +255,7 @@ void TreeViewForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 void TreeViewForm::CreateContextMenuListStyle(void)
 {
 	AppResource* pAppResource = Application::GetInstance()->GetAppResource();
-//	Bitmap* pNormalBitmap1 = pAppResource->GetBitmapN(L"call_type1.png");
-//	Bitmap* pPressedBitmap1 = pAppResource->GetBitmapN(L"call_f_type1.png");
 
-
-//	Bitmap* pNormalBitmap2 = pAppResource->GetBitmapN(L"message_type1.png");
-//	Bitmap* pPressedBitmap2 = pAppResource->GetBitmapN(L"message_f_type1.png");
 
 	__pContextMenuIconText = new ContextMenu();
 	__pContextMenuIconText->Construct(Point(100, 240), CONTEXT_MENU_STYLE_LIST);
@@ -299,13 +287,10 @@ void TreeViewForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 	case  0: if (ZLTreeTitledNode *TitledNode = zlobject_cast<ZLTreeTitledNode*>(node))
 				{
 			 	 AppLog("Node is ZLTreeTitledNode %s ",TitledNode->title().c_str());
-			 	 strName = String(TitledNode->title().c_str());
-			 	 SetTitleText(strName);
+			 	// strName = String(TitledNode->title().c_str());
+			 	// SetTitleText(strName);
 			 	 //myModel->enter(node);
 			 	 myTreeDialog->enter(node);
-			 	 //UpdateContent();
-			    // myTreeDialog->loadCovers();
-			     //UpdateContent();
 				};
 			 break;
 	//case  1:
@@ -322,20 +307,7 @@ void TreeViewForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 
 			  myTreeDialog->treadTerminator();
 			  node->actions()[0]->run();
-		/*
-		Osp::Graphics::Rectangle r = source.GetBounds();
-		AppLog("TouchPosition %d, %d",TouchPosition.x,TouchPosition.y);
-		selectedNode = node;
-		__pContextMenuIconText->RemoveAllItems();
-		for (int i =0; i<actionsCount; i++){
-			std::string actionText = node->actionText(node->actions()[i]);
-			AppLog("actionText  %s",actionText.c_str());
-			__pContextMenuIconText->AddItem(actionText.c_str(),ID_CONTEXT_ITEM+i);
-		}
-		__pContextMenuIconText->SetPosition(Point(TouchPosition.x,TouchPosition.y+r.y));
-		__pContextMenuIconText->SetShowState(true);
-		__pContextMenuIconText->Show();
-		*/
+
 	}
 	/*
 	if (actionsCount>0)
@@ -407,22 +379,7 @@ void TreeViewForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 	}
 	*/
 
-/*
-	ContentSearchResult* pInfo = (ContentSearchResult*)__pLstContentInfo->GetAt(index);
-	//TryCatch(pInfo != null, popStr = "Fail to convert to ContentSearchResult", "Fail to convert %i th node.", i);
 
-	tmpContentPath = ((ContentInfo*)pInfo->GetContentInfo())->GetContentPath();
-	bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);
-	AppLog("tmpContentPath %s",(char*)bb->GetPointer());
-
-	AppLog("Выбран файл! \n");
-	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-	pFrame->SetCurrentForm(*pPreviousForm);
-	pPreviousForm->Draw();
-	pPreviousForm->Show();
-	((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
-	pPreviousForm->SendUserEvent(0, null);
-*/
     switch (itemId)
     {
         case 500:
@@ -446,8 +403,18 @@ void TreeViewForm::UpdateContent(){
 	String strName;
 	result r = E_SUCCESS;
 //	__pLstSearchList->RemoveAllItems();  // Clear ui list
-   __pCustomList->RemoveAllItems();  // Clear ui list
+  // Clear ui list
 	//AppLog("__pCustomList->RemoveAllItems()");
+   if (ZLTreeTitledNode *myNode = zlobject_cast<ZLTreeTitledNode*>(myTreeDialog->myCurrentNode)) {
+	  strName = String(myNode->title().c_str());
+	  SetTitleText(strName);
+   }
+   else {
+		const char *title = myTreeDialog->myResource["title"].value().c_str();
+		SetTitleText(String(title));
+   }
+   RequestRedraw(true);
+   __pCustomList->RemoveAllItems();
 	AppLog("children().size() = %d ",myTreeDialog->myCurrentNode->children().size());
 	ZLTreeNode::List::iterator it;
 	for (int i =0; i<myTreeDialog->myCurrentNode->children().size(); i++) {
@@ -459,8 +426,8 @@ void TreeViewForm::UpdateContent(){
 				strName = String(TitledNode->title().c_str());
 				strSub = String(TitledNode->subtitle().c_str());
 
-				Bitmap *pBmp = new Bitmap;
-				pBmp->Construct(Dimension(70,90), BITMAP_PIXEL_FORMAT_ARGB8888);
+				//Bitmap *pBmp = new Bitmap;
+				//pBmp->Construct(Dimension(70,90), BITMAP_PIXEL_FORMAT_ARGB8888);
 				/*
 				shared_ptr<ZLImage> cover =TitledNode->image();
 				if (cover.isNull()) {	AppLog("cover.isNull()");}
@@ -483,32 +450,20 @@ void TreeViewForm::UpdateContent(){
 						}
 						*/
 				//AppLog("AddListItem");
-				AddListItem(*__pCustomList, strName, strSub, pBmp);
+				AddListItem(*__pCustomList, strName, strSub, null);
 				}
 			else
 			{
 				strName = "Node is not ZLTreeTitledNode ";
 			}
 
-		//	r = __pLstSearchList->AddItem(&strName, null, null, null );
-
-//		r = __pLstSearchList->AddItem(&strName,&strSub, pBitmapLeftIcon, null );
-
-
 	}
 
 //	delete pBitmapLeftIcon;
 //	delete pBitmapRightIcon;
-
-
-
 	__pCustomList->Draw();
 	__pCustomList->Show();
-
-
-
 	return;
-
 }
 
 void TreeViewForm::_ClearContentInfoList()
@@ -588,7 +543,6 @@ void TreeViewForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collecti
 			pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
 			//myHolder.doAction(ActionIdList[2]);
-
 		}
 		break;
 	case 2:

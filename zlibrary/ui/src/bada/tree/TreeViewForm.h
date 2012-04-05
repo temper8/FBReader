@@ -101,9 +101,10 @@ protected:
 //	static const int ID_LIST_BITMAP = 104;
 //	static const int ID_LIST_CHECKBOX = 105;
 //	static const int ID_FORMAT_CUSTOM = 106;
-
-
+	Osp::Graphics::Bitmap* makeIcon(Osp::Graphics::Bitmap* srcBmp);
+	Osp::Graphics::Rectangle iconRect;
     Osp::Ui::Controls::CustomList* __pCustomList;
+    Osp::Ui::Controls::CustomListItemFormat* __pNoIconsListItemFormat;
     Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat;
    // CustomListElement* __pListElement;
     result AddListItem(Osp::Ui::Controls::CustomList& customList,  Osp::Base::String title, Osp::Base::String subTitle, Osp::Graphics::Bitmap* pBitmapNormal);
