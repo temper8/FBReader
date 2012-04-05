@@ -78,7 +78,6 @@ void BookTextView::readBookState(const Book &book) {
 	} else {
 		AppLog("BooksDB::Instance().loadBookState");
 		BooksDB::Instance().loadBookState(book, state);
-		state.Paragraph = state.Word = state.Character = 0;
 	}
 	gotoPosition(state.Paragraph, state.Word, state.Character);
 	AppLog("end readBookState");
