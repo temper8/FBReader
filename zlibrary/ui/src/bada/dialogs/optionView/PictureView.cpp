@@ -192,13 +192,31 @@ void PictureView::updateActions(){
 	}
 }
 
+Bitmap* PictureView::makeCover(Bitmap* srcBmp){
+	Dimension coverDim = Dimension(200,300);
+	Bitmap *pBmp = new Bitmap;
+	pBmp->Construct(coverDim, BITMAP_PIXEL_FORMAT_ARGB8888);
+	int imageWidth = srcBmp->GetWidth();
+	int imageHeight = srcBmp->GetHeight();
+	AppLog("makeIcon image w = %d, h = %d", imageWidth, imageHeight);
+	int dy = (coverDim.height - imageHeight) / 2;
+	int dx = (coverDim.width - imageWidth) / 2;
+	if ((dy<0)||(dx<0)) {
+		srcBmp->Scale(coverDim);
+		pBmp->Merge(Point(0,0), *srcBmp, Rectangle(0,0,coverDim.width,coverDim.height));
+	}
+	else
+		pBmp->Merge(Point(dx,dy), *srcBmp, Rectangle(0,0,imageWidth,imageHeight));
+	return pBmp;
+}
+
 void PictureView::_createItem() {
     AppLog("PictureView::_createItem");
     if (myImage.isNull()) {
         return;
     }
-    Bitmap *pBmp = new Bitmap;
-    pBmp->Construct(Dimension(200,300), BITMAP_PIXEL_FORMAT_ARGB8888);
+    Bitmap *pBmp = null;//new Bitmap;
+    //pBmp->Construct(Dimension(200,300), BITMAP_PIXEL_FORMAT_ARGB8888);
 
 	shared_ptr<ZLImage> cover = myImage;
 	if (cover.isNull()) {	AppLog("cover.isNull()");}
@@ -210,10 +228,11 @@ void PictureView::_createItem() {
 				//Bitmap *pBmp;
 				ZLImageData &image = *coverData;
 				Bitmap *tmpBmp = 	((ZLbadaImageData&)image).pBitmap;
-				int imageWidth = tmpBmp->GetWidth();
-				int imageHeight = tmpBmp->GetHeight();
-				AppLog("image w = %d, h = %d", imageWidth, imageHeight);
-				pBmp->Merge(Point(0,0), *tmpBmp, Rectangle(0,0,imageWidth,imageHeight));
+				//int imageWidth = tmpBmp->GetWidth();
+				//int imageHeight = tmpBmp->GetHeight();
+				//AppLog("image w = %d, h = %d", imageWidth, imageHeight);
+				//pBmp->Merge(Point(0,0), *tmpBmp, Rectangle(0,0,imageWidth,imageHeight));
+				pBmp = makeCover(tmpBmp);
 			}
 			else
 			 {	AppLog("coverData.isNull()");}
@@ -242,7 +261,7 @@ void PictureView::_createItem() {
 //	*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
 	//pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 	//pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
-	pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
+	if (pBmp!=null) pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
 	//pItem->SetCheckBox(ID_LIST_CHECKBOX);
 	//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);

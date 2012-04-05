@@ -387,6 +387,7 @@ private:
         shared_ptr<ZLImage> myImage;
         //shared_ptr<ZLTreeTitledNode> myNode;
       //  const ZLTreeTitledNode* myNode;
+        Osp::Graphics::Bitmap* makeCover(Osp::Graphics::Bitmap* srcBmp);
     	virtual void OnActionPerformed(int actionId);
     	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
 };
