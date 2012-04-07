@@ -13,6 +13,7 @@
 #include "library/LibraryOptionsDialog.h"
 #include "color/ColorOptionsDialog.h"
 #include "textStyle/TextStyleOptionsDialog.h"
+#include "text/TextOptionsDialog.h"
 #include "ZLOptionsDialog.h"
 
 //TextStyleOptionsDialogAction   +
@@ -95,7 +96,7 @@ void ReadingOptionsDialogAction::run() {
 }
 
 ZLResourceKey ReadingOptionsDialogAction::key() const {
-	return ZLResourceKey("ReadingOptionsDialog");
+	return ZLResourceKey("text");
 }
 
 
@@ -112,3 +113,18 @@ void LookAndFeelOptionsDialogAction::run() {
 ZLResourceKey LookAndFeelOptionsDialogAction::key() const {
 	return ZLResourceKey("LookAndFeelOptionsDialog");
 }
+
+TextOptionsDialogAction::TextOptionsDialogAction()  {
+}
+
+void TextOptionsDialogAction::run() {
+	if (TextOptionsDialog().dialog().run()) {
+		// TODO: select current node (?) again
+		//FBReader::Instance().refreshWindow();
+	}
+}
+
+ZLResourceKey TextOptionsDialogAction::key() const {
+	return ZLResourceKey("text");
+}
+

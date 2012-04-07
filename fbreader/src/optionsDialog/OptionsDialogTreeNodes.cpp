@@ -16,6 +16,12 @@
 #include "../options/FBTextStyle.h"
 #include "../bookmodel/FBTextKind.h"
 
+const ZLTypeId OptionsDialogNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
+
+const ZLTypeId &OptionsDialogNode::typeId() const {
+	return TYPE_ID;
+}
+
 const ZLTypeId LibraryOptionsDialogNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
 const ZLTypeId &LibraryOptionsDialogNode::typeId() const {
@@ -298,6 +304,40 @@ std::string LookAndFeelOptionsDialogNode::imageUrl() const {
 }
 
 shared_ptr<ZLImage> LookAndFeelOptionsDialogNode::extractCoverImage() const {
+	//AppLog("AuthorNode::extractCoverImage");
+	return FBNode::defaultCoverImage("booktree-folder.png");
+}
+
+//-----------------------------------------------------------
+
+OptionsDialogNode::OptionsDialogNode(shared_ptr<ZLRunnableWithKey> action):myAction(action)  {
+	registerAction(action);
+//	registerAction(new ReadingOptionsDialogAction());
+}
+
+std::string OptionsDialogNode::title() const {
+        //TODO add not-toolbar resource for this node
+ //       return myAction->key().Name;//"xxxLook And Feel Options";//ZLResource::resource("toolbar")["addBook"]["label"].value();
+    return ZLResource::resource("Preferences")[myAction->key().Name].value();
+//   return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+}
+
+std::string OptionsDialogNode::subtitle() const {
+        //TODO add not-toolbar resource for this node
+	return ZLResource::resource("Preferences")[myAction->key().Name]["summary"].value();
+      //  return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+}
+
+
+bool OptionsDialogNode::activate() {
+	return false;
+}
+
+std::string OptionsDialogNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-folder.png");
+}
+
+shared_ptr<ZLImage> OptionsDialogNode::extractCoverImage() const {
 	//AppLog("AuthorNode::extractCoverImage");
 	return FBNode::defaultCoverImage("booktree-folder.png");
 }

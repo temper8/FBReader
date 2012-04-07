@@ -14,6 +14,7 @@
 #include <ZLOptions.h>
 
 #include <ZLResource.h>
+#include "ZLRunnable.h"
 
 #include "../tree/FBNode.h"
 
@@ -24,6 +25,7 @@
 //ShowLookAndFeelOptionsDialogAction   +
 
 //#include <ZLTextKind.h>
+
 class ZLTextStyleDecoration;
 
 class TextStyleNode : public FBNode {
@@ -157,7 +159,33 @@ class LookAndFeelOptionsDialogNode : public FBNode {
 		virtual bool activate();
 		std::string imageUrl() const;
 		shared_ptr<ZLImage> extractCoverImage() const;
+
 	private:
+	//	ZLStringOption DirectoryOption;
+	//	ZLStringOption FileOption;
+};
+
+class OptionsDialogNode : public FBNode {
+	public:
+		static const ZLTypeId TYPE_ID;
+
+	public:
+		const ZLTypeId &typeId() const;
+		//TODO may be other name
+		OptionsDialogNode(shared_ptr<ZLRunnableWithKey> action);
+
+	public:
+
+		std::string title() const;
+		std::string subtitle() const;
+		virtual bool activate();
+		std::string imageUrl() const;
+		shared_ptr<ZLImage> extractCoverImage() const;
+
+	private:
+
+		shared_ptr<ZLRunnableWithKey> myAction;
+		//ZLRunnableWithKey &myRunnableWithKey;
 	//	ZLStringOption DirectoryOption;
 	//	ZLStringOption FileOption;
 };

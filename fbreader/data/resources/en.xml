@@ -666,4 +666,12 @@
 	<node name="library">
 		<node name="caption" value="Library" />
 	</node>
+
+	<node name="Preferences">
+		<node name="ReadingOptionsDialog" value="Reading Options Dialogxx"/>
+		<node name="text" value="Text">
+			<node name="summary" value="Font, hyphenations, etc."/>
+	       	</node>
+       	</node>
+
 </resources>

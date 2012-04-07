@@ -74,5 +74,16 @@ private:
 	//const shared_ptr<Book> myBook;
 };
 
+class TextOptionsDialogAction : public ZLRunnableWithKey {
+
+public:
+	TextOptionsDialogAction();
+	void run();
+	ZLResourceKey key() const;
+
+private:
+	//const shared_ptr<Book> myBook;
+};
+
 
 #endif /* OPTIONSDIALOGACTIONS_H_ */

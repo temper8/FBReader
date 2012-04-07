@@ -44,6 +44,7 @@
 #include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
 
 #include "../optionsDialog/OptionsDialogTreeNodes.h"
+#include "../optionsDialog/OptionsDialogActions.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -99,7 +100,13 @@ void ShowOptionsDialogAction::run() {
 	dialog->noIcons = true;
 	size_t index = 0;
 
-	dialog->rootNode().insert(new ReadingOptionsDialogNode, index++);
+
+	//shared_ptr<ZLRunnableWithKey> a = new ReadingOptionsDialogAction();
+	AppLog("new ReadingOptionsDialogAction()");
+	dialog->rootNode().insert(new OptionsDialogNode(new TextOptionsDialogAction()), index++);
+	AppLog("rootNode().insert");
+
+	dialog->rootNode().insert(new ReadingOptionsDialogNode(), index++);
 
 	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
 
