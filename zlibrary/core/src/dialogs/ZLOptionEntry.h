@@ -50,6 +50,7 @@ public:
 		PATH,
         PICTURE,
         BUTTON,
+        MENU
 	};
 
 public:
@@ -269,6 +270,18 @@ protected:
        shared_ptr<ZLImage> myImage;
 };
 
+class ZLMenuOptionEntry : public ZLOptionEntry {
+
+public:
+       ZLMenuOptionEntry(const std::vector<shared_ptr<ZLRunnableWithKey> > &actions );
+       ZLMenuOptionEntry();
+       ZLOptionKind kind() const;
+       const std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
+
+protected:
+       std::vector<shared_ptr<ZLRunnableWithKey> > menuActions;
+
+};
 
 class ZLButtonOptionEntry : public ZLOptionEntry {
 
@@ -349,16 +362,11 @@ inline const shared_ptr<ZLRunnableWithKey> ZLButtonOptionEntry::action() const {
 inline ZLOptionEntry::ZLOptionKind ZLPictureOptionEntry::kind() const { return PICTURE; }
 inline const shared_ptr<ZLImage> ZLPictureOptionEntry::image() const { return myImage; }
 
-//inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image): myImage(image) { }
 inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image, const std::vector<shared_ptr<ZLRunnableWithKey> > &actions ): myImage(image),	myActions(actions){	}
-
-//inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLTreeTitledNode> node): myNode(node),myImage(0) { }
-//inline ZLPictureOptionEntry::ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()),	myActions(node->actions()){	}
 inline ZLPictureOptionEntry::ZLPictureOptionEntry(): myImage(null), myActions(bookActions){	}
 
-//inline const shared_ptr<ZLTreeTitledNode> ZLPictureOptionEntry::node() const { AppLog("ZLPictureOptionEntry::node()"); return myNode; }
-//inline const ZLTreeTitledNode* ZLPictureOptionEntry::node() const { AppLog("ZLPictureOptionEntry::node()"); return myNode; }
-
+inline ZLMenuOptionEntry::ZLMenuOptionEntry(const std::vector<shared_ptr<ZLRunnableWithKey> > &actions ): 	myActions(actions){	}
+inline ZLMenuOptionEntry::ZLMenuOptionEntry(): myActions(menuActions){	}
 
 
 

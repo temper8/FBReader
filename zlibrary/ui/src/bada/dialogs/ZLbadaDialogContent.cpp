@@ -118,6 +118,10 @@ void ZLbadaDialogContent::createViewByEntry(const std::string &name, const std::
     		AppLog("ZLOptionEntry::BUTTON");
     		    view = new ButtonView(name, tooltip, (ZLButtonOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
     		    break;
+    	case ZLOptionEntry::MENU:
+    		AppLog("ZLOptionEntry::MENU");
+    		    view = new MenuView(name, tooltip, (ZLMenuOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+    		    break;
 	}
 
 	if (view != 0) {

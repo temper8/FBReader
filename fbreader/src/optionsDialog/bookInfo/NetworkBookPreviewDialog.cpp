@@ -34,6 +34,29 @@
 #include "../../networkActions/NetworkActions.h"
 #include "PreviewEntries.h"
 
+
+class NetworkBookMenuEntry : public ZLMenuOptionEntry {
+
+public:
+	NetworkBookMenuEntry(NetworkBookNode* node);
+
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+};
+
+NetworkBookMenuEntry::NetworkBookMenuEntry(NetworkBookNode* node) : ZLMenuOptionEntry(node->actions()) {
+}
+
+const std::string &NetworkBookMenuEntry::initialValue() const {
+	return std::string();
+}
+
+void NetworkBookMenuEntry::onAccept(const std::string &value) {
+	//myPreviewDialog.myBook->setTitle(value);
+}
+
+
+
 class NetworkBookPictureEntry : public ZLPictureOptionEntry {
 
 public:
@@ -42,9 +65,8 @@ public:
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 };
-//ZLPictureOptionEntry(ZLTreeTitledNode *node): myImage(node->image()),	myActions(node->actions()){	}
+
 NetworkBookPictureEntry::NetworkBookPictureEntry(NetworkBookNode* node) : ZLPictureOptionEntry(node->image(),node->actions()) {
-//NetworkBookPictureEntry::NetworkBookPictureEntry(NetworkBookNode* node) : myImage(node->image()),	myActions(node->actions()) {
 }
 
 const std::string &NetworkBookPictureEntry::initialValue() const {
@@ -60,16 +82,19 @@ NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNod
 	// TODO Auto-generated constructor stub
 	//myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookOpenAction(myBook));
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
-	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
+
+
 	AppLog("myDialog->createTab");
 	const NetworkBookItem &book = node->book();
-	//shared_ptr<ZLImage> bookImage;
-	//bookImage = myNode->image();
-		//bookImage = FBNode::defaultCoverImage("booktree-book.png");
+
 	if (!myNode->myIsInitialized) {
 		myNode->init();
 		myNode->myIsInitialized = true;
-	}
+		}
+	myDialog->setMenuEntry( new NetworkBookMenuEntry(myNode));
+
+	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
+
 	commonTab.addOption(ZLResourceKey("cover"), new NetworkBookPictureEntry(myNode));
 	//commonTab.addOption(ZLResourceKey("title"), new BookPreviewTitleEntry(*this));
 	ZLDialogContent &BookInfoTab = myDialog->createTab(ZLResourceKey("BookInfo"));
@@ -100,21 +125,21 @@ NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNod
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 				!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
 		//commonTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookReadAction(myNode, book, false)));
-		SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookDownloadAction(myNode, book, false)));
+		//SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookDownloadAction(myNode, book, false)));
 		//commonTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookDeleteAction(book)));
 		}
 		if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-			SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookReadAction(myNode, book, true)));//
-			SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookDownloadAction(myNode, book, true, myNode->resource()["demo"].value())));
+			//SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookReadAction(myNode, book, true)));//
+			//SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookDownloadAction(myNode, book, true, myNode->resource()["demo"].value())));
 
 			//registerTreeAction(new NetworkBookReadAction(this, book, true));
 			//registerTreeAction(new NetworkBookDownloadAction(this, book, true, resource()["demo"].value()));
 		}
 		if (!book.reference(BookReference::BUY).isNull()) {
-			SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookBuyDirectlyAction(myNode, book)));
+			//SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookBuyDirectlyAction(myNode, book)));
 			//registerTreeAction(new NetworkBookBuyDirectlyAction(this, book));
 		} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
-			SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookBuyInBrowserAction(book)));
+			//SummaryTab.addOption(ZLResourceKey("title"), new ButtonEntry(new NetworkBookBuyInBrowserAction(book)));
 			//registerTreeAction(new NetworkBookBuyInBrowserAction(book));
 		}
 }

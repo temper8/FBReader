@@ -25,6 +25,7 @@
 #include <ZLOptionEntry.h>
 
 #include "../../formats/FormatPlugin.h"
+#include <optionEntries/ZLLanguageOptionEntry.h>
 
 class ZLOptionsDialog;
 class ZLDialogContent;
@@ -32,6 +33,9 @@ class AuthorDisplayNameEntry;
 class SeriesTitleEntry;
 class BookIndexEntry;
 class BookTagEntry;
+
+
+
 
 class BookInfoDialog {
 
@@ -73,6 +77,19 @@ friend class BookEncodingEntry;
 friend class BookLanguageEntry;
 friend class BookTagEntry;
 friend class BookInfoApplyAction;
+};
+
+class BookLanguageEntry : public ZLAbstractLanguageOptionEntry {
+
+public:
+	BookLanguageEntry(shared_ptr<Book> book, const std::vector<std::string> &languageCodes);
+	//BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes);
+
+	void onAcceptCode(const std::string &code);
+
+private:
+	shared_ptr<Book> myBook;
+	//BookInfoDialog &myInfoDialog;
 };
 
 inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }

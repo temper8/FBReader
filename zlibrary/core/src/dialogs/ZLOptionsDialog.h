@@ -30,7 +30,10 @@
 #include <ZLOptions.h>
 #include <ZLResource.h>
 
+
 class ZLOptionEntry;
+
+class ZLMenuOptionEntry;
 
 class ZLDialogContentBuilder;
 
@@ -51,6 +54,7 @@ public:
 	void createPlatformDependentTabs();
 	virtual bool run();
 	void accept();
+    virtual void setMenuEntry(ZLMenuOptionEntry* option);
 
 protected:
 	virtual const std::string &selectedTabKey() const = 0;

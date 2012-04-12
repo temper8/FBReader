@@ -9,6 +9,7 @@
 #include "ZLResource.h"
 #include <FBase.h>
 #include "ZLbadaDialogContent.h"
+#include "optionView/ZLbadaOptionView.h"
 #include "DialogForm.h"
 
 using namespace Osp::App;
@@ -47,6 +48,7 @@ ZLDialogContent &ZLbadaOptionsDialog::createTab(const ZLResourceKey &key){
   myDialogForm->AddTab(key.Name.c_str());
   //ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), tabResource(key));
   //myTabWidget->addTab(tab->widget(), ::qtString(tab->displayName()));
+ //TODO проследить за уничторежнием TABов... чувствую тут проблема возможна
   myTabs.push_back(tab);
   return *tab;
 }
@@ -76,4 +78,10 @@ void ZLbadaOptionsDialog::selectTab(const ZLResourceKey &key){
 
 void ZLbadaOptionsDialog::apply() {
 	ZLOptionsDialog::accept();
+}
+
+void ZLbadaOptionsDialog::setMenuEntry(ZLMenuOptionEntry* option){
+	AppLog("&ZLbadaOptionsDialog::setMenuEntry()");
+	MenuView* view = new MenuView(std::string(), std::string(), (ZLMenuOptionEntry*)option, null, 0, 0, 0);
+	myDialogForm->setMenuView(view);
 }

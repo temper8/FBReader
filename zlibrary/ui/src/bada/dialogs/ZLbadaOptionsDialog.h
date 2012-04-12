@@ -21,6 +21,7 @@ public:
 public:
 	virtual ZLDialogContent &createTab(const ZLResourceKey &key);
 	virtual bool run();
+    virtual void setMenuEntry(ZLMenuOptionEntry* option);
 	DialogForm *myDialogForm;
 	void apply();
 

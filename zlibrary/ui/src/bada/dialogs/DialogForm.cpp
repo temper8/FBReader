@@ -20,20 +20,22 @@ using namespace Osp::Content;
 using namespace Osp::Graphics;
 using namespace Osp::Base::Runtime;
 
-bool DialogForm::Initialize(const char *title, bool showApplyButton)
+bool DialogForm::Initialize(const char *title, bool __showApplyButton)
 {
+	showApplyButton = __showApplyButton;
 	AppLog("DialogForm::Initialize \n");
 	// Construct an XML form FORM_STYLE_INDICATOR|
 
-	if (showApplyButton) {
+//	if (showApplyButton) {
+	if (true) {
 	//	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1);
-		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1);
+		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
 		AddSoftkeyActionListener(SOFTKEY_0, *this);
 		SetSoftkeyActionId(SOFTKEY_0, ID_ACT_UPDATE);
 		SetSoftkeyText(SOFTKEY_0, L"Apply");
 	}
 	else
-		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_1);
+		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
 	SetTitleText(String(title));
 
 	AddSoftkeyActionListener(SOFTKEY_1, *this);
@@ -43,7 +45,7 @@ bool DialogForm::Initialize(const char *title, bool showApplyButton)
 	return true;
 }
 
-DialogForm::DialogForm() {
+DialogForm::DialogForm() : myMenuView(null) {
 	// TODO Auto-generated constructor stub
 	AppLog("DialogForm::DialogForm()");
 }
@@ -68,16 +70,48 @@ DialogForm::~DialogForm() {
 	AppLog("DialogForm::~DialogForm()");
 }
 
-OptionListItem::OptionListItem(ZLbadaOptionView* badaOptionView) : CustomListItem(), mybadaOptionView(badaOptionView) {
+void DialogForm::ShowOptionMenu(void) {
+    __pOptionMenu->SetShowState(true);
+    __pOptionMenu->Show();
+}
+
+void DialogForm::HideOptionMenu(void) {
+    __pOptionMenu->SetShowState(false);
+    Draw();
+    Show();
+}
+
+void DialogForm::setMenuView(MenuView* view) {
+	AppLog("DialogForm::setMenuView");
+	myMenuView = view;
+
+	__pOptionMenu = new OptionMenu();
+	__pOptionMenu->Construct();
+
+	updateMenu();
+	SetOptionkeyActionId(ID_OPTIONKEY);
+	AddOptionkeyActionListener(*this);
+}
+
+void DialogForm::updateMenu(){
+	int actionsCount = myMenuView->myActions.size();
+	AppLog("actionsCount %d", actionsCount);
+	actionsCount =0;
+	int itemsCount = __pOptionMenu->GetItemCount();
+	for (int i= 0; i<itemsCount; i++) __pOptionMenu->RemoveItemAt(0);
+
+	for (int i = 1; i<myMenuView->myActions.size();i++){
+		shared_ptr<ZLRunnableWithKey> a = myMenuView->myActions[i];
+		if (a->makesSense()) { AppLog("makesSense true %d",actionsCount);
+			std::string text = a->text(ZLResource::resource("networkView")["bookNode"]);
+			if (actionsCount == 0) SetSoftkeyText(SOFTKEY_0, text.c_str());
+			else
+				__pOptionMenu->AddItem(text.c_str(),ID_OPTIONMENU_ITEM0+i);
+			actionsCount++;
+		}
 
 	}
-
-void OptionListItem::OnActionPerformed(int actionId){
-	AppLog(" OptionListItem::OnActionPerformed");
-	mybadaOptionView->OnActionPerformed(actionId);
-	}
-
-
+}
 
 result DialogForm::OnInitializing(void)
 {
@@ -245,12 +279,17 @@ void DialogForm::SetPreviousForm(Osp::Ui::Controls::Form* preForm)
 
 void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId)
 {
-	AppLog("DialogForm::OnActionPerformed");
+	AppLog("DialogForm::OnActionPerformed id=%d",actionId);
 	switch(actionId)
 	{
+    case ID_OPTIONKEY:
+    	AppLog("ShowOptionMenu()");
+        ShowOptionMenu();
+        break;
+
 	case ID_ACT_CLOSE:
 		{
-			AppLog("Close button is clicked! \n");
+			AppLog("Close button is clicked!");
 			Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 			//pFrame->SetCurrentForm(*pPreviousForm);
 			//pPreviousForm->Draw();
@@ -259,12 +298,24 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 			pPreviousForm->SendUserEvent(0, null);
 		}
 		break;
+
 	case ID_ACT_UPDATE:
 		{
 			AppLog("UpdateContent");
 			//((shared_ptr<ZLbadaOptionsDialog>)__badaOptionsDialog)->apply();
-			__badaOptionsDialog->accept();
-			pPreviousForm->SendUserEvent(2, null);
+			if (showApplyButton) {
+				__badaOptionsDialog->accept();
+				pPreviousForm->SendUserEvent(2, null);
+			}
+			else {
+				for (int i = 1; i<myMenuView->myActions.size();i++){
+					shared_ptr<ZLRunnableWithKey> a = myMenuView->myActions[i];
+					if (a->makesSense()) {
+							runAction(a);
+							break;
+						}
+					}
+			}
 		//	UpdateContent();
 
 		}
@@ -286,10 +337,26 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 			break;
 		}*/
 	default:
+		AppLog("default");
+		int menuActionId = actionId - ID_OPTIONMENU_ITEM0;
+		if ((menuActionId>=0)&&(menuActionId<12)) {
+			shared_ptr<ZLRunnableWithKey> a = myMenuView->myActions[menuActionId];
+			runAction(a);
+		}
 		break;
 	}
 }
-
+void DialogForm::runAction(shared_ptr<ZLRunnableWithKey> action){
+	std::string text = action->key().Name;
+	AppLog("OnActionPerformed= %s", text.c_str());
+	action->run();
+	if ((text=="readDemo")||(text=="read"))
+		{
+			 pPreviousForm->SendUserEvent(2, null);
+		}
+	else
+		updateMenu();
+}
 
 void DialogForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs)
 {
@@ -415,4 +482,14 @@ void  DialogForm::OnItemStateChanged (const Osp::Ui::Control &source, int groupI
             break;
     }
 }
+
+
+OptionListItem::OptionListItem(ZLbadaOptionView* badaOptionView) : CustomListItem(), mybadaOptionView(badaOptionView) {
+
+	}
+
+void OptionListItem::OnActionPerformed(int actionId){
+	AppLog(" OptionListItem::OnActionPerformed");
+	mybadaOptionView->OnActionPerformed(actionId);
+	}
 

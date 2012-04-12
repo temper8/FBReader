@@ -392,6 +392,28 @@ private:
     	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
 };
 
+class MenuView : public ZLbadaOptionView,
+				 public Osp::Ui::IActionEventListener
+					{
+
+public:
+        MenuView(const std::string &name, const std::string &tooltip, ZLMenuOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn);
+        ~MenuView();
+        void updateActions();
+
+    	const std::vector<shared_ptr<ZLRunnableWithKey> > &myActions;
+
+private:
+        void _createItem();
+        void _onAccept() const;
+
+private:
+
+    	virtual void OnActionPerformed(int actionId);
+    	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
+};
+
+
 class ButtonView : public ZLbadaOptionView,
 				   public Osp::Ui::IActionEventListener{
 
@@ -407,4 +429,6 @@ private:
     	virtual void OnActionPerformed(int actionId);
     	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
 };
+
+
 #endif /* __ZLBADAOPTIONVIEW_H__ */

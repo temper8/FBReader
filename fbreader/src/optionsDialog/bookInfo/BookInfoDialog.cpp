@@ -28,7 +28,7 @@
 
 #include <optionEntries/ZLStringInfoEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
-#include <optionEntries/ZLLanguageOptionEntry.h>
+//#include <optionEntries/ZLLanguageOptionEntry.h>
 
 #include "BookInfoDialog.h"
 
@@ -345,24 +345,17 @@ void BookEncodingEntry::onAcceptValue(const std::string &value) {
 
 
 
-class BookLanguageEntry : public ZLAbstractLanguageOptionEntry {
 
-public:
-	BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes);
-
-	void onAcceptCode(const std::string &code);
-
-private:
-	BookInfoDialog &myInfoDialog;
-};
-
-BookLanguageEntry::BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes) : 
-	ZLAbstractLanguageOptionEntry(dialog.myBook->language(), languageCodes),
-	myInfoDialog(dialog) {
+//BookLanguageEntry::BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes) :
+BookLanguageEntry::BookLanguageEntry(shared_ptr<Book> book, const std::vector<std::string> &languageCodes) :
+	ZLAbstractLanguageOptionEntry(book->language(), languageCodes),
+	//myInfoDialog(dialog) {
+	myBook(book) {
 }
 
 void BookLanguageEntry::onAcceptCode(const std::string &code) {
-	myInfoDialog.myBook->setLanguage(code);
+	//myInfoDialog.myBook->setLanguage(code);
+	myBook->setLanguage(code);
 }
 
 class BookTagEntry : public ZLComboOptionEntry {
@@ -517,7 +510,8 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
 	languageCodes.push_back("de-traditional");
 
-	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
+//	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
+	myLanguageEntry = new BookLanguageEntry(myBook, languageCodes);
 	AppLog("myLanguageEntry = new BookLanguageEntry");
 
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);

@@ -11,8 +11,10 @@
 #include <FBase.h>
 #include <FUi.h>
 #include <FContent.h>
+
 #include <shared_ptr.h>
 #include <ZLOptionsDialog.h>
+
 
 #define	ID_ACT_UPDATE	1700
 #define ID_ACT_DELETE	1701
@@ -37,6 +39,10 @@
 #define ID_LIST_BACKGROUND  		115
 #define ID_LIST_COLOR  			116
 
+#define ID_OPTIONKEY  300
+#define ID_OPTIONMENU_ITEM0 200
+
+
 class SpinOptionPopup;
 class SpinOptionView;
 class ComboOptionPopup;
@@ -45,6 +51,7 @@ class ColorComboOptionPopup;
 class ColorOptionView;
 class ZLbadaOptionsDialog;
 class ZLbadaOptionView;
+class MenuView;
 
 class OptionListItem : public Osp::Ui::Controls::CustomListItem {
 public:
@@ -57,6 +64,31 @@ class DialogForm :
 	public Osp::Ui::Controls::Form,
 	public Osp::Ui::IActionEventListener,
     public Osp::Ui::IGroupedItemEventListener {
+
+ protected:
+	bool showApplyButton;
+	void ShowOptionMenu(void);
+	void HideOptionMenu(void);
+
+	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
+	MenuView* myMenuView;
+	void updateMenu();
+	void runAction(shared_ptr<ZLRunnableWithKey> action);
+
+ public:
+	void setMenuView(MenuView* view);
+
+ public:
+
+    Osp::Ui::Controls::CustomListItemFormat* __pComboViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pStringViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pSpinViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pBooleanListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat2;
+    Osp::Ui::Controls::CustomListItemFormat* __pColorListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pImageViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pButtonViewListItemFormat;
+    Osp::Ui::Controls::CustomListItemFormat* __pStaticTextListItemFormat;
 
 public:
 	DialogForm();
@@ -80,18 +112,11 @@ public:
 	Osp::Graphics::Bitmap* buttonBmp;
 	Osp::Graphics::Bitmap* buttonBmp2;
 	Osp::Graphics::Bitmap* arrowDownBmp;
-   int GroupCount;
+    int GroupCount;
+
     Osp::Ui::Controls::GroupedList* __pCustomList;
    // Osp::Ui::Controls::CustomList* __pCustomList;
-    Osp::Ui::Controls::CustomListItemFormat* __pComboViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pStringViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pSpinViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pBooleanListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pCustomListItemFormat2;
-    Osp::Ui::Controls::CustomListItemFormat* __pColorListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pImageViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pButtonViewListItemFormat;
-    Osp::Ui::Controls::CustomListItemFormat* __pStaticTextListItemFormat;
+
  //  virtual void OnItemStateChanged(const Osp::Ui::Control& source, int index, int itemId, int elementId, Osp::Ui::ItemStatus status);
  //  virtual void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
     virtual void  OnItemStateChanged (const Osp::Ui::Control &source, int groupIndex, int itemIndex, int itemId, Osp::Ui::ItemStatus status);

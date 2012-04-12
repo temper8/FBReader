@@ -31,6 +31,32 @@
 #include "../../fbreader/FBReader.h"
 #include "../../formats/FormatPlugin.h"
 #include "PreviewEntries.h"
+#include "BookInfoDialog.h"
+
+class BookMenuEntry : public ZLMenuOptionEntry {
+
+public:
+	BookMenuEntry(shared_ptr<Book> book);
+
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+};
+
+
+BookMenuEntry::BookMenuEntry(shared_ptr<Book> book) : ZLMenuOptionEntry() {
+
+	menuActions.push_back(new BookReadAction(book));
+	menuActions.push_back(new BookReadAction(book));
+	menuActions.push_back(new BookRemoveAction(book));
+}
+
+const std::string &BookMenuEntry::initialValue() const {
+	return std::string();
+}
+
+void BookMenuEntry::onAccept(const std::string &value) {
+	//myPreviewDialog.myBook->setTitle(value);
+}
 
 
 class BookPictureEntry : public ZLPictureOptionEntry {
@@ -41,6 +67,8 @@ public:
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 };
+
+
 
 BookPictureEntry::BookPictureEntry(shared_ptr<Book> book) : ZLPictureOptionEntry() {
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*book);
@@ -113,18 +141,16 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	// TODO Auto-generated constructor stub
 //	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookReadAction(myBook));
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
+
+	myDialog->setMenuEntry( new BookMenuEntry(book));
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
 	AppLog("myDialog->createTab");
 	shared_ptr<ZLImage> bookImage;
 
-	//shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
-	//if (!plugin.isNull()) {
-	//	bookImage = plugin->coverImage(myBook->file());
-	//	}
-	//else
+
     bookImage = FBNode::defaultCoverImage("booktree-book.png");
 	commonTab.addOption(ZLResourceKey("cover"), new BookPictureEntry(book));
-
+//	commonTab.addOption(ZLResourceKey("cover"), new BookMenuEntry(book));
 
 	ZLDialogContent &BookInfoTab = myDialog->createTab(ZLResourceKey("BookInfo"));
 	//commonTab.addOption(ZLResourceKey("title"), new BookPreviewTitleEntry(*this));
@@ -135,11 +161,19 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	BookInfoTab.addOption(ZLResourceKey("authors"), new StaticTextEntry(authors));
 	BookInfoTab.addOption(ZLResourceKey("seriesTitle"), new StaticTextEntry(myBook->seriesTitle()));
 
+
 	//commonTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Common"));
 	//SummaryTab.addOption(ZLResourceKey("title"), new StaticTextEntry(myBook.Summary));
 	SummaryTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	AppLog("commonTab.addOption file");
+
+	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
+	languageCodes.push_back("de-traditional");
+
+//	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
+	//	AppLog("myLanguageEntry = new BookLanguageEntry");
+	SummaryTab.addOption(ZLResourceKey("language"), new BookLanguageEntry(myBook, languageCodes));
 
 }
 
