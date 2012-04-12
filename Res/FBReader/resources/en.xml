@@ -629,7 +629,6 @@
 			<node name="title" value="Network Library"/>
 			<node name="message" value="ghdfghdfgdh"/>
 		</node>
-
 		<node name="TOCTreeDialog">
 			<node name="title" value="Book Content"/>
 		</node>
@@ -692,4 +691,10 @@
 	<node name="library">
 		<node name="caption" value="Library"/>
 	</node>
+	<node name="Preferences">
+		<node name="ReadingOptionsDialog" value="Reading Options Dialogxx"/>
+		<node name="text" value="Text">
+			<node name="summary" value="Font, hyphenations, etc."/>
+	       	</node>
+       	</node>
 </resources>
