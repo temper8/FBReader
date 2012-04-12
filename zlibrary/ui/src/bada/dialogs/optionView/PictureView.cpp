@@ -199,14 +199,20 @@ Bitmap* PictureView::makeCover(Bitmap* srcBmp){
 	int imageWidth = srcBmp->GetWidth();
 	int imageHeight = srcBmp->GetHeight();
 	AppLog("makeIcon image w = %d, h = %d", imageWidth, imageHeight);
-	int dy = (coverDim.height - imageHeight) / 2;
-	int dx = (coverDim.width - imageWidth) / 2;
-	if ((dy<0)||(dx<0)) {
+
+	if (imageWidth>50) {
 		srcBmp->Scale(coverDim);
 		pBmp->Merge(Point(0,0), *srcBmp, Rectangle(0,0,coverDim.width,coverDim.height));
 	}
 	else
-		pBmp->Merge(Point(dx,dy), *srcBmp, Rectangle(0,0,imageWidth,imageHeight));
+		{
+		Dimension coverDim2 = Dimension(imageWidth*3,imageHeight*3);
+		int dy = (coverDim.height - coverDim2.height) / 2;
+		int dx = (coverDim.width - coverDim2.width) / 2;
+		srcBmp->Scale(coverDim2);
+		//pBmp->Merge(Point(0,0), *srcBmp, Rectangle(0,0,coverDim.width,coverDim.height));
+		pBmp->Merge(Point(dx,dy), *srcBmp, Rectangle(0,0,coverDim2.width,coverDim2.height));
+		}
 	return pBmp;
 }
 
