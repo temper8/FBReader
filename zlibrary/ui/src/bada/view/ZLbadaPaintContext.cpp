@@ -68,8 +68,8 @@ Osp::Graphics::Font* ZLbadaPaintContext::loadExternalFont(const std::string &fam
 	pFont = new Osp::Graphics::Font;
 
 
-    AppLog("loadExternalFont size = %d",size);
-    AppLog("loadExternalFont style = %d",style);
+   // AppLog("loadExternalFont size = %d",size);
+   // AppLog("loadExternalFont style = %d",style);
 
 	if (pFont->Construct(Osp::Base::String(path.c_str()),style,size) != E_SUCCESS){
 				AppLog("loadExternalFont not E_SUCCESS");
@@ -99,8 +99,8 @@ void ZLbadaPaintContext::restoreFont(){
 
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 //	AppLog( "setFont %s",family.c_str());
-	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
-	AppLog( "setFont family %s",family.c_str());
+//	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
+//	AppLog( "setFont family %s",family.c_str());
 	bool fontChanged = false;
 
 	if (myStoredFamily != family) fontChanged = true;
@@ -124,7 +124,7 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 	std::map<std::string, std::string>::const_iterator it = myFontsList.find(family);
 	if (it != myFontsList.end()) {
 		fontPath = it->second;
-		AppLog("fontFamily %s",fontPath.c_str());
+	//	AppLog("fontFamily %s",fontPath.c_str());
 		font = new Osp::Graphics::Font;
 		if (font->Construct(Osp::Base::String(fontPath.c_str()),style,size) != E_SUCCESS){
 					AppLog("font == NULL");
@@ -143,7 +143,7 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 			font = loadDefaultFont(style,size);
 			if (font == null) {
 				font = new Osp::Graphics::Font;
-				AppLog( "Construct bada font ");
+			//	AppLog( "Construct bada font ");
 				font->Construct(style,size);
 			}
 		}
@@ -165,7 +165,7 @@ void ZLbadaPaintContext::deleteMyFont(){
 }
 
 Osp::Graphics::Font* ZLbadaPaintContext::loadDefaultFont( int style, int size){
-	AppLog("ZLbadaPaintContext::loadDefaultFont()");
+//	AppLog("ZLbadaPaintContext::loadDefaultFont()");
 	Osp::Graphics::Font* font = null;
 	std::map<std::string, std::string>::const_iterator it = myFontsList.find(defaultFont);
 	if (it != myFontsList.end()) {
@@ -174,7 +174,7 @@ Osp::Graphics::Font* ZLbadaPaintContext::loadDefaultFont( int style, int size){
 		//font = loadExternalFont(defaultFont,fontPath,style,size);
 		font = new Osp::Graphics::Font;
 		if (font->Construct(String(fontPath.c_str()),style,size) != E_SUCCESS){
-				AppLog("defaultFontLoaded not E_SUCCESS");
+			//	AppLog("defaultFontLoaded not E_SUCCESS");
 				delete font;
 				font = null;
 			}
