@@ -23,8 +23,11 @@ ZLbadaViewWidget::~ZLbadaViewWidget() {
 //	badaForm->myView = view;
 //}
 
-void ZLbadaViewWidget::repaint() {
 
+void ZLbadaViewWidget::repaint() {
+	int angle = myWindows->application().AngleStateOption.value();
+	AppLog("AngleStateOption2 %d", angle);
+	mybadaForm->setOrientation(angle);
 	// Draw and Show the form
 	mybadaForm->Draw();
 	mybadaForm->Show();

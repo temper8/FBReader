@@ -23,6 +23,7 @@ public:
 	virtual void setScrollbarPlacement(ZLView::Direction direction, bool standard);
 	virtual void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to);
 
+//	virtual setOrientation(ZLView::Angle angle);
 
 	//void setView(shared_ptr<ZLView> view);
     void doAction(std::string &actionId);
