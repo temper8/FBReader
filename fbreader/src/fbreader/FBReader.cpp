@@ -556,7 +556,7 @@ void FBReader::clearTextCaches() {
 	((ZLTextView&)*myFootnoteView).clearCaches();
 	((ZLTextView&)*myContentsView).clearCaches();
 }
-/*
+
 shared_ptr<ZLKeyBindings> FBReader::keyBindings() {
 	return UseSeparateBindingsOption.value() ?
 		keyBindings(rotation()) : myBindings0;
@@ -575,7 +575,7 @@ shared_ptr<ZLKeyBindings> FBReader::keyBindings(ZLView::Angle angle) {
 	}
 	return 0;
 }
-*/
+
 shared_ptr<ProgramCollection> FBReader::dictionaryCollection() const {
 	return myProgramCollectionMap.collection("Dictionary");
 }

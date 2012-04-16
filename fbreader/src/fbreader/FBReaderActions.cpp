@@ -100,23 +100,29 @@ void ShowOptionsDialogAction::run() {
 	dialog->noIcons = true;
 	size_t index = 0;
 
+	dialog->rootNode().insert(new OptionsDialogNode(new AppearanceOptionsDialogAction()), index++);
 
-	//shared_ptr<ZLRunnableWithKey> a = new ReadingOptionsDialogAction();
-	AppLog("new ReadingOptionsDialogAction()");
 	dialog->rootNode().insert(new OptionsDialogNode(new TextOptionsDialogAction()), index++);
-	AppLog("rootNode().insert");
+
+	dialog->rootNode().insert(new OptionsDialogNode(new MarginsOptionsDialogAction()), index++);
+
+	dialog->rootNode().insert(new OptionsDialogNode(new IndicatorOptionsDialogAction()), index++);
+
+	dialog->rootNode().insert(new OptionsDialogNode(new PageTurningOptionsDialogAction()), index++);
+
+	dialog->rootNode().insert(new OptionsDialogNode(new ColorOptionsDialogAction()), index++);
+
+	dialog->rootNode().insert(new TextStylesTreeNode, index++);
+
+	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
 
 	dialog->rootNode().insert(new ReadingOptionsDialogNode(), index++);
 
 	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
 
-	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
-
 	dialog->rootNode().insert(new LibraryOptionsDialogNode, index++);
 
-	dialog->rootNode().insert(new ColorOptionsDialogNode, index++);
-
-	dialog->rootNode().insert(new TextStylesTreeNode, index++);
+//	dialog->rootNode().insert(new ColorOptionsDialogNode, index++);
 
 	dialog->run();
 
