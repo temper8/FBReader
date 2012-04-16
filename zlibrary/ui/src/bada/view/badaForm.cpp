@@ -81,6 +81,33 @@ result badaForm::OnDraw(void)
 //virtual bool onStylusMove(int x, int y);
 //virtual bool onStylusMovePressed(int x, int y);
 //virtual bool onFingerTap(int x, int y);
+void badaForm::OnKeyLongPressed (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode){
+	AppLog("OnKeyLongPressed");
+}
+
+void badaForm::OnKeyPressed (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode){
+	AppLog("OnKeyPressed");
+}
+
+void badaForm::OnKeyReleased (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode){
+	AppLog("OnKeyReleased");
+	if (!FBReader::Instance().EnableTapScrollingByVolumeKeysOption.value()) return;
+
+	switch (keyCode)
+		{
+	 	 case KEY_SIDE_UP :
+	 	 	 	FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+	 	 	// 	source.ConsumeInputEvent();
+	 	 	 	break;
+
+	 	 case KEY_SIDE_DOWN :
+	 		    FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
+	 	 	// 	source.ConsumeInputEvent();
+	 	 	 	break;
+
+	 	 }
+
+}
 
 void badaForm::OnTouchDoublePressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
@@ -188,31 +215,46 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 
 }
 
+void badaForm::setOrientation(int angle){
+
+	Osp::Ui::Orientation badaAngle;
+
+	switch (angle) {
+		case ZLView::DEGREES0:
+			badaAngle = ORIENTATION_PORTRAIT;
+			break;
+		case ZLView::DEGREES90:
+			badaAngle = ORIENTATION_LANDSCAPE ;
+			break;
+		case ZLView::DEGREES180:
+			badaAngle = ORIENTATION_PORTRAIT_REVERSE;
+			break;
+	    case ZLView::DEGREES270:
+		    badaAngle = ORIENTATION_LANDSCAPE_REVERSE;
+			break;
+	    case -1:
+	    	badaAngle = ORIENTATION_AUTOMATIC_FOUR_DIRECTION;
+	    	break;
+	}
+	AppLog("badaAngle %d",badaAngle);
+	SetOrientation(badaAngle);
+}
+
 void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::OrientationStatus  orientationStatus ){
 
 	AppLog("OnOrientationChanged");
 	formRect = GetClientAreaBounds();
-	int tmp;
-	switch(this->GetOrientation()) {
-		case ORIENTATION_STATUS_PORTRAIT:
-			break;
-		case ORIENTATION_STATUS_LANDSCAPE:
-			tmp = formRect.width;
-			formRect.width = formRect.height;
-			formRect.height = tmp;
-			break;
-		case ORIENTATION_STATUS_PORTRAIT_REVERSE:
-			break;
-		case ORIENTATION_STATUS_LANDSCAPE_REVERSE:
-			break;
 
-	}
 	if (myCanvas) delete myCanvas;
+
 	myCanvas = new Canvas();
 	myCanvas->Construct(formRect);
+
 	if (capturedCanvas) delete capturedCanvas;
+
 	capturedCanvas = new Canvas();
 	capturedCanvas->Construct(formRect);
+
 	OnDraw();
 }
 
@@ -240,26 +282,10 @@ bool badaForm::Initialize()
 
 
 	formRect = GetClientAreaBounds();
-	int tmp;
-	switch(this->GetOrientation()) {
-		case ORIENTATION_STATUS_PORTRAIT:
-			break;
-		case ORIENTATION_STATUS_LANDSCAPE:
-			tmp = formRect.width;
-			formRect.width = formRect.height;
-			formRect.height = tmp;
-			break;
-		case ORIENTATION_STATUS_PORTRAIT_REVERSE:
-			break;
-		case ORIENTATION_STATUS_LANDSCAPE_REVERSE:
-			break;
 
-	}
-	AppLog("formRect.width=%d",formRect.width);
-	AppLog("formRect.height=%d",formRect.height);
-	//__pCanvas = this->GetCanvasN();
 	myCanvas = new Canvas();
 	myCanvas->Construct();
+
 	capturedCanvas = new Canvas();
 	capturedCanvas->Construct();
 	return true;
@@ -275,6 +301,7 @@ result badaForm::OnInitializing(void)
 	// TODO: Add your initialization code here
 	AddTouchEventListener(*this);
 	AddOrientationEventListener(*this);
+	AddKeyEventListener(*this);
 //	((GView*)myHolder.myApplication)->ReadImage();
 	return r;
 }

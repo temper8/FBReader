@@ -181,7 +181,7 @@ ZLViewWidget *ZLbadaApplicationWindow::createViewWidget() {
 	// Create a form
 	badaForm *pbadaForm = new badaForm(*myViewWidget);
 	pbadaForm->Initialize();
-	pbadaForm->SetOrientation(ORIENTATION_AUTOMATIC_FOUR_DIRECTION);
+	//pbadaForm->SetOrientation(ORIENTATION_PORTRAIT_REVERSE );
 
 	// Add the form to the frame
 	ZLbadaLibraryImplementation::myBadaApp->TestTest();

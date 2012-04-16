@@ -24,6 +24,7 @@
 #include <ZLTextStyleOptions.h>
 
 #include "ReadingOptionsDialog.h"
+#include "IndicatorOptionsDialog.h"
 
 #include "../../fbreader/FBReader.h"
 #include "../../fbreader/FBView.h"
@@ -123,6 +124,54 @@ void IndicatorTypeEntry::onValueSelected(int index) {
 }
 
 void ReadingOptionsDialog::createIndicatorTab() {
+	ZLDialogContent &indicatorTab = dialog().createTab(ZLResourceKey("Indicator"));
+	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
+	static ZLResourceKey typeKey("type");
+	IndicatorTypeEntry *indicatorTypeEntry =
+		new IndicatorTypeEntry(indicatorTab.resource(typeKey), indicatorInfo.TypeOption);
+	indicatorTab.addOption(typeKey, indicatorTypeEntry);
+
+	ZLOptionEntry *heightEntry =
+		new ZLSimpleSpinOptionEntry(indicatorInfo.HeightOption, 1);
+	ZLOptionEntry *offsetEntry =
+		new ZLSimpleSpinOptionEntry(indicatorInfo.OffsetOption, 1);
+	indicatorTab.addOptions(ZLResourceKey("height"), heightEntry, ZLResourceKey("offset"), offsetEntry);
+	indicatorTypeEntry->addDependentEntry(heightEntry);
+	indicatorTypeEntry->addDependentEntry(offsetEntry);
+
+	StateOptionEntry *showTextPositionEntry =
+		new StateOptionEntry(indicatorInfo.ShowTextPositionOption);
+	indicatorTab.addOption(ZLResourceKey("pageNumber"), showTextPositionEntry);
+	indicatorTypeEntry->addDependentEntry(showTextPositionEntry);
+
+	StateOptionEntry *showTimeEntry =
+		new StateOptionEntry(indicatorInfo.ShowTimeOption);
+	indicatorTab.addOption(ZLResourceKey("time"), showTimeEntry);
+	indicatorTypeEntry->addDependentEntry(showTimeEntry);
+
+	SpecialFontSizeEntry *fontSizeEntry =
+		new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
+	indicatorTab.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
+	indicatorTypeEntry->addDependentEntry(fontSizeEntry);
+	showTextPositionEntry->addDependentEntry(fontSizeEntry);
+	showTimeEntry->addDependentEntry(fontSizeEntry);
+
+	ZLOptionEntry *tocMarksEntry =
+		new ZLSimpleBooleanOptionEntry(FBReader::Instance().bookTextView().ShowTOCMarksOption);
+	indicatorTab.addOption(ZLResourceKey("tocMarks"), tocMarksEntry);
+	indicatorTypeEntry->addDependentEntry(tocMarksEntry);
+
+	ZLOptionEntry *navigationEntry =
+		new ZLSimpleBooleanOptionEntry(indicatorInfo.IsSensitiveOption);
+	indicatorTab.addOption(ZLResourceKey("navigation"), navigationEntry);
+	indicatorTypeEntry->addDependentEntry(navigationEntry);
+
+	indicatorTypeEntry->onStringValueSelected(indicatorTypeEntry->initialValue());
+	showTextPositionEntry->onStateChanged(showTextPositionEntry->initialState());
+	showTimeEntry->onStateChanged(showTimeEntry->initialState());
+}
+
+void IndicatorOptionsDialog::createIndicatorTab() {
 	ZLDialogContent &indicatorTab = dialog().createTab(ZLResourceKey("Indicator"));
 	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
 	static ZLResourceKey typeKey("type");

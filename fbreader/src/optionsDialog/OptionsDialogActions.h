@@ -75,14 +75,40 @@ private:
 };
 
 class TextOptionsDialogAction : public ZLRunnableWithKey {
-
 public:
 	TextOptionsDialogAction();
 	void run();
 	ZLResourceKey key() const;
 
-private:
-	//const shared_ptr<Book> myBook;
+};
+
+
+class MarginsOptionsDialogAction : public ZLRunnableWithKey {
+public:
+	MarginsOptionsDialogAction();
+	void run();
+	ZLResourceKey key() const;
+};
+
+class AppearanceOptionsDialogAction : public ZLRunnableWithKey {
+public:
+	AppearanceOptionsDialogAction();
+	void run();
+	ZLResourceKey key() const;
+};
+
+class IndicatorOptionsDialogAction : public ZLRunnableWithKey {
+public:
+	IndicatorOptionsDialogAction();
+	void run();
+	ZLResourceKey key() const;
+};
+
+class PageTurningOptionsDialogAction : public ZLRunnableWithKey {
+public:
+	PageTurningOptionsDialogAction();
+	void run();
+	ZLResourceKey key() const;
 };
 
 

@@ -1,43 +1,36 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * PageTurningOptionsDialog.cpp
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301, USA.
+ *  Created on: 16.04.2012
+ *      Author: Alex
  */
+
+#include "PageTurningOptionsDialog.h"
 
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
+#include <optionEntries/ZLFontFamilyOptionEntry.h>
 
-#include "ReadingOptionsDialog.h"
+#include <ZLTextStyleCollection.h>
+#include <ZLTextStyleOptions.h>
 
 #include "../../fbreader/FBReader.h"
 #include "../../fbreader/FBView.h"
+#include "../../options/FBOptions.h"
+#include "../../options/FBTextStyle.h"
 
 
-
-
-//ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("ReadingOptionsDialog"), true) {
-ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+PageTurningOptionsDialog::PageTurningOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+	// TODO Auto-generated constructor stub
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();
 
 	ZLDialogContent &scrollingTab = dialog.createTab(ZLResourceKey("Scrolling"));
+
 	scrollingTab.addOption(ZLResourceKey("keyLinesToScroll"), new ZLSimpleSpinOptionEntry(fbreader.LinesToScrollOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToKeep"), new ZLSimpleSpinOptionEntry(fbreader.LinesToKeepOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyScrollDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyScrollingDelayOption, 50));
@@ -56,16 +49,18 @@ ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 			enableTapScrollingEntry->addDependentEntry(fingerOnlyEntry);
 			enableTapScrollingEntry->onStateChanged(enableTapScrollingEntry->initialState());
 		}
+
+   const bool hasVolumeKeys = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::VOLUME_KEYS_PRESENTED, false).value();
+
+  if (hasVolumeKeys) {
+	        ZLToggleBooleanOptionEntry *volumeKeysEntry =
+	                new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingByVolumeKeysOption);
+	        scrollingTab.addOption(ZLResourceKey("volumeKeys"), volumeKeysEntry);
+	    }
 	}
 
-	ZLDialogContent &selectionTab = dialog.createTab(ZLResourceKey("Selection"));
-	selectionTab.addOption(ZLResourceKey("enableSelection"), FBView::selectionOption());
+}
 
-	createIndicatorTab();
-
-//	ZLDialogContent &rotationTab = dialog.createTab(ZLResourceKey("Rotation"));
-// ZLResourceKey directionKey("direction");
-//	rotationTab.addOption(directionKey, new RotationTypeEntry(rotationTab.resource(directionKey), fbreader.RotationAngleOption));
-
-	createKeyBindingsTab();
+PageTurningOptionsDialog::~PageTurningOptionsDialog() {
+	// TODO Auto-generated destructor stub
 }

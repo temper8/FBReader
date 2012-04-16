@@ -6,6 +6,7 @@
  */
 
 #include "TextOptionsDialog.h"
+
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 

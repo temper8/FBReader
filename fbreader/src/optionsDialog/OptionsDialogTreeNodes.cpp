@@ -72,7 +72,7 @@ std::string TextStyleNode::title() const {
 
 std::string TextStyleNode::subtitle() const {
         //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+        return std::string();//ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
 }
 //(shared_ptr<Author> author): myAuthor(author)
 //			TextStyleNode(const shared_ptr<ZLTextStyleDecoration> decoration)
@@ -95,7 +95,7 @@ shared_ptr<ZLImage> TextStyleNode::extractCoverImage() const {
 	return FBNode::defaultCoverImage("booktree-folder.png");
 }
 
-
+/*
 std::string TextStylesTreeNode::title() const {
         //TODO add not-toolbar resource for this node
         return "Text Styles";//ZLResource::resource("toolbar")["addBook"]["label"].value();
@@ -105,6 +105,21 @@ std::string TextStylesTreeNode::subtitle() const {
         //TODO add not-toolbar resource for this node
         return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
 }
+*/
+std::string TextStylesTreeNode::title() const {
+        //TODO add not-toolbar resource for this node
+ //       return myAction->key().Name;//"xxxLook And Feel Options";//ZLResource::resource("toolbar")["addBook"]["label"].value();
+    return ZLResource::resource("Preferences")["textStyles"].value();
+//   return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+}
+
+std::string TextStylesTreeNode::subtitle() const {
+        //TODO add not-toolbar resource for this node
+	return ZLResource::resource("Preferences")["textStyles"]["summary"].value();
+      //  return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+}
+
+
 
 static const ZLResourceKey KEY_STYLE("style");
 

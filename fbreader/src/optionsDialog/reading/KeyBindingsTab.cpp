@@ -271,16 +271,23 @@ void ReadingOptionsDialog::createKeyBindingsTab() {
 	ZLResourceKey actionKey("action");
 	ZLResourceKey separateKey("separate");
 	ZLResourceKey orientationKey("orientation");
+	AppLog("createKeyBindingsTab 1");
 	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(dialogTab.resource(actionKey));
+	AppLog("createKeyBindingsTab 12");
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry, dialogTab.resource(orientationKey));
+	AppLog("createKeyBindingsTab 13");
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(*keyEntry, *orientationEntry);
+	AppLog("createKeyBindingsTab 2");
 	dialogTab.addOption(separateKey, useSeparateBindingsEntry);
 	dialogTab.addOption(orientationKey, orientationEntry);
 	dialogTab.addOption("", "", keyEntry);
+	AppLog("createKeyBindingsTab 3");
 	ZLOptionEntry *exitOnCancelEntry = new ZLSimpleBooleanOptionEntry(fbreader.QuitOnCancelOption);
+	AppLog("createKeyBindingsTab 4");
 	keyEntry->setExitOnCancelEntry(exitOnCancelEntry);
 	dialogTab.addOption(ZLResourceKey("quitOnCancel"), exitOnCancelEntry);
 	exitOnCancelEntry->setVisible(false);
+	AppLog("createKeyBindingsTab 5");
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
 	dialogTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
 }

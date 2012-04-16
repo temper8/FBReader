@@ -16,7 +16,8 @@ class badaForm :
 	public Osp::Ui::Controls::Form,
 	public Osp::Ui::ITouchEventListener,
 	public Osp::Ui::IActionEventListener,
-	public Osp::Ui::IOrientationEventListener
+	public Osp::Ui::IOrientationEventListener,
+	public Osp::Ui::IKeyEventListener
 {
 
 // Construction
@@ -55,6 +56,9 @@ public:
     Osp::Content::ContentSearchResult* pSearchResultInfo;
 	void goOpenFileForm();
 	ZLbadaViewWidget &myHolder;
+
+	void setOrientation(int angle);
+
 	virtual result OnDraw(void);
 	virtual result OnInitializing(void);
 	virtual result OnTerminating(void);
@@ -69,6 +73,12 @@ public:
 	virtual void  OnTouchPressed (const Osp::Ui::Control &source, const Osp::Graphics::Point &currentPosition, const Osp::Ui::TouchEventInfo &touchInfo);
 	virtual void  OnTouchReleased (const Osp::Ui::Control &source, const Osp::Graphics::Point &currentPosition, const Osp::Ui::TouchEventInfo &touchInfo);
 	void OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList* pArgs);
+
+	virtual void  OnKeyLongPressed (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode);
+	virtual void  OnKeyPressed (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode);
+	virtual void  OnKeyReleased (const Osp::Ui::Control &source, Osp::Ui::KeyCode keyCode);
+
+
 };
 
 #endif	//_BADAFORM_H_

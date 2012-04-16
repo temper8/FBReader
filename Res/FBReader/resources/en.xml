@@ -300,7 +300,8 @@
 					<node name="tocMarks" value="Show TOC Marks"/>
 					<node name="navigation" value="Enable Navigation"/>
 				</node>
-				<node name="Scrolling" value="Scrolling">
+				<node name="Scrolling" value="Page turning">
+					<node name="volumeKeys" value="Turn page with volume keys"/>
 					<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs"/>
 					<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling"/>
 					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling"/>
@@ -349,13 +350,13 @@
 					<node name="allowHyphenations" value="Allow Hyphenations"/>
 					<node name="autoHyphenations" value="Auto Hyphenations"/>
 				</node>
-				<node name="Rotation" value="Rotation">
+				<node name="Rotation" value="Screen orientation">
 					<node name="direction" value="Rotation Type">
-						<node name="disabled" value="Disabled"/>
-						<node name="clockwise" value="90 Degrees Clockwise"/>
-						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
-						<node name="180" value="180 Degrees"/>
-						<node name="cycle" value="Cycle Through All 4 Directions"/>
+						<node name="sensor" value="Device orientation sensitive"/>
+						<node name="portrait" value="Portrait"/>
+						<node name="landscape" value="Landscape"/>
+						<node name="reversePortrait" value="Reverse portrait"/>
+						<node name="reverseLandscape" value="Reverse landscape"/>
 					</node>
 				</node>
 				<node name="Colors" value="Colors">
@@ -695,6 +696,25 @@
 		<node name="ReadingOptionsDialog" value="Reading Options Dialogxx"/>
 		<node name="text" value="Text">
 			<node name="summary" value="Font, hyphenations, etc."/>
+	       	</node>
+		<node name="textStyles" value="Text Styles">
+			<node name="summary" value="Separate settings for titles, epigraphs, etc."/>
+	       	</node>
+		<node name="margins" value="Margins">
+			<node name="summary" value="Text margins"/>
+	       	</node>
+		<node name="colors" value="Colors">
+			<node name="summary" value="Colors settings"/>
+	       	</node>
+		<node name="appearance" value="Appearance">
+			<node name="summary" value="Display settings, status bar, button lights"/>
+	       	</node>
+		<node name="indicator" value="Progress indicator">
+			<node name="summary" value="Scrollbar, footer settings"/>
+	       	</node>
+		<node name="scrolling" value="Page turning">
+			<node name="summary" value="How to turn pages"/>
+
 	       	</node>
        	</node>
 </resources>
