@@ -9,6 +9,7 @@
 #include <FBase.h>
 #include <FUi.h>
 
+
 //#include "ZLQtTreeDialog.h"
 /*
 class LoadingIcon : public QLabel {
@@ -49,33 +50,85 @@ friend class ZLbadaProgressDialog;
 
 */
 
+//using namespace  Osp::Base::Runtime;
+class AnimationThread:  public Osp::Base::Runtime::Thread,
+						public Osp::Ui::IAnimationEventListener {
+public:
+	AnimationThread(void);
+	~AnimationThread(void);
+	result Construct(Osp::Ui::Controls::Animation* 		__pAnimation);
+	result Construct(Osp::Base::Collection::ArrayList* 	__pAnimationFrameList);
+	bool OnStart(void);
+	Osp::Ui::Controls::Animation* 		myAnimation;
+	Osp::Ui::Controls::Popup*			myProgressPopup;
+ 	Osp::Base::Runtime::Monitor*        myMonitor;
+private:
+//	void ConstructAnimationFrameList(void);
+	Osp::Base::Collection::ArrayList* 	myAnimationFrameList;
+	virtual void OnAnimationStopped(const Osp::Ui::Control& source);
+
+};
+/*
+class TimerThread: public Osp::Base::Runtime::ITimerEventListener,
+				  // public Osp::Base::Runtime::IRunnable,
+				   public Osp::Ui::IAnimationEventListener,
+				   public Osp::Base::Runtime::Thread {
+public:
+	TimerThread(void);
+	~TimerThread(void);
+	result Construct(Osp::Ui::Controls::Popup*	pProgressPopup);
+
+public:
+
+	bool OnStart(void);
+	void GopStop(void);
+
+public:
+	void OnTimerExpired(Osp::Base::Runtime::Timer& timer);
+
+private:
+	Osp::Ui::Controls::Popup*	myProgressPopup;
+	int count;
+	Osp::Base::Runtime::Timer* __pTimer;
+	void ConstructAnimationFrameList(void);
+	Osp::Ui::Controls::Animation* 		__pAnimation;
+	 Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
+	virtual void OnAnimationStopped(const Osp::Ui::Control& source);
+	//Osp::Base::Object* Run(void);
+};
+*/
 class ZLbadaProgressDialog : public ZLProgressDialog,
-							 public Osp::Ui::IAnimationEventListener,
-							 public Osp::Base::Runtime::Thread
-							 //public Osp::Base::Runtime::IRunnable
+
+							// public Osp::Base::Runtime::Thread,
+							// public Osp::Base::Runtime::ITimerEventListener
+							public Osp::Base::Runtime::IRunnable
 							 {
 public:
 		ZLbadaProgressDialog(const ZLResourceKey &key);
 
-                void run(ZLRunnable &runnable);
+        void run(ZLRunnable &runnable);
                // void run(TreeActionListener* listener); // for wait dialog while loading book
 
 		void setMessage(const std::string &message);
 
 private:
-		virtual void OnAnimationStopped(const Osp::Ui::Control& source);
-		void ConstructAnimationFrameList(void);
-		Osp::Ui::Controls::Animation* 		__pAnimation;
-		Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
+
+
 		ZLRunnable* myRunnable;
-		Osp::Base::Object* Run(void);
-		//ZLQtWaitDialog* myDialog;
-	 	//Osp::Ui::Controls::Popup*			__pProgressPopup;
-	    Osp::Base::Runtime::Thread* 		__pThread;
+
+		void ConstructAnimationFrameList(void);
+		static Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
+	 	Osp::Ui::Controls::Popup*			__pProgressPopup;
+	    //Osp::Base::Runtime::Thread* 		__pThread;
+	 	Osp::Base::Runtime::Monitor*        __pMonitor;
+	 //   TimerThread*  __pTimerThread;
 		//Osp::Ui::Controls::Animation* 		__pAnimation;
 		//Osp::Base::Collection::ArrayList* 	__pAnimationFrameList;
-		bool OnStart(void);
-	//	void OnStop(void);
+	//    Osp::Base::Runtime::Timer* __pTimer;
+	//    void OnTimerExpired(Osp::Base::Runtime::Timer& timer);
+	//	bool OnStart(void);
+		void OnStop(void);
+		Osp::Base::Object* Run(void);
 };
 
 /*

@@ -114,13 +114,13 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 #include <iostream>
 
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
-	//AppLog("ZLFile::inputStream()");
+	AppLog("ZLFile::inputStream()");
 	shared_ptr<ZLInputStream> stream;
 	
 	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		stream = ourPlainStreamCache[myPath];
-	//	AppLog("ourPlainStreamCache  size = %d",ourPlainStreamCache.size());
+		AppLog("ourPlainStreamCache  size = %d",ourPlainStreamCache.size());
 
 		AppLog("ourPlainStreamCache %s",myPath.c_str());
 		if (stream.isNull()) {

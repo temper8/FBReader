@@ -7,16 +7,22 @@
 
 #include "ZLbadaPaintContext.h"
 #include "../image/ZLbadaImageManager.h"
-//#include <FGraphics.h>
+
+#include <ZLTextStyleCollection.h>
+#include <ZLTextStyleOptions.h>
+#include "../../../../fbreader/src/options/FBOptions.h"
+#include "../../../../fbreader/src/options/FBTextStyle.h"
 
 #include <FIo.h>
 #include <FText.h>
+#include <FXml.h>
 
 using namespace Osp::Graphics;
 using namespace Osp::Base::Utility;
 using namespace Osp::Base;
 using namespace Osp::Text;
 using namespace Osp::Io;
+using namespace Osp::Xml;
 
 void ZLbadaPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 	AppLog( "fillFamiliesList");
@@ -24,29 +30,34 @@ void ZLbadaPaintContext::fillFamiliesList(std::vector<std::string> &families) co
     FontList = Osp::Graphics::Font::GetSystemFontListN();
 	int Count = FontList->GetCount();
 	AppLog( "fillFamiliesList %d", Count);
-	//bool helveticaFlag = false;
+	badaFonts.clear();
 	for (int i =0; i<Count; i++) {
 		Osp::Base::String* f = (Osp::Base::String*)FontList->GetAt(i);
 		Utf8Encoding utf8;
 		ByteBuffer* pBB = utf8.GetBytesN(*f);
-		std::string  family(( const char*)pBB->GetPointer(),f->GetLength());
+		std::string  family(( const char*)pBB->GetPointer());//,f->GetLength());
 		AppLog( "family name = %s",family.c_str()) ;
-		//if (family == HELVETICA) {
-		//	helveticaFlag = true;
-		//}
-		families.push_back(family);
+		delete pBB;
+		bool check = false;
+		for (std::vector<std::string>::const_iterator it = families.begin(); it != families.end(); ++it) {
+				if  (*it == family) {
+					check = true;
+					break;
+				}
+		}
+		if (!check)	{
+			families.push_back(family);
+			badaFonts.push_back(family);
+		}
 	}
-	//if (!helveticaFlag) {
-//		families.push_back(HELVETICA);
-//	}
 	FontList->RemoveAll(true);
 
-	for (std::map<std::string, std::string>::const_iterator it=myFontsList.begin() ; it != myFontsList.end(); it++ ){
-		std::string  family((*it).first);
-		families.push_back(family);
-		AppLog( "myFontsList = %s",family.c_str()) ;
-	}
-
+	for (std::vector<ZLFont*>::const_iterator it=fontsList.begin() ; it != fontsList.end(); it++ ){
+			ZLFont* f = *it;
+			//std::string  family(f.family);
+			families.push_back(f->family);
+			AppLog( "myFontsList = %s",f->family.c_str()) ;
+		}
 }
 
 const std::string ZLbadaPaintContext::realFontFamilyName(std::string &fontFamily) const {
@@ -82,12 +93,12 @@ Osp::Graphics::Font* ZLbadaPaintContext::loadExternalFont(const std::string &fam
 }
 
 void ZLbadaPaintContext::printFaceName(Osp::Graphics::Font* font){
-ByteBuffer* bb;
-Osp::Base::String fontFaceName;
-fontFaceName=font->GetFaceName();
-bb = Osp::Base::Utility::StringUtil:: StringToUtf8N(fontFaceName);
-AppLog( "fontFaceName2 %s",(char *)bb->GetPointer());
-delete bb;
+	ByteBuffer* bb;
+	Osp::Base::String fontFaceName;
+	fontFaceName=font->GetFaceName();
+	bb = Osp::Base::Utility::StringUtil:: StringToUtf8N(fontFaceName);
+	AppLog( "fontFaceName2 %s",(char *)bb->GetPointer());
+	delete bb;
 }
 
 void ZLbadaPaintContext::setFont2(const std::string &family, int size, bool bold, bool italic){
@@ -97,19 +108,52 @@ void ZLbadaPaintContext::restoreFont(){
 	setFont(myStoredFamily,myStoredSize,myStoredBold,myStoredItalic);
 }
 
+const std::string ZLbadaPaintContext::findFont(const std::string &family, bool bold, bool italic) {
+	for (std::vector<ZLFont*>::const_iterator it=fontsList.begin() ; it != fontsList.end(); it++ ){
+			ZLFont* f = *it;
+			if (f->family ==  family ) return f->getFileName(bold,italic);
+		}
+	return std::string();
+}
+
+std::string ZLbadaPaintContext::checkFont(const std::string &family) {
+	std::string badaFont;
+//	AppLog("checkFont %s",family.c_str());
+	for (std::vector<std::string>::const_iterator it=badaFonts.begin() ; it != badaFonts.end(); it++ )
+			if (*it ==  family ) {
+				badaFont = *it;
+				break;
+		};
+	if (!badaFont.empty()) return badaFont;
+
+	std::string font = findFont(family, false, false);
+	if (!font.empty())return family;
+
+	FBTextStyle &baseStyle = FBTextStyle::Instance();
+	font = baseStyle.FontFamilyOption.value();
+//	AppLog("baseStyle newFont %s",font.c_str());
+	return font;
+}
+
 void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 //	AppLog( "setFont %s",family.c_str());
 //	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
 //	AppLog( "setFont family %s",family.c_str());
-	bool fontChanged = false;
+//	bool fontChanged = false;
+	bool famylyChanged = false;
+	bool styleChanged = false;
+	std::string newFont = checkFont(family);
 
-	if (myStoredFamily != family) fontChanged = true;
-	int style = ( bold ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN) | ( italic ? FONT_STYLE_ITALIC : 0);
-	if ((myStoredItalic != italic)||(myStoredBold != bold)||(myStoredSize != size)) {
-		fontChanged = true;
+	if ((myStoredFamily != newFont)||(myStoredSize != size)||(myStoredBold != bold)) famylyChanged = true;
+	int style = ( bold ? FONT_STYLE_BOLD : FONT_STYLE_PLAIN);// | ( italic ? FONT_STYLE_ITALIC : 0);
+	if ((myStoredItalic != italic)) {
+		styleChanged = true;
 	}
-	if (!fontChanged) {
-		 if ((myFont!=0)&&(pCanvas!=0))  {pCanvas->SetFont(*myFont);
+	if ((!famylyChanged)) {
+		 if ((pCanvas!=0))  {
+			if (italic) myFont = myFontItalic;
+				else myFont = myFontRegular;
+			if (myFont!=0) pCanvas->SetFont(*myFont);
 		  return;
 		 }
 	}
@@ -118,15 +162,95 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 	myStoredSize = size;
 	myStoredBold = bold ;
 	myStoredItalic = italic;
+	myStoredFamily = newFont;
+
+	if (famylyChanged) {
+		deltaItalic = 0;
+	    if (myFontRegular!=0) delete myFontRegular;
+		myFontRegular = null;
+	    if (myFontItalic!=0) delete myFontItalic;
+		myFontItalic = null;
+	//	std::string newFont = checkFont(family);
+		AppLog("newFont %s",newFont.c_str());
+
+		std::string badaFont;
+		for (std::vector<std::string>::const_iterator it=badaFonts.begin() ; it != badaFonts.end(); it++ )
+				if (*it ==  newFont ) {
+					badaFont = *it;
+					break;
+			}
+
+		std::string fontRegular;
+		std::string fontItalic;
+		if (badaFont.empty()) {
+			fontRegular = findFont(newFont, false, false);
+
+
+			AppLog("findFont");
+			fontItalic = findFont(newFont, false, true);
+			if (!fontRegular.empty()) {
+						AppLog("myFontRegular fontFamily %s",fontRegular.c_str());
+						myFontRegular = new Osp::Graphics::Font;
+						if (myFontRegular->Construct(Osp::Base::String(fontRegular.c_str()),style, size) != E_SUCCESS){
+									AppLog("font == NULL");
+									myFontRegular = new Osp::Graphics::Font;
+									myFontRegular->Construct(style,size);
+								}
+						}
+
+			AppLog("findFont 2");
+			if (!fontItalic.empty()) {
+						AppLog("myFontItalic fontFamily %s",fontItalic.c_str());
+						myFontItalic = new Osp::Graphics::Font;
+						if (myFontItalic->Construct(Osp::Base::String(fontItalic.c_str()),style, size) != E_SUCCESS){
+									AppLog("font == NULL");
+									myFontItalic = new Osp::Graphics::Font;
+									myFontItalic->Construct(style,size);
+								}
+						else {
+							deltaItalic = myFontRegular->GetAscender() - myFontItalic->GetAscender();
+							AppLog("deltaItalic=%d", deltaItalic );
+							if (deltaItalic<0) deltaItalic = -(myFontRegular->GetDescender() - myFontItalic->GetDescender());
+							AppLog("deltaItalic=%d", deltaItalic );
+						}
+						}
+
+
+		}
+		else {
+			myFontRegular = new Osp::Graphics::Font;
+			myFontRegular->Construct(badaFont.c_str(),style,size);
+			myFontItalic = new Osp::Graphics::Font;
+			myFontItalic->Construct(badaFont.c_str(),style| FONT_STYLE_ITALIC ,size);
+		}
+
+		if (myFontRegular == null) {
+					myFontRegular = new Osp::Graphics::Font;
+					myFontRegular->Construct(style,size);
+					}
+
+		if (myFontItalic == null) {
+					myFontItalic = new Osp::Graphics::Font;
+					myFontItalic->Construct(style| FONT_STYLE_ITALIC ,size);
+					}
+
+	}
+
+	if (italic) myFont = myFontItalic;
+		else myFont = myFontRegular;
+	/*
+	Osp::Graphics::Font* font;
 
 	std::string fontPath;
-	Osp::Graphics::Font* font;
-	std::map<std::string, std::string>::const_iterator it = myFontsList.find(family);
-	if (it != myFontsList.end()) {
-		fontPath = it->second;
-	//	AppLog("fontFamily %s",fontPath.c_str());
+
+	fontPath = findFont(family, bold, italic);
+	//std::map<std::string, std::string>::const_iterator it = myFontsList.find(family);
+	//if (it != myFontsList.end()) {
+	if (!fontPath.empty()) {
+		//fontPath = it->second;
+		AppLog("not empty fontFamily %s",fontPath.c_str());
 		font = new Osp::Graphics::Font;
-		if (font->Construct(Osp::Base::String(fontPath.c_str()),style,size) != E_SUCCESS){
+		if (font->Construct(Osp::Base::String(fontPath.c_str()),style, size) != E_SUCCESS){
 					AppLog("font == NULL");
 					font = new Osp::Graphics::Font;
 					font->Construct(style,size);
@@ -134,13 +258,13 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 	//	printFaceName(font);
 	}
 	else
-	  {
+	  {AppLog("empty");
 		font = new Osp::Graphics::Font;
 		if (font->Construct(String(family.c_str()),style,size) != E_SUCCESS){
 			delete font;
 			font = null;
 			//AppLog( "loadDefaultFont ");
-			font = loadDefaultFont(style,size);
+			//font = loadDefaultFont(style,size);
 			if (font == null) {
 				font = new Osp::Graphics::Font;
 			//	AppLog( "Construct bada font ");
@@ -148,20 +272,31 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 			}
 		}
    }
-
-	//font->SetCharSpace(1);
+*/
+//	font = new Osp::Graphics::Font;
+//	font->Construct(style,size);
+	//if (italic) font->SetCharSpace(-1);
 	//AppLog("getCharSpace %d",font->GetCharSpace());
-	//AppLog("maxh=%d, getsize=%d, getas=%d, getdes=%d", font->GetMaxHeight(), font->GetSize(), font->GetAscender(), font->GetDescender());
+	AppLog("maxh=%d, getsize=%d, getas=%d, getdes=%d", myFont->GetMaxHeight(), myFont->GetSize(), myFont->GetAscender(), myFont->GetDescender());
 	mySpaceWidth = -1;
-	myDescent = font->GetDescender();
-	myStoredFamily = family;
-    if (myFont!=0) delete myFont;
-	myFont = font;
-	if ((myFont!=0)&&(pCanvas!=0))  pCanvas->SetFont(*myFont);
+	myDescent = myFont->GetDescender();
+
+   // if (myFont!=0) delete myFont;
+	//myFont = font;
+	if ((myFont!=0)&&(pCanvas!=0))  {
+	//	AppLog("pCanvas->SetFont(*myFont)");
+		pCanvas->SetFont(*myFont);
+	}
 }
+
 void ZLbadaPaintContext::deleteMyFont(){
-	 if (myFont!=0) delete myFont;
-	 myFont = 0;
+	 //if (myFont!=0) delete myFont;
+	 //myFont = 0;
+
+	 if (myFontRegular!=0) delete myFontRegular;
+	 myFontRegular = null;
+	 if (myFontItalic!=0) delete myFontItalic;
+	 myFontItalic = null;
 }
 
 Osp::Graphics::Font* ZLbadaPaintContext::loadDefaultFont( int style, int size){
@@ -231,10 +366,31 @@ int ZLbadaPaintContext::stringWidth(const char *str, int len, bool) const {
     utf8.GetString(buffer, bada_str);
 
     Dimension dim;
-    myFont->GetTextExtent(bada_str, charCount, dim);
-    //pCanvas->GetFontN()->GetTextExtent(bada_str, charCount, dim);
-//    AppLog("ZLbadaPaintContext::stringWidth %d",dim.width );
-	return dim.width;//+2*charCount;
+
+
+	 //if (!myStoredItalic) {
+		 myFont->GetTextExtent(bada_str, charCount, dim);
+	//	AppLog("dim.width %d",dim.width);
+		 return dim.width;// + charCount*(myFont->GetCharSpace());
+	 /*}
+	 else{
+		 int width = 0;
+		 //int startY = y-myFont->GetMaxHeight();
+		 mchar ch;
+		 for (int i=0; i<charCount; i++){
+		     bada_str.GetCharAt(i, ch);
+		     int rb;
+		     myFont->GetRightBear(ch, rb);
+		    // int lb;
+		    // myFont->GetLeftBear(ch, lb);
+		    // pCanvas->DrawText(Point(startX, startY), ch);
+		     AppLog("width %d",width);
+		     width = width + rb;
+		     }
+		 return width;
+	 	 }*/
+
+
 }
 
 int ZLbadaPaintContext::spaceWidth() const {
@@ -247,7 +403,7 @@ int ZLbadaPaintContext::spaceWidth() const {
 		myFont->GetTextExtent(L" ", 1, dim);
 		//pCanvas->GetFontN()->GetTextExtent(L" ", 1, dim);
 
-		mySpaceWidth = dim.width+1;
+		mySpaceWidth = dim.width;//+1;??
 	}
 	//AppLog("spaceWidth %d",mySpaceWidth);
 	return mySpaceWidth;
@@ -272,7 +428,7 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
     buffer.SetArray((byte*)str, 0, len);
     buffer.SetByte('\0');
     buffer.Flip();
-//	AppLog("ZLbadaPaintContext::stringWidth %s",(const char *)buffer.GetPointer());
+//AppLog("ZLbadaPaintContext::drawString %s",(const char *)str);
 //	StringUtil::Utf8ToString((const char *)buffer.GetPointer(), bada_str);
     Utf8Encoding utf8;
     int charCount;
@@ -280,10 +436,36 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
     utf8.GetString(buffer, bada_str);
  //   AppLog("charCount = %d : len = %d", charCount,len);
  //   DrawEnrichedTex(x, y-myFont->GetMaxHeight(),bada_str );
-
-
+ //   AppLog("myStoredSize = %d ", myStoredSize);
+ //   AppLog("myFont->GetMaxHeight() = %d ", myFont->GetMaxHeight());
     //Osp::Graphics::Color clr = Osp::Graphics::Color::COLOR_GREEN;
-    pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str);
+
+	if ((myFont!=0)&&(pCanvas!=0))  {
+	//	AppLog("pCanvas->SetFont(*myFont)");
+	//	pCanvas->SetFont(*myFont);
+	}
+	 if (myStoredItalic)
+		 pCanvas->DrawText(Point(x, y - myFont->GetMaxHeight()+ deltaItalic), bada_str);
+	 else
+		 pCanvas->DrawText(Point(x, y - myFont->GetMaxHeight()), bada_str);
+ /*
+ if (!myStoredItalic) pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str);
+ else{
+	 int startX = x;
+	 int startY= y-myFont->GetMaxHeight();
+	 mchar ch;
+	 for (int i=0; i<charCount; i++){
+	     bada_str.GetCharAt(i, ch);
+	     int rb;
+	     myFont->GetRightBear(ch, rb);
+	     int lb;
+	     myFont->GetLeftBear(ch, lb);
+	     pCanvas->DrawText(Point(startX, startY), ch);
+	     startX = startX + rb;
+	     }
+ 	 }
+
+*/
 	//pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str, Osp::Graphics::Color::COLOR_WHITE);
 //	pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str, charCount);
 //	pCanvas->DrawText(Point(x, y), bada_str,charCount);
@@ -351,7 +533,7 @@ void ZLbadaPaintContext::collectFiles(std::map<std::string, std::string> &names,
        // AppLog("dirEntry name Length = %d",str.GetLength()) ;
         Utf8Encoding utf8;
        	ByteBuffer* pBB = utf8.GetBytesN(str);
-        std::string  shortName((const char*)pBB->GetPointer(),str.GetLength());
+        std::string  shortName((const char*)pBB->GetPointer());//,str.GetLength());
         AppLog("dirEntry name = %s",shortName.c_str()) ;
         if (shortName !="." && shortName !="..")	{
         	std::string fullName;
@@ -359,7 +541,7 @@ void ZLbadaPaintContext::collectFiles(std::map<std::string, std::string> &names,
         	AppLog("fullName = %s",fullName.c_str());
         	names.insert(std::make_pair(shortName,fullName));
         }
-
+        delete pBB;
        // names.push_back(shortName);
     }
 
@@ -369,13 +551,82 @@ void ZLbadaPaintContext::collectFiles(std::map<std::string, std::string> &names,
     AppLog("Succeeded");
 }
 
+ZLFont::ZLFont(){};
+	//names.insert(std::make_pair(shortName,fullName));
+ZLFont::~ZLFont(){};
+
+void ZLFont::initValue(char* name, char* value){
+	 AppLog("name = %s value = %s ", name, value);
+	if (!strcmp(name,"family")) {
+		 	family = value;
+		 	return;
+			}
+	if (!strcmp(name,"regular")) {
+			fontStyles[0]="/Res/Fonts/" + std::string(value);
+			return;
+			}
+	if (!strcmp(name,"italic")) {
+			fontStyles[1]="/Res/Fonts/" + std::string(value);
+			return;
+			}
+	if (!strcmp(name,"bold")) {
+			fontStyles[2]="/Res/Fonts/" + std::string(value);
+			return;
+			}
+	if (!strcmp(name,"boldItalic")) {
+			fontStyles[3]="/Res/Fonts/" + std::string(value);
+			return;
+			}
+	return;
+}
+std::string ZLFont::getFileName(bool bold, bool italic){
+	int style = 0;
+	if (italic) style = 1;
+	if (bold) style = 2;
+	if (bold&&italic) style = 3;
+	return fontStyles[style];
+}
+
 void ZLbadaPaintContext::initMyFontsList(){
 //	myFontsList
 	 AppLog("initMyFontsList");
-	collectFiles(myFontsList,"/Res/Fonts/");
+//	collectFiles(myFontsList,"/Res/Fonts/");
+
+	 //Create xml text reader
+	 AppLog("Read FontsList");
+	 xmlDocPtr pDocument = null;
+	 xmlNodePtr pRoot = null;
+	 xmlNodePtr pCurrentElement = null;
+	 // Create UI controls
+	 pDocument = xmlParseFile("/Res/Fonts/fonts.xml");
+	 pRoot = xmlDocGetRootElement(pDocument);
+
+	 for (pCurrentElement = pRoot->children; pCurrentElement;
+	      pCurrentElement = pCurrentElement->next)
+	 {
+		 xmlNodePtr pChildElement = null;
+		 if (pCurrentElement->type == XML_ELEMENT_NODE)
+		 {
+			 ZLFont* newFont = new ZLFont;
+			 fontsList.push_back(newFont);
+			 for (pChildElement = pCurrentElement->children->next; pChildElement;
+				  pChildElement = pChildElement->next)
+			 {
+				 if (pChildElement->type == XML_ELEMENT_NODE)  {
+				 				 AppLog("name : %s", (char*)pChildElement->name);
+				 				 //AppLog("value : %s", (char*)pChildElement->content);
+				 				 //AppLog("children name : %s", (char*)pChildElement->children->name);
+				 				 AppLog("children value : %s", (char*)pChildElement->children->content);
+				 				 newFont->initValue((char*)pChildElement->name,(char*)pChildElement->children->content);
+				 			 }
+			 }
+
+
+		 }
+	}
 }
 
-ZLbadaPaintContext::ZLbadaPaintContext():myFont(0), defaultFont("LiberationSerif-Regular.ttf"),myStoredFamily("xxx"), defaultFontLoaded(false) {
+ZLbadaPaintContext::ZLbadaPaintContext():myFont(0), defaultFont("Liberation Serif"),myStoredFamily("xxx"), defaultFontLoaded(false) {
 	// TODO Auto-generated constructor stub
 	AppLog("ZLbadaPaintContext::ZLbadaPaintContext()");
 	mySpaceWidth = -1;

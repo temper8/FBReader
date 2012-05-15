@@ -33,8 +33,11 @@
 #include "expat/ZLXMLReaderInternal.h"
 
 
-static const size_t BUFFER_SIZE = 2048;
+//static const size_t BUFFER_SIZE = 2048;
 //static const size_t BUFFER_SIZE = 4096;
+//static const size_t BUFFER_SIZE = 8192*16;
+static const size_t BUFFER_SIZE = 16384;
+//static const size_t BUFFER_SIZE = 32768*2;
 
 class ZLXMLReaderHandler : public ZLAsynchronousInputStream::Handler {
 
@@ -114,10 +117,12 @@ bool ZLXMLReader::readDocument(const ZLFile &file) {
 bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	AppLog(" ZLXMLReader::readDocument");
 	if (stream.isNull() || !stream->open()) {
+		AppLog(" ZLXMLReader::readDocument return false;");
 		return false;
 	}
-//	AppLog(" ZLXMLReader::readDocument 1");
+	AppLog(" ZLXMLReader::readDocument 1");
 	bool useWindows1252 = false;
+	char *encoding = 0;
 
 	stream->read(myParserBuffer, 256);
 //	AppLog(" ZLXMLReader::readDocument 2");
@@ -129,7 +134,7 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	//	AppLog(" ZLXMLReader::readDocument stringBuffer =%s",stringBuffer.c_str());
 	//AppLog(" ZLXMLReader::readDocument 4");
 	int index = stringBuffer.find('>');
-	char *encoding = 0;
+
 	if (index > 0) {
 		stringBuffer = ZLUnicodeUtil::toLower(stringBuffer.substr(0, index));
 		int index = stringBuffer.find("\"iso-8859-1\"");
@@ -148,13 +153,16 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 			encoding ="KOI8-R";
 		}
 	}
+
 	//initialize(useWindows1252 ? "windows-1252" : 0);
 	if (encoding != 0) {AppLog("init encoding %s",encoding);}
+	AppLog("initialize(encoding);");
 	initialize(encoding);
 	size_t length;
+	AppLog("before do");
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
-	//	AppLog(" ZLXMLReader::readDocument length = %d", length);
+		AppLog(" ZLXMLReader::readDocument length = %d", length);
 		if (!readFromBuffer(myParserBuffer, length)) {
 			AppLog(" ZLXMLReader::readDocument break");
 			break;

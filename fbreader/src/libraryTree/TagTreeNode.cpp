@@ -32,6 +32,7 @@ std::string TagTreeNode::subtitle() const {
 std::string TagTreeNode::imageUrl() const {
 	return FBNode::defaultImageUrl("booktree-tags.png");
 }
+
 shared_ptr<ZLImage> TagTreeNode::extractCoverImage() const {
 	//AppLog("AuthorNode::extractCoverImage");
 	return FBNode::defaultCoverImage("booktree-tags.png");

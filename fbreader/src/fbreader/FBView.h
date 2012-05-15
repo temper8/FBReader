@@ -65,6 +65,7 @@ private:
 	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
 protected:
+	void doTapScrollingX(int x);
 	void doTapScrolling(int y);
 
 public:

@@ -60,7 +60,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			return stream.offset() == startOffset + 16;
 	}
 }
-const size_t BUFFER_SIZE = 2048*16;
+const size_t BUFFER_SIZE = 2048;//*16;
 
 void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 	switch (header.Signature) {

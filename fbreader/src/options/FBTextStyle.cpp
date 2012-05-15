@@ -39,8 +39,8 @@ FBTextStyle &FBTextStyle::Instance() {
 static const std::string GROUP = "Style";
 
 FBTextStyle::FBTextStyle() :
-	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", ""),
-	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontSize", 5, 72, 26),
+	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", "Samsung Font"),
+	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontSize", 5, 72, 28),
 	BoldOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:bold", false),
 	ItalicOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:italic", false),
 	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:alignment", ALIGN_JUSTIFY),

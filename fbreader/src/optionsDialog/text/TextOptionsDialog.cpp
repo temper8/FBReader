@@ -25,7 +25,7 @@
 static const ZLResourceKey _KEY_LINESPACING("lineSpacing");
 static const ZLResourceKey _KEY_ALIGNMENT("alignment");
 
-TextOptionsDialog::TextOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+TextOptionsDialog::TextOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("TextOptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 	FBOptions &options = FBOptions::Instance();
 

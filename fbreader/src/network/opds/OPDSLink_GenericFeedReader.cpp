@@ -43,15 +43,15 @@ void OPDSLink::GenericFeedReader::processFeedEnd() {
 }
 
 void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
-//	AppLog("processFeedEntry");
+	AppLog("GenericFeedReader::processFeedEntry");
 	std::map<std::string,std::string> links;
 	std::string iconURL;
 	for (size_t i = 0; i < entry->links().size(); ++i) {
 		ATOMLink &link = *(entry->links()[i]);
 		const std::string &href = link.href();
 		const std::string &rel = link.rel();
-	//	AppLog("href = %s",href.c_str());
-	//	AppLog("rel = %s",rel.c_str());
+	AppLog("href = %s",href.c_str());
+	AppLog("rel = %s",rel.c_str());
 		if (rel == "search") {
 			links[rel] = OpenSearchXMLReader::convertOpenSearchURL(href);
 		} else if (rel == "") {

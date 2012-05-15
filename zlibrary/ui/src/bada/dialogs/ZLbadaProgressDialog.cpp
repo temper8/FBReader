@@ -77,18 +77,32 @@ void LoadingIcon::rotate() {
     QWidget::raise();
 }
 */
-ZLbadaProgressDialog::ZLbadaProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myRunnable(null) {
 
+Osp::Base::Collection::ArrayList* 	ZLbadaProgressDialog::__pAnimationFrameList = 0;
+
+ZLbadaProgressDialog::ZLbadaProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myRunnable(null) {
+	__pProgressPopup  = new Osp::Ui::Controls::Popup();
+	if (__pProgressPopup) {
+			result r;
+			r = __pProgressPopup->Construct(true, Osp::Graphics::Dimension(400,250));
+			AppLog("r = %d",r);
+			r =__pProgressPopup->SetTitleText(messageText().c_str());
+			AppLog("r = %d",r);
+			r = __pProgressPopup->SetShowState(true);
+			AppLog("r = %d",r);
+			r = __pProgressPopup->Show();
+			if (r!=0)	{
+				delete __pProgressPopup;
+				__pProgressPopup = null;
+				AppLog("delete __pPopup");
+				}
+			}
 }
 
 static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
-
-Osp::Base::Object* ZLbadaProgressDialog::Run(void){
-	myRunnable->run();
-	return null;
-}
-
 void ZLbadaProgressDialog::ConstructAnimationFrameList(void){
+	if (__pAnimationFrameList == null)
+	{
 	Image *pImage = new Image();
 	result r = pImage->Construct();
 		//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
@@ -123,54 +137,271 @@ void ZLbadaProgressDialog::ConstructAnimationFrameList(void){
 		__pAnimationFrameList->Add(*pAniFrame7);
 		__pAnimationFrameList->Add(*pAniFrame8);
 
+		delete pBitmap1;
+		delete pBitmap2;
+		delete pBitmap3;
+		delete pBitmap4;
+		delete pBitmap5;
+		delete pBitmap6;
+		delete pBitmap7;
+		delete pBitmap8;
+	}
+}
+/*
+void TimerThread::ConstructAnimationFrameList(void){
+	Image *pImage = new Image();
+	result r = pImage->Construct();
+		//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
+		Bitmap *pBitmap1 = pImage->DecodeN("/Res/icons/ani/progressing00.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap2 = pImage->DecodeN("/Res/icons/ani/progressing01.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap3 = pImage->DecodeN("/Res/icons/ani/progressing02.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap4 = pImage->DecodeN("/Res/icons/ani/progressing03.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap5 = pImage->DecodeN("/Res/icons/ani/progressing04.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap6 = pImage->DecodeN("/Res/icons/ani/progressing05.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap7 = pImage->DecodeN("/Res/icons/ani/progressing06.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap8 = pImage->DecodeN("/Res/icons/ani/progressing07.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+
+		// Creates AnimationFrame.
+		AnimationFrame *pAniFrame1 = new AnimationFrame(*pBitmap1, 100);
+		AnimationFrame *pAniFrame2 = new AnimationFrame(*pBitmap2, 100);
+		AnimationFrame *pAniFrame3 = new AnimationFrame(*pBitmap3, 100);
+		AnimationFrame *pAniFrame4 = new AnimationFrame(*pBitmap4, 100);
+		AnimationFrame *pAniFrame5 = new AnimationFrame(*pBitmap5, 100);
+		AnimationFrame *pAniFrame6 = new AnimationFrame(*pBitmap6, 100);
+		AnimationFrame *pAniFrame7 = new AnimationFrame(*pBitmap7, 100);
+		AnimationFrame *pAniFrame8 = new AnimationFrame(*pBitmap8, 100);
+
+
+		__pAnimationFrameList = new ArrayList();
+		__pAnimationFrameList->Construct();
+		__pAnimationFrameList->Add(*pAniFrame1);
+		__pAnimationFrameList->Add(*pAniFrame2);
+		__pAnimationFrameList->Add(*pAniFrame3);
+		__pAnimationFrameList->Add(*pAniFrame4);
+		__pAnimationFrameList->Add(*pAniFrame5);
+		__pAnimationFrameList->Add(*pAniFrame6);
+		__pAnimationFrameList->Add(*pAniFrame7);
+		__pAnimationFrameList->Add(*pAniFrame8);
+
+		delete pBitmap1;
+		delete pBitmap2;
+		delete pBitmap3;
+		delete pBitmap4;
+		delete pBitmap5;
+		delete pBitmap6;
+		delete pBitmap7;
+		delete pBitmap8;
+
 }
 
-void ZLbadaProgressDialog::OnAnimationStopped(const Control& source)
+void TimerThread::OnAnimationStopped(const Control& source)
 {
 	AppLog("OnAnimationStopped");
 	if(__pAnimation)
 		__pAnimation->Play();
 }
-bool ZLbadaProgressDialog::OnStart(void){
-	AppLog("ZLbadaProgressDialog::OnStart()");
+*/
+
+AnimationThread::AnimationThread(void):myAnimation(null)   { }
+
+AnimationThread::~AnimationThread(void) { }
+
+result AnimationThread::Construct(Osp::Ui::Controls::Animation* __pAnimation){
+	myAnimation=__pAnimation;
+	return Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
+//	return Thread::Construct(THREAD_TYPE_WORKER);
+}
+
+result  AnimationThread::Construct(Osp::Base::Collection::ArrayList* 	__pAnimationFrameList){
+	myAnimationFrameList=__pAnimationFrameList;
+
+	return Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
+}
+
+bool AnimationThread::OnStart(void){
+	myAnimation = new Animation();
+
+	if (myAnimation == null) AppLog("__pAnimation = null ");
+	Rectangle popupFormArea = myProgressPopup->GetClientAreaBounds();
+	myAnimation->Construct(Rectangle(popupFormArea.width/2-50, 20, 120, 120), *myAnimationFrameList);
+	AppLog("Construct ");
+	myAnimation->AddAnimationEventListener(*this);
+	myAnimation->SetRepeatCount(10000);
+	myProgressPopup->AddControl(*myAnimation);
+	if(myAnimation)	{
+		AppLog("AnimationThread::OnStart");
+	//	myAnimation->AddAnimationEventListener(*this);
+		myAnimation->Play();
+		myMonitor->Notify();
+	}
 	return true;
 }
 
-//bool ZLbadaProgressDialog::OnStop(void){
-//	AppLog("ZLbadaProgressDialog::OnStart()");
-//}
+void AnimationThread::OnAnimationStopped(const Control& source)
+{
+	AppLog("OnAnimationStopped");
+	if(myAnimation)
+		myAnimation->Play();
+}
+/*
+TimerThread::TimerThread(void) : __pTimer(null), myProgressPopup(null) { }
+
+TimerThread::~TimerThread(void) { }
+
+result TimerThread::Construct(Osp::Ui::Controls::Popup*	pProgressPopup){
+	myProgressPopup=pProgressPopup;
+	return Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
+//	return Thread::Construct(THREAD_TYPE_WORKER);
+
+}
+
+bool TimerThread::OnStart(void){
+	AppLog("ZLbadaProgressDialog::OnStart()");
+
+	count =0;
+
+	ConstructAnimationFrameList();
+	Rectangle popupFormArea = myProgressPopup->GetClientAreaBounds();
+
+	__pAnimation = new Animation();
+
+	if (__pAnimation == null)AppLog("__pAnimation = null ");
+	__pAnimation->Construct(Rectangle(popupFormArea.width/2-50, 20, 120, 120), *__pAnimationFrameList);
+	AppLog("Construct ");
+	__pAnimation->AddAnimationEventListener(*this);
+	__pAnimation->SetRepeatCount(10000);
+
+	myProgressPopup->AddControl(*__pAnimation);
+
+	 __pAnimation->Play();
+	return true;
+}
+
+void TimerThread::GopStop(void){
+	AppLog("ZLbadaProgressDialog::OnStop()");
+//	__pTimer->Cancel();
+//	delete __pTimer;
+	AppLog("fgdfgdf ");
+	if (__pAnimation == null)AppLog("__pAnimation = null ");
+	__pAnimation->Stop();
+	AppLog("fgdfgdf 1");
+	__pAnimationFrameList->RemoveAll(true);
+	AppLog("fgdfgdf 2");
+	__pAnimation->RemoveAnimationEventListener(*this);
+	AppLog("fgdfgdf 3");
+	__pAnimationFrameList->RemoveAll(true);
+
+	delete __pAnimationFrameList;
+//	__pAnimationFrameList = null;
+	myProgressPopup->RemoveControl(*__pAnimation);
+//	delete __pAnimation;
+	AppLog("fgdfgdf ");
+//	__pAnimation = null;
+}
+/*
+Osp::Base::Object* TimerThread::Run(void){
+	AppLog("TimerThread run");
+	for (int i = 0; i<20;i++)
+	{
+		Osp::Graphics::Canvas canvas;
+		canvas.Construct();
+		//canvas.DrawLine(Point(100,100),Point(300,300+10*count++));
+		canvas.DrawArc(Rectangle(250,300,60,60), 0,20*i ,ARC_STYLE_FILLED_PIE);
+		canvas.Show();
+		AppLog("TimerThread i=%d",i);
+		Sleep(1000);
+	}
+}
+
+void TimerThread::OnTimerExpired(Osp::Base::Runtime::Timer& timer){
+	AppLog("ZLbadaProgressDialog::OnTimerExpired %d", count);
+	//Osp::Graphics::Canvas canvas;
+	//canvas.Construct();
+	//canvas.DrawLine(Point(100,100),Point(300,300+10*count++));
+	//canvas.DrawArc(Rectangle(200,310,80,80), 0, 10*count++ ,ARC_STYLE_FILLED_PIE);
+	//canvas.Show();
+//	__pTimer->Start(300);
+}
+*/
+Osp::Base::Object* ZLbadaProgressDialog::Run(void){
+	AppLog("ZLbadaProgressDialog RRRun");
+	myRunnable->run();
+	__pMonitor->Notify();
+	AppLog("ZLbadaProgressDialog RRRun end");
+	return null;
+}
 
 void ZLbadaProgressDialog::run(ZLRunnable &runnable) {
 	AppLog("ZLbadaProgressDialog run");
-	result r;
-	//myRunnable = &runnable;
-	Osp::Ui::Controls::Popup* __pPopup = new Osp::Ui::Controls::Popup();
-	if (__pPopup) {
-			r = __pPopup->Construct(true, Osp::Graphics::Dimension(400,250));
-			AppLog("r = %d",r);
-			r =__pPopup->SetTitleText(L"Please wait...");
-			AppLog("r = %d",r);
-			//ConstructAnimationFrameList();
-			//Rectangle popupFormArea = __pPopup->GetClientAreaBounds();
-			//__pAnimation = new Animation();
-			//__pAnimation->Construct(Rectangle(popupFormArea.width/2-60, 20, 120, 120), *__pAnimationFrameList);
-			//__pAnimation->AddAnimationEventListener(*this);
-			//__pPopup->AddControl(*__pAnimation);
-			r = __pPopup->SetShowState(true);
-			AppLog("r = %d",r);
-			r = __pPopup->Show();
-			AppLog("r = %d",r);
-			if (r==0)	{
-					//	 Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
-					//	  Start();
-			 	 	 //	 __pAnimation->Play();
-						}
-			else {
-				delete __pPopup;
-				__pPopup = null;
-				AppLog("delete __pPopup");
-			}
+	myRunnable = &runnable;
+
+	if (__pProgressPopup) {
+		    __pMonitor = new Monitor;
+	    	__pMonitor->Construct();
+
+		    AppLog("ConstructAnimationFrameList");
+			ConstructAnimationFrameList();
+			Rectangle popupFormArea = __pProgressPopup->GetClientAreaBounds();
+			AnimationThread* aniTread = new AnimationThread;
+    		aniTread->Construct(__pAnimationFrameList);
+    		aniTread->myMonitor = __pMonitor;
+    		aniTread->myProgressPopup = __pProgressPopup;
+			aniTread->Start();
+			result r;
+			__pMonitor->Enter();
+			AppLog("Animation Monitor");
+			//runnable.run();
+			__pMonitor->Wait();
+
+			__pMonitor->Exit();
+
+			//__pTimerThread = new TimerThread;
+			//r = __pTimerThread->Construct(__pProgressPopup);
+			//if (r == E_SUCCESS) AppLog("Construct E_SUCCESS");
+			//if (__pTimerThread->Start() == E_SUCCESS) AppLog("Start E_SUCCESS");
+
+			Thread* runTread = new Thread;
+			runTread->Construct(*this);
+			runTread->Start();
+
+			__pMonitor->Enter();
+			AppLog("Thread Start()");
+			//runnable.run();
+			__pMonitor->Wait();
+
+			__pMonitor->Exit();
+			AppLog("_pMonitor->Exit())");
+			//__pTimerThread->Stop();
+			//__pTimerThread->GopStop();
+			aniTread->Stop();
+			aniTread->myAnimation->Stop();
+
+			AppLog("fgdfgdf 1");
+			//__pAnimationFrameList->RemoveAll(true);
+			AppLog("fgdfgdf 2");
+			//delete __pAnimationFrameList;
+		//	__pAnimationFrameList = null;
+			__pProgressPopup->RemoveControl(*aniTread->myAnimation);
+			AppLog("__pTimerThread->Stop()");
+			//pTread->Stop();
+			delete aniTread;
+			delete runTread;
+			AppLog("delete runTread");
+			//delete __pTimerThread;
+			AppLog("delete __pTimerThread");
+			delete __pMonitor;
+			AppLog("delete __pMonitor;");
+			__pProgressPopup->SetShowState(false);
+			AppLog("SetShowState");
+			delete __pProgressPopup;
+			AppLog("delete __pPopup");
 	}
+	else
+	{
+		runnable.run();
+		AppLog("ZLbadaProgressDialog f");
+	}
+
 	/*if (r == E_SUCCESS) {
 		__pThread = new Osp::Base::Runtime::Thread();
 			__pThread->Construct(*this);
@@ -178,14 +409,8 @@ void ZLbadaProgressDialog::run(ZLRunnable &runnable) {
 	}
 	else
 		*/
-		runnable.run();
-		AppLog("ZLbadaProgressDialog f");
-	if (__pPopup)  {
-					//if (r==0) Stop();
-					__pPopup->SetShowState(false);
-					delete __pPopup;
-					AppLog("delete __pPopup");
-	}
+
+
 
 }
 /*

@@ -15,7 +15,7 @@
 #include "../../fbreader/FBView.h"
 #include "../../options/FBOptions.h"
 
-ColorOptionsDialog::ColorOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true)  {
+ColorOptionsDialog::ColorOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("ColorOptionsDialog"), true)  {
 	// TODO Auto-generated constructor stub
 	FBOptions &options = FBOptions::Instance();
 	ZLOptionsDialog &dialog = this->dialog();

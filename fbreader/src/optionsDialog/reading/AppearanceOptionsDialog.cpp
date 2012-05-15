@@ -83,7 +83,7 @@ void RotationTypeEntry::onAccept(const std::string &value) {
 }
 
 
-AppearanceOptionsDialog::AppearanceOptionsDialog()  : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+AppearanceOptionsDialog::AppearanceOptionsDialog()  : AbstractOptionsDialog(ZLResourceKey("AppearanceOptionsDialog"), false) {
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();

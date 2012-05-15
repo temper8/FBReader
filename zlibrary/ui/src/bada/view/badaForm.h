@@ -17,8 +17,8 @@ class badaForm :
 	public Osp::Ui::ITouchEventListener,
 	public Osp::Ui::IActionEventListener,
 	public Osp::Ui::IOrientationEventListener,
-	public Osp::Ui::IKeyEventListener
-{
+	public Osp::Ui::IKeyEventListener,
+	public Osp::Base::Runtime::ITimerEventListener  {
 
 // Construction
 public:
@@ -45,6 +45,14 @@ protected:
 	Osp::Graphics::Rectangle formRect;
 	Osp::Graphics::Rectangle srcRect;
 	int touchMove;
+	int apiVersion;
+	result GetSystemInfomation(void);
+	Osp::Base::Runtime::Timer* myTimer;
+	int dx;
+	int vx;
+	void PrevPage();
+	void NextPage();
+	void OnTimerExpired(Osp::Base::Runtime::Timer& timer);
 
 public:
 	int ScreenHeight;

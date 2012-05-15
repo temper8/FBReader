@@ -75,9 +75,10 @@ OPDSCatalogItem::OPDSCatalogItem(
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
-	AppLog("loadChildren");
+	AppLog("OPDSCatalogItem::loadChildren");
 	NetworkOperationData data(Link);
-
+	AppLog("Link SiteName = %s", Link.SiteName.c_str());
+	AppLog("Link title= %s", Link.getTitle().c_str());
 	shared_ptr<ZLExecutionData> networkData =
 		((OPDSLink&)Link).createNetworkData(URLByType[URL_CATALOG], data);
 
@@ -86,7 +87,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 		if (!error.empty()) {
 			return error;
 		}
-
+		AppLog("OPDSCatalogItem::loadChildren perform(networkData");
 		children.insert(children.end(), data.Items.begin(), data.Items.end());
 		networkData = data.resume();
 	}

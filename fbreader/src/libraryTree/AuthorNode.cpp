@@ -57,17 +57,17 @@ std::string AuthorNode::subtitle() const {
 std::string AuthorNode::imageUrl() const {
 	return FBNode::defaultImageUrl("booktree-author.png");
 }
-/*
+
 shared_ptr<ZLImage> AuthorNode::image() const {
 	AppLog("AuthorNode::image");
-	if (!myCoverImageIsStored) {
+	/*if (!myCoverImageIsStored) {
 		AppLog("!myCoverImageIsStored");
 		myCoverImageIsStored = true;
 		myStoredCoverImage = extractCoverImage();
-	}
-	return myStoredCoverImage;
+	}*/
+	return 0; //myStoredCoverImage;
 }
-*/
+
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 	AppLog("AuthorNode::extractCoverImage");
 	return FBNode::defaultCoverImage("booktree-author.png");

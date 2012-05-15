@@ -46,7 +46,7 @@ public:
 	HttpMonitor* myMonitor;
 	static void createInstance();
 	void initPaths();
-	
+	virtual bool connect() const;
 //	QNetworkCookieJar *cookieJar() const;
 //	QNetworkProxy proxy() const;
 	std::string perform(const ZLExecutionData::Vector &dataList) const;

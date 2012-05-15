@@ -23,7 +23,7 @@
 #include "../../options/FBTextStyle.h"
 
 
-PageTurningOptionsDialog::PageTurningOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+PageTurningOptionsDialog::PageTurningOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("PageTurningOptionsDialog"), true) {
 	// TODO Auto-generated constructor stub
 	FBReader &fbreader = FBReader::Instance();
 

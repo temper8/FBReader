@@ -140,7 +140,7 @@ void BookOpenAction::run() {
 BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	// TODO Auto-generated constructor stub
 //	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookReadAction(myBook));
-	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), 0, true);
 
 	myDialog->setMenuEntry( new BookMenuEntry(book));
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Cover"));
@@ -165,7 +165,9 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	//commonTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Common"));
 	//SummaryTab.addOption(ZLResourceKey("title"), new StaticTextEntry(myBook.Summary));
-	SummaryTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
+	ZLStringInfoEntry* fileNameOption =  new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()));
+	SummaryTab.addOption(ZLResourceKey("file"),fileNameOption);
+	fileNameOption->setActive(false);
 	AppLog("commonTab.addOption file");
 
 	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
@@ -173,7 +175,9 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 
 //	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
 	//	AppLog("myLanguageEntry = new BookLanguageEntry");
-	SummaryTab.addOption(ZLResourceKey("language"), new BookLanguageEntry(myBook, languageCodes));
+	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
+	SummaryTab.addOption(ZLResourceKey("language"), bookLanEntry);
+	bookLanEntry->setActive(false);
 
 }
 

@@ -155,14 +155,6 @@ shared_ptr<ZLImage> TextStylesTreeNode::extractCoverImage() const {
 }
 
 
-
-
-
-
-
-
-
-
 std::string ColorOptionsDialogNode::title() const {
         //TODO add not-toolbar resource for this node
         return "Color Options";//ZLResource::resource("toolbar")["addBook"]["label"].value();
@@ -196,12 +188,15 @@ shared_ptr<ZLImage> ColorOptionsDialogNode::extractCoverImage() const {
 
 std::string LibraryOptionsDialogNode::title() const {
         //TODO add not-toolbar resource for this node
-        return "Library Options";//ZLResource::resource("toolbar")["addBook"]["label"].value();
+       // return "Library Options";//ZLResource::resource("toolbar")["addBook"]["label"].value();
+        return ZLResource::resource("Preferences")["library"].value();
 }
 
 std::string LibraryOptionsDialogNode::subtitle() const {
         //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+       // return std::string();
+        return ZLResource::resource("Preferences")["library"]["summary"].value();
+
 }
 
 //static const std::string GROUP_NAME = "OpenFileDialog";
@@ -234,7 +229,7 @@ std::string SystemOptionsDialogNode::title() const {
 
 std::string SystemOptionsDialogNode::subtitle() const {
         //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+        return std::string();
 }
 
 //static const std::string GROUP_NAME = "OpenFileDialog";
@@ -266,7 +261,7 @@ std::string ReadingOptionsDialogNode::title() const {
 
 std::string ReadingOptionsDialogNode::subtitle() const {
         //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+        return std::string();
 }
 
 //static const std::string GROUP_NAME = "OpenFileDialog";
@@ -300,7 +295,7 @@ std::string LookAndFeelOptionsDialogNode::title() const {
 
 std::string LookAndFeelOptionsDialogNode::subtitle() const {
         //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
+        return std::string();
 }
 
 //static const std::string GROUP_NAME = "OpenFileDialog";

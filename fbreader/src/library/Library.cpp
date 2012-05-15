@@ -92,13 +92,14 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames, std::ve
 	while (!dirs.empty()) {
 		std::string dirname = *dirs.begin();
 		dirs.erase(dirs.begin());
-		
+		AppLog("dirname %s",dirname.c_str());
 		ZLFile dirfile(dirname);
 		std::vector<std::string> files;
 		bool inZip = false;
-
+		AppLog("dirfile.directory");
 		shared_ptr<ZLDir> dir = dirfile.directory();
 		if (dir.isNull()) {
+			AppLog("dir.isNull");
 			continue;
 		}
 		
@@ -121,6 +122,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames, std::ve
 			const bool collectBookWithoutMetaInfo = CollectAllBooksOption.value();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
 				const std::string fileName = (inZip) ? (*jt) : (dir->itemPath(*jt));
+				AppLog("fileName %s",fileName.c_str());
 				ZLFile file(fileName);
 //				std::cerr << "Check file \"" << fileName << "\" ... ";
 //				std::cerr.flush();
@@ -130,6 +132,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames, std::ve
 				// TODO: zip -> any archive
 				} else if (file.extension() == "zip") {
 					if (myScanSubdirs || !inZip) {
+						AppLog("myScanSubdirs fileName %s",fileName.c_str());
 						dirs.insert(fileName);
 					}
 				}
@@ -342,6 +345,7 @@ void Library::collectDirNames(std::set<std::string> &nameSet) const {
 		const std::string resolvedName = f.resolvedPath();
 		if (resolvedNameSet.find(resolvedName) == resolvedNameSet.end()) {
 			if (myScanSubdirs) {
+				AppLog("myScanSubdirs true");
 				shared_ptr<ZLDir> dir = f.directory();
 				if (!dir.isNull()) {
 					std::vector<std::string> subdirs;

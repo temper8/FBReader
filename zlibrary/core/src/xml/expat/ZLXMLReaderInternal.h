@@ -49,7 +49,9 @@ private:
 	xmlParserCtxtPtr ctxt;
 	//XML_Parser myParser;
 	bool myInitialized;
-	static ZLEncodingConverterInfoPtr encodingInfo;
+	//static ZLEncodingConverterInfoPtr encodingInfo;
+	ZLEncodingConverterInfoPtr encodingInfo;
+	shared_ptr<ZLEncodingConverter> converter;
 	std::set<shared_ptr<ZLInputStream> > myDTDStreamLocks;
 	static int	fxmlCharEncodingInputFunc(unsigned char * out, int * outlen, const unsigned char * in,  int * inlen);
 };

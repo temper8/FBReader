@@ -32,5 +32,5 @@ std::string AuthorTreeNode::imageUrl() const {
 
 shared_ptr<ZLImage> AuthorTreeNode::extractCoverImage() const {
 	AppLog("AuthorNode::extractCoverImage");
-	return FBNode::defaultCoverImage("booktree-author.png");
+	return FBNode::defaultCoverImage("booktree-authors.png");
 }

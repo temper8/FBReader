@@ -24,6 +24,7 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
+	shared_ptr<ZLImage> image() const { return 0; };
 	shared_ptr<ZLImage> extractCoverImage() const;
 };
 
@@ -40,6 +41,7 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
+	shared_ptr<ZLImage> image() const { return 0; };
 	shared_ptr<ZLImage> extractCoverImage() const;
 };
 
@@ -56,6 +58,7 @@ public:
         std::string title() const;
         std::string subtitle() const;
         std::string imageUrl() const;
+    	shared_ptr<ZLImage> image() const { return 0; };
     	shared_ptr<ZLImage> extractCoverImage() const;
 };
 
@@ -72,6 +75,7 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
+	shared_ptr<ZLImage> image() const { return 0; };
 	shared_ptr<ZLImage> extractCoverImage() const;
 };
 
@@ -95,6 +99,7 @@ class OpenFileSystemNode : public FBNode {
 		std::string subtitle() const;
 		virtual bool activate();
 		std::string imageUrl() const;
+		shared_ptr<ZLImage> image() const { return 0; };
 		shared_ptr<ZLImage> extractCoverImage() const;
 	private:
 		ZLStringOption DirectoryOption;

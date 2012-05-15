@@ -98,11 +98,9 @@ void ZLDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const
 	AppLog("createProgressDialog run %s",key.Name.c_str());
 //TODO
 	shared_ptr<ZLProgressDialog> dialog = createProgressDialog(key);
-	if (!dialog.isNull()) {
-		dialog->run(runnable);
-	} else {
-	AppLog("else runnable.run()");
-		runnable.run();
+	if (!dialog.isNull()) {	dialog->run(runnable);	}
+	else {	AppLog("else runnable.run()");
+		    runnable.run();
 	}
 }
 

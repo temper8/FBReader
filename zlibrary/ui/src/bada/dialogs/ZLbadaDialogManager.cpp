@@ -99,18 +99,48 @@ void ZLbadaDialogManager::errorBox(const ZLResourceKey &key, const std::string &
 		::qtButtonName(OK_BUTTON)
 	);*/
 }
-/*
+
 int ZLbadaDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	return QMessageBox::question(
+	AppLog("ZLbadaDialogManager::questionBox");
+
+	MessageBox messageBox;
+	messageBox.Construct(dialogTitle(key).c_str(), message.c_str(), MSGBOX_STYLE_YESNO, 0);
+
+	// Calls ShowAndWait - draw, show itself and process events
+	int modalResult = 0;
+	messageBox.ShowAndWait(modalResult);
+    AppLog("modalResult %d", modalResult);
+    int r;
+	switch(modalResult)
+	   {
+	    case MSGBOX_RESULT_YES:
+	    	AppLog("modalResult Yes");
+	    	r = 0;
+	        break;
+
+	    case MSGBOX_RESULT_CANCEL:
+		   	AppLog("modalResult Cancel");
+		    r = 1;
+		    break;
+
+	    default:
+	    	r = 1;
+	        break;
+	    }
+	AppLog("r %d", r);
+
+	return r;
+			/*
+			QMessageBox::question(
 		qApp->mainWidget(),
 		::qtString(dialogTitle(key)),
 		::qtString(message),
 		::qtButtonName(button0),
 		::qtButtonName(button1),
 		::qtButtonName(button2)
-	);
+	);*/
 }
-*/
+
 shared_ptr<ZLProgressDialog> ZLbadaDialogManager::createProgressDialog(const ZLResourceKey &key) const {
 	return new ZLbadaProgressDialog(key);
 }

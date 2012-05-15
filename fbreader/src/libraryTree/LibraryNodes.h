@@ -56,9 +56,7 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
-
-protected:
-//	shared_ptr<ZLImage> image() const;
+	shared_ptr<ZLImage> image() const;
 
 private:
 	shared_ptr<Author> myAuthor;
@@ -73,7 +71,7 @@ public:
 public:
 	SeriesNode(AuthorNode *parent);
 	//void init();
-
+	shared_ptr<ZLImage> image() const { return 0; };
 	//shared_ptr<Book> book() const;
 
 private:
@@ -99,6 +97,8 @@ public:
 	//void init();
 
 	//shared_ptr<Tag> tag() const;
+	shared_ptr<ZLImage> image() const { return 0; };
+
 
 private:
 	const ZLResource &resource() const;
@@ -126,6 +126,7 @@ private:
         std::string imageUrl() const;
         std::string title() const;
         std::string subtitle() const;
+    	shared_ptr<ZLImage> image() const { return 0; };
         shared_ptr<ZLImage> extractCoverImage() const;
 
 private:

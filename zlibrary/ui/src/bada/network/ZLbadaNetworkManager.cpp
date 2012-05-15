@@ -60,6 +60,10 @@ void ZLbadaNetworkManager::createInstance() {
 	ourInstance = new ZLbadaNetworkManager();
 }
 
+bool ZLbadaNetworkManager::connect() const
+{
+	AppLog("ZLbadaNetworkManager::connect()");
+}
 void ZLbadaNetworkManager::initPaths() {
 	/*
 	QMutexLocker locker(globalCacheMutex());

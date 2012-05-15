@@ -14,6 +14,16 @@
 
 using namespace Osp::Graphics;
 
+class ZLFont {
+public:
+	std::string family;
+	std::string fontStyles[4];
+	ZLFont();
+	~ZLFont();
+	void initValue(char* name, char* value);
+	std::string getFileName(bool bold, bool italic);
+};
+
 class ZLbadaPaintContext: public ZLPaintContext {
 private:
 
@@ -27,8 +37,11 @@ private:
 	bool myStoredItalic;
 	bool defaultFontLoaded;
 	std::string defaultFont;
+	int deltaItalic;
 	Osp::Graphics::Color FillColor;
 	Osp::Graphics::Font* myFont;
+	Osp::Graphics::Font* myFontRegular;
+	Osp::Graphics::Font* myFontItalic;
 	Osp::Base::ByteBuffer* fontData;
 	Osp::Graphics::Font* loadExternalFont(const std::string &family, const std::string &path, int style, int size);
 	void printFaceName(Osp::Graphics::Font* font);
@@ -36,6 +49,10 @@ private:
 protected:
 	std::map<std::string, std::string> fontsCache;
 	std::map<std::string, std::string> myFontsList;
+	mutable std::vector<std::string> badaFonts;
+	std::vector<ZLFont*> fontsList;
+	std::string checkFont(const std::string &family);
+	const std::string findFont(const std::string &family, bool bold, bool italic);
 	void collectFiles(std::map<std::string, std::string> &names, const char* path );
 	void initMyFontsList();
 

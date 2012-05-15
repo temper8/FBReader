@@ -79,10 +79,10 @@ result OpenFileForm::OnInitializing(void)
     pList->AddItemEventListener(*this);
 
     // Creates a String
-    String itemText1(L"Text1");
-    String itemText2(L"Text2");
-    String itemText3(L"Text4");
-    String itemText4(L"Text5");
+  //  String itemText1(L"Text1");
+  //  String itemText2(L"Text2");
+  //  String itemText3(L"Text4");
+  //  String itemText4(L"Text5");
     // Adds an item to the List
   //  pList->AddItem(&itemText1, null, null, null, 500);
   //  pList->AddItem(&itemText2, null, null, null, 501);
@@ -156,10 +156,6 @@ void OpenFileForm::OnItemStateChanged (const Osp::Ui::Control &source, int index
 
 	AppLog("Выбран файл! \n");
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-	pFrame->SetCurrentForm(*pPreviousForm);
-	pPreviousForm->Draw();
-	pPreviousForm->Show();
-	//((badaForm*)pPreviousForm)->pSearchResultInfo=pInfo;
 
 	if (pInfo) {
 			tmpContentPath = ((ContentInfo*)pInfo->GetContentInfo())->GetContentPath();
@@ -327,21 +323,10 @@ void OpenFileForm::UpdateContent(){
 	TryCatch(E_SUCCESS == r, popStr = "Search fail - Construct fail.", "Construct() is failed by %s.", GetErrorMessage(r));
 
 	strQuery = L"ContentFileName LIKE '%.fb2' OR ContentFileName LIKE '%.epub'";
-	//strQuery.Append(L" LIKE '%.fb2' OR  LIKE '%.fb2'");
-	//keyword = L" ";
 
-		// convert special char
-		//keyword.Replace(L"\\", L"\\\\");
-		//keyword.Replace(L"_", L"\\_");
-		//keyword.Replace(L"%", L"\\%");
-		//keyword.Replace(L"'", L"\\'");
-
-		//strQuery.Append(keyword);
-
-		//strQuery.Append(L"'");
 	bb = Osp::Base::Utility::StringUtil::StringToUtf8N(strQuery);
 	AppLog("strQuery %s",(char*)bb->GetPointer());
-	__pLstContentInfo = contentSearch.SearchN(1, 50, totalPage, totalCount, strQuery, sortColumn, SORT_ORDER_NONE);
+	__pLstContentInfo = contentSearch.SearchN(1, 100, totalPage, totalCount, strQuery, sortColumn, SORT_ORDER_NONE);
 	TryCatch(__pLstContentInfo != null, popStr = "Search failed.", "ContentSearch.SearchN() is failed by %s", GetErrorMessage(GetLastResult()));
 
 	nItemCount = __pLstContentInfo->GetCount();

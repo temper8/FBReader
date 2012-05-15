@@ -81,7 +81,7 @@ void NetworkBookPictureEntry::onAccept(const std::string &value) {
 NetworkBookPreviewDialog::NetworkBookPreviewDialog(NetworkBookNode *node): myNode(node) {
 	// TODO Auto-generated constructor stub
 	//myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookOpenAction(myBook));
-	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"),0, true);
 
 
 	AppLog("myDialog->createTab");

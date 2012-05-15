@@ -26,7 +26,6 @@
 //#include <QtCore/QMap>
 #include <FBase.h>
 #include <ZLTreeDialog.h>
-#include "../tree/ZLbadaTreeModel.h"
 #include "../tree/TreeViewForm.h"
 
 //class WaitWidget;
@@ -48,28 +47,9 @@ public:
 	ZLbadaTreeDialog(const ZLResource &resource);
 	~ZLbadaTreeDialog();
 
-	static bool isAlive(ZLbadaTreeDialog *dialog);
-	
-//	virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-//	virtual QModelIndex parent(const QModelIndex &child) const;
-	
-//	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-//	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-	//    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
-	
-//	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	
-	void onProgressUpdated(ZLTreeNode *node);
-	void onProgressFinished(ZLTreeNode *node, const std::string &error);
-	
-//	Q_INVOKABLE void fetchChildren(const QModelIndex &index);
-//	Q_INVOKABLE QVariant progressData(const QModelIndex &index);
-//	Q_INVOKABLE bool activate(const QModelIndex &index);
-//	Q_INVOKABLE QStringList actions(const QModelIndex &index);
-//	Q_INVOKABLE bool isVisibleAction(const QModelIndex &index, int action);
-//	Q_INVOKABLE QObject *createPageContent(const QModelIndex &index);
-//	Q_INVOKABLE void run(const QModelIndex &index, int action);
-//	Q_INVOKABLE void finish();
+//	static bool isAlive(ZLbadaTreeDialog *dialog);
+//	void onProgressUpdated(ZLTreeNode *node);
+//	void onProgressFinished(ZLTreeNode *node, const std::string &error);
 	
 	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index);
 	virtual void onNodeEndInsert();
@@ -79,20 +59,23 @@ public:
 	virtual void run();
 	Osp::Base::Object* Run(void);
 	Osp::Base::Runtime::Thread* __pThread;
-	virtual void onCloseRequest();
+//	virtual void onCloseRequest();
 	
 public: ///////; Q_SLOTS:
-	void finishLater();
+//	void finishLater();
 	
 //Q_SIGNALS:
-	void finished();
-	void progressChanged();
+//	void finished();
+//	void progressChanged();
 	virtual bool back();
 	virtual bool enter(ZLTreeNode* node);
 	virtual void updateNode(ZLTreeTitledNode &node, int index);
 	virtual void treadTerminator();
-private:
+	virtual void setShowIcons(bool value);
 
+private:
+	bool __terminateThread;
+	virtual bool exitThread();
     //WaitWidget* myWaitWidget;
  //   shared_ptr<ZLExecutionData::Listener> myWaitWidgetListener;
     TreeViewForm* myForm;

@@ -37,30 +37,17 @@ using namespace Osp::Ui::Controls;
 
 
 
-ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(resource)
+ZLbadaTreeDialog::ZLbadaTreeDialog(const ZLResource &resource) : ZLTreeDialog(resource), __pThread(null)
 {
 	AppLog("ZLbadaTreeDialog::ZLbadaTreeDialog()");
-	//myResource = resource;
+
 	result r = E_SUCCESS;
-	//setCaption(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
-
-	//        myWaitWidget = new WaitWidget;
-
- //   TreeActionListener* listener = new TreeActionListener;
-    //because we should have a shared_ptr
-  //  myWaitWidgetListener = listener;
-
 	AppLog("new TreeViewForm");
    	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 	myForm = new TreeViewForm;
-
-
 	AppLog("new ZLbadaTreeModel");
 	//myRootNode = ;
 	myCurrentNode = &rootNode();
-	//ZLbadaTreeModel* myModel = new ZLbadaTreeModel(rootNode(), myWaitWidgetListener);
-	//myForm->setModel(myModel);
-	//myForm->myModel->TestTest();
 	myForm->SetPreviousForm(pFrame->GetCurrentForm());
 	//myForm->Initialize(resource["title"].value().c_str());
 	myForm->Initialize(this);
@@ -77,18 +64,36 @@ ZLbadaTreeDialog::~ZLbadaTreeDialog() {
 //	aliveTrees()->remove(this);
 }
 
+void ZLbadaTreeDialog::setShowIcons(bool value){
+	showIcons = value;
+	if (myForm) myForm->showIcons = value;
+}
+
 Object* ZLbadaTreeDialog::Run(void){
 	AppLog("__pThread Run");
 	loadCovers();
+	return null;
+}
+
+bool ZLbadaTreeDialog::exitThread(){
+	//int exitCode = 0;
+	//__pThread->GetExitCode(exitCode);
+	//bool exit;
+	//AppLog("exitCode %d",exitCode );
+	//__pMonitor->Enter();
+	//__pMonitor->Wait();
+	//__pMonitor->Exit();
+	return __terminateThread;
 }
 
 bool ZLbadaTreeDialog::back() {
 	AppLog("ZLbadaTreeDialog::back()");
 	if (__pThread) {
-		 AppLog("wait terminateThread ");
-		terminateThread = true;
+		AppLog("wait terminateThread ");
+		__terminateThread = true;
+		//__pThread->Exit(1);
 		__pThread->Join();
-		 AppLog("Join");
+		AppLog("Join");
 		delete __pThread;
 		__pThread = null;
 	}
@@ -96,14 +101,14 @@ bool ZLbadaTreeDialog::back() {
 		return false;
 	}
 	myCurrentNode = myCurrentNode->parent();
-	 myForm->UpdateContent();
+	myForm->UpdateContent();
 	 AppLog("UpdateContent finish");
-	 if (!noIcons){
+	 if (showIcons){
 		 __pThread = new Thread();
 		 __pThread->Construct(*this);
 		 //pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
 		 //__pListView->SetTextOfEmptyList(L"Loading...");
-		 terminateThread = false;
+		 __terminateThread = false;
 		 __pThread->Start();
 	 }
 	return true;
@@ -111,7 +116,8 @@ bool ZLbadaTreeDialog::back() {
 
 void ZLbadaTreeDialog::treadTerminator(){
 	if (__pThread) {
-		terminateThread = true;
+		__terminateThread = true;
+		//__pThread->Exit(1);
 		__pThread->Join();
 		 AppLog("Join");
 		delete __pThread;
@@ -124,7 +130,8 @@ bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
 	 AppLog("enter node");
 	if (__pThread) {
 		 AppLog("wait terminateThread ");
-		terminateThread = true;
+		__terminateThread = true;
+		//__pThread->Exit(1);
 		__pThread->Join();
 		 AppLog("Join");
 		delete __pThread;
@@ -135,13 +142,11 @@ bool ZLbadaTreeDialog::enter(ZLTreeNode* node) {
 	 myCurrentNode->requestChildren(0);
 	 myForm->UpdateContent();
 	 AppLog("UpdateContent finish");
-	 if (!noIcons){
-	__pThread = new Thread();
-	__pThread->Construct(*this);
-		//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
-		//__pListView->SetTextOfEmptyList(L"Loading...");
-	terminateThread = false;
-	__pThread->Start();
+	 if (showIcons){
+		 __pThread = new Thread();
+		 __pThread->Construct(*this);
+		__terminateThread = false;
+		 __pThread->Start();
 	 }
 	return true;
 }
@@ -150,11 +155,11 @@ void ZLbadaTreeDialog::updateNode(ZLTreeTitledNode &node, int index){
 	AppLog("updateNode %d", index);
 	myForm->updateItem(node, index);
 }
-
+/*
 bool ZLbadaTreeDialog::isAlive(ZLbadaTreeDialog *dialog) {
 	return true;//aliveTrees()->contains(dialog);
 }
-
+*/
 void ZLbadaTreeDialog::run() {
 	AppLog("ZLbadaTreeDialog::run");
 //	Osp::Base::Runtime::Monitor* pMonitor = new Osp::Base::Runtime::Monitor;
@@ -163,25 +168,27 @@ void ZLbadaTreeDialog::run() {
 
 	result r = E_SUCCESS;
 	//myForm->UpdateContent();
-
+/*
 	if (__pThread) {
-		terminateThread = true;
+		__terminateThread = true;
+		__pThread->Exit(1);
 		__pThread->Join();
 		 AppLog("Join");
 		delete __pThread;
 		__pThread = null;
 	}
+	*/
 	 //myCurrentNode = node;
 	// myCurrentNode->requestChildren(myWaitWidgetListener);
 	 myForm->UpdateContent();
 
 	 AppLog("UpdateContent finish");
-	 if (!noIcons){
+	 if (showIcons){
 			__pThread = new Thread();
 			__pThread->Construct(*this);
 				//pHeader->PlayWaitingAnimation(HEADER_ANIMATION_POSITION_TITLE);
 				//__pListView->SetTextOfEmptyList(L"Loading...");
-			terminateThread = false;
+			__terminateThread = false;
 			__pThread->Start();
 		 }
 	Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();

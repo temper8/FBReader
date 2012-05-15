@@ -66,12 +66,15 @@ BookRemoveAction::BookRemoveAction(shared_ptr<Book> book) : myBook(book) {
 }
 
 void BookRemoveAction::run() {
+	AppLog("BookRemoveAction::run() ");
 	switch (removeBookDialog()) {
 		case Library::REMOVE_FROM_DISK:
 		{
+			AppLog("REMOVE_FROM_DISK ");
 			const std::string path = myBook->file().physicalFilePath();
 			ZLFile physicalFile(path);
 			if (!physicalFile.remove()) {
+				AppLog("!physicalFile.remove()");
 				ZLResourceKey boxKey("removeFileErrorBox");
 				const std::string message =
 					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), path);
@@ -80,6 +83,7 @@ void BookRemoveAction::run() {
 		}
 		// yes, we go through this label
 		case Library::REMOVE_FROM_LIBRARY:
+			AppLog("REMOVE_FROM_LIBRARY ");
 			Library::Instance().removeBook(myBook);
 			FBReader::Instance().refreshWindow();
 		case Library::REMOVE_DONT_REMOVE:
@@ -103,7 +107,7 @@ int BookRemoveAction::removeBookDialog() const {
 		case Library::REMOVE_DONT_REMOVE:
 			return Library::REMOVE_DONT_REMOVE;
 		case Library::REMOVE_FROM_DISK:
-		{
+		{   AppLog("REMOVE_FROM_DISK ");
 			ZLFile physFile(myBook->file().physicalFilePath());
 			const std::string message = ZLStringUtil::printf(msgResource["deleteFile"].value(), physFile.name(false));
 			if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
@@ -112,7 +116,7 @@ int BookRemoveAction::removeBookDialog() const {
 			return Library::REMOVE_DONT_REMOVE;
 		}
 		case Library::REMOVE_FROM_LIBRARY:
-		{
+		{ AppLog("REMOVE_FROM_LIBRARY ");
 			const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook->title());
 			if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
 				return Library::REMOVE_FROM_LIBRARY;
@@ -120,7 +124,7 @@ int BookRemoveAction::removeBookDialog() const {
 			return Library::REMOVE_DONT_REMOVE;
 		}
 		case Library::REMOVE_FROM_LIBRARY_AND_DISK:
-		{
+		{ AppLog("REMOVE_FROM_LIBRARY_AND_DISK ");
 			ZLResourceKey removeFileKey("removeFile");
 			ZLResourceKey removeLinkKey("removeLink");
     

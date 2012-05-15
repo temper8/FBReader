@@ -9,12 +9,12 @@
 #include <FBase.h>
 
 unsigned char *newMem1(unsigned size){
-//	AppLog("newMem1 %d",size);
+	AppLog("newMem1 %d",size);
 return new unsigned char[size];
 }
 
 void freeMem1(unsigned char *ptr){
-	//AppLog("freeMem1");
+	AppLog("freeMem1");
 	delete[] ptr;
 }
 
@@ -46,12 +46,12 @@ mem::~mem() {
 extern "C"
 {
 unsigned char *newMem(unsigned size){
-//	AppLog("newMem");
+	AppLog("newMem");
 	return newMem1(size);
 }
 
 void freeMem(unsigned char *ptr){
-//	AppLog("freeMem");
+	AppLog("freeMem");
 	freeMem1(ptr);
 }
 }

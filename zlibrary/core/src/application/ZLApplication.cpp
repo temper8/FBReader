@@ -149,7 +149,10 @@ shared_ptr<ZLView> ZLApplication::currentView() const {
 
 void ZLApplication::refreshWindow() {
 	AppLog("ZLApplication::refreshWindow");
+
 	if (!myViewWidget.isNull()) {
+		AppLog("Orientation %d", myViewWidget->rotation());
+		AppLog("AngleStateOption %d", AngleStateOption.value());
 		AppLog("myViewWidget->repaint()");
 		myViewWidget->repaint();
 	}

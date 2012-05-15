@@ -280,6 +280,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		const std::string &href = link.href();
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
+		AppLog("readCatalogItem rel =%s",rel.c_str());
+		AppLog("readCatalogItem href =%s",href.c_str());
 		if (ZLMimeType::isImage(type)) {
 			if (rel == OPDSConstants::REL_THUMBNAIL ||
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
@@ -310,6 +312,12 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				url = href;
 			}
 		}
+		else if (*type == *ZLMimeType::APPLICATION_EPUB_ZIP) {
+					 {
+						//litresCatalogue = true;
+						url = href;
+					}
+				}
 	}
 
 	if (url.empty() && htmlURL.empty()) {

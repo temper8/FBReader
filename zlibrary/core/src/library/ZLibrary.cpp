@@ -144,9 +144,11 @@ std::string ZLibrary::Language() {
 			ourLocaleIsInitialized = true;
 		}
 	}
+	AppLog("ZLibrary ourLanguage =%s", ourLanguage.c_str());
 	if (ourLanguage.empty()) {
 		ourLanguage = "en";
 	}
+	//ourLanguage = "ru";
 	return ourLanguage;
 }
 
@@ -155,5 +157,7 @@ std::string ZLibrary::Country() {
 		initLocale();
 		ourLocaleIsInitialized = true;
 	}
+	AppLog("ZLibrary ourCountry =%s", ourCountry.c_str());
+//	ourCountry = "ru";
 	return ourCountry;
 }

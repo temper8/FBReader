@@ -97,7 +97,7 @@ void ShowOptionsDialogAction::run() {
 	AppLog("ShowOptionsDialogAction::run() SystemOptionsDialog");
 	//FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("PreferencesTreeDialog"));
-	dialog->noIcons = true;
+	dialog->setShowIcons(false);
 	size_t index = 0;
 
 	dialog->rootNode().insert(new OptionsDialogNode(new AppearanceOptionsDialogAction()), index++);
@@ -112,13 +112,13 @@ void ShowOptionsDialogAction::run() {
 
 	dialog->rootNode().insert(new OptionsDialogNode(new ColorOptionsDialogAction()), index++);
 
-	dialog->rootNode().insert(new TextStylesTreeNode, index++);
+//	dialog->rootNode().insert(new TextStylesTreeNode, index++);
 
 	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
 
-	dialog->rootNode().insert(new ReadingOptionsDialogNode(), index++);
+//	dialog->rootNode().insert(new ReadingOptionsDialogNode(), index++);
 
-	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
+//	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
 
 	dialog->rootNode().insert(new LibraryOptionsDialogNode, index++);
 
@@ -166,7 +166,7 @@ void ShowTOCTreeAction::run() {
 	AppLog("ShowTOCTreeAction::run() ");
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("TOCTreeDialog"));
 	AppLog("ShowTOCTreeAction::createTreeDialog() ");
-	dialog->noIcons = true;
+	dialog->setShowIcons(false);
 	shared_ptr<ZLTextModel> contentsModel = FBReader::Instance().myModel->contentsModel();
 	AppLog("ShowTOCTreeAction::contentsModel() ");
 	const ZLTextTreeParagraph& rootParagraph = ((ContentsModel&)*contentsModel).getRootParagraph();

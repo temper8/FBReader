@@ -38,24 +38,30 @@ const std::string ZLibrary::FileNameDelimiter("/");
 const std::string ZLibrary::PathDelimiter(":");
 const std::string ZLibrary::EndOfLine("\n");
 
+#include <FBase.h>
+#include <FLocales.h>
+
+using namespace Osp::Base;
+using namespace Osp::Locales;
+
+
 void ZLibrary::initLocale() {
-	const char *locale = setlocale(LC_MESSAGES, ""); 
-	if (locale != 0) {
-		std::string sLocale = locale;
-		const int dotIndex = sLocale.find('.');
-		if (dotIndex != -1) {
-			sLocale = sLocale.substr(0, dotIndex);
-		}
-		const int dashIndex = std::min(sLocale.find('_'), sLocale.find('-'));
-		if (dashIndex == -1) {
-			ourLanguage = sLocale;
-		} else {
-			ourLanguage = sLocale.substr(0, dashIndex);
-			ourCountry = sLocale.substr(dashIndex + 1);
-			if ((ourLanguage == "es") && (ourCountry != "ES")) {
-				ourCountry = "LA";
-			}
-		}
+	LocaleManager localeManager;
+	localeManager.Construct();
+
+	// Gets the system locale information.
+	Locale  systemLocale = localeManager.GetSystemLocale();
+	LanguageCode langCode = systemLocale.GetLanguageCode();
+	switch (langCode) {
+			case LANGUAGE_ENG :
+				ourLanguage = "en";
+				break;
+			case LANGUAGE_FIN :
+				ourLanguage = "fi";
+				break;
+			case LANGUAGE_RUS :
+				ourLanguage = "ru";
+				break;
 	}
 }
 

@@ -88,17 +88,19 @@ static std::string getHomeDir() {
 }
 
 ZLFileInfo ZLbadaFSManager::fileInfo(const std::string &path) const {
+	AppLog("ZLbadaFSManager::fileInfo %s",path.c_str());
 	ZLFileInfo info;
-	struct stat fileStat;
+	//struct stat fileStat;
     result r = E_SUCCESS;
     FileAttributes attr;
-    r = File::GetAttributes(path.c_str(), attr);
+    Osp::Base::String badaPath(path.c_str());
+    r = File::GetAttributes(badaPath, attr);
    //TODO if(IsFailed(r)) goto CATCH;
 
 	//info.Exists = stat(path.c_str(), &fileStat) == 0; stat - не работает
     info.Exists = (r==E_SUCCESS);
 
-	AppLog("ZLbadaFSManager::fileInfo %s",path.c_str());
+	AppLog("ZLbadaFSManager::fileInfo r = %d", r);
 	if (info.Exists) {
 		info.Size = attr.GetFileSize();//fileStat.st_size;
 		//AppLog("ZLbadaFSManager::fileInfo.Size %d",fileStat.st_size);
@@ -189,9 +191,9 @@ void ZLbadaFSManager::normalizeRealPath(std::string &path) const {
 }
 
 ZLFSDir *ZLbadaFSManager::createNewDirectory(const std::string &path) const {
-//	AppLog("createNewDirectory %s",path.c_str());
+	AppLog("createNewDirectory %s",path.c_str());
 
-	result r = Osp::Io::Directory::Create  (Osp::Base::String(path.c_str()), true);
+	result r = Osp::Io::Directory::Create(Osp::Base::String(path.c_str()), true);
 	if (r == E_SUCCESS) {
 		return createPlainDirectory(path);
 	}
@@ -211,7 +213,7 @@ ZLOutputStream *ZLbadaFSManager::createOutputStream(const std::string &path) con
 }
 
 bool ZLbadaFSManager::removeFile(const std::string &path) const {
-	AppLog("removeFile %s",path.c_str());
+	AppLog("ZLbadaFSManager:removeFile %s",path.c_str());
 	return unlink(path.c_str()) == 0;
 }
 
@@ -243,6 +245,7 @@ bool ZLbadaFSManager::canRemoveFile(const std::string &path) const {
 	FileAttributes attr;
     r = File::GetAttributes(path.c_str(), attr);
 	//TODO   if(IsFailed(r)) goto CATCH;
+    if (!attr.IsReadOnly())	AppLog("true"); else AppLog("false");
    return !attr.IsReadOnly();
 //	return access(parentPath(path).c_str(), W_OK) == 0;
 }

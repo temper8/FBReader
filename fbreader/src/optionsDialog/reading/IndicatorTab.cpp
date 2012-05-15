@@ -91,9 +91,9 @@ private:
 };
 
 IndicatorTypeEntry::IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption) : myOption(typeOption) {
-	myValues.push_back(resource["osScrollbar"].value());
-	myValues.push_back(resource["fbIndicator"].value());
+//	myValues.push_back(resource["osScrollbar"].value());
 	myValues.push_back(resource["none"].value());
+	myValues.push_back(resource["fbIndicator"].value());
 }
 
 const std::string &IndicatorTypeEntry::initialValue() const {

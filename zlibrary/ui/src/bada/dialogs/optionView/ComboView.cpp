@@ -24,7 +24,32 @@ using namespace Osp::Graphics;
 using namespace Osp::Base::Runtime;
 
 
-
+result ComboOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus)
+{
+	result r = E_SUCCESS;
+	AppLog("DrawElement");
+	Osp::Graphics::Canvas* pCanvas = const_cast<Osp::Graphics::Canvas*>(&canvas);
+	AppLog("pCanvas");
+	int d=5;
+	Rectangle CircleRect(rect.x+d,rect.y+d,rect.width-2*d ,rect.height-2*d);
+	pCanvas->SetLineWidth(2);
+	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+	if (pCanvas->DrawEllipse(CircleRect) != E_SUCCESS)
+		return r;
+	int cx = rect.x + rect.width /2;
+	int cy = rect.y + rect.height /2;
+	int wt = rect.width /6;
+	Point point1(cx-wt,cy-wt/2);
+	Point point2(cx+wt,cy-wt/2);
+	Point point3(cx,cy+wt/2);
+	pCanvas->FillTriangle (Osp::Graphics::Color::COLOR_GREY, point1, point2, point3);
+	/*
+	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_WHITE);
+	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+20, rect.y+10), *pEnrichedText) != E_SUCCESS)
+		return r;
+*/
+	return r;
+}
 void ComboOptionView::_createItem() {
 	AppLog("ComboOptionView::_createItem() name = %s",(ZLOptionView::name()).c_str());
 
@@ -32,40 +57,12 @@ void ComboOptionView::_createItem() {
     pItem->Construct(100);
     pItem->SetItemFormat(*myTab->form()->__pComboViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
-//    pItem->SetElement(ID_LIST_CUSTOM, *this);
-	 pItem->SetElement(ID_LIST_CHECKBOX, *myTab->form()->arrowDownBmp, myTab->form()->arrowDownBmp);
- //   pItem->SetCheckBox(ID_LIST_CHECKBOX);
-    //pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
+    pItem->SetElement(ID_LIST_CHECKBOX, *myTab->form()->arrowDownBmp, myTab->form()->arrowDownBmp);
+  //  pItem->SetElement(ID_LIST_CHECKBOX, *this);
+
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 	groupIndex = myTab->form()->GroupCount-1;
 	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
-
-	/*
-	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
-	QLabel *label = 0;
-	const std::string &name = ZLOptionView::name();
-	if (!name.empty()) {
-		label = new QLabel(::qtString(name), myTab->widget());
-	}
-	myComboBox = new QComboBox(myTab->widget());
-	myComboBox->setEditable(comboOption.isEditable());
-
-	if (label != 0) {
-		myWidgets.push_back(label);
-	}
-	myWidgets.push_back(myComboBox);
-
-	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueSelected(int)));
-	connect(myComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
-
-	if (label != 0) {
-		int width = myToColumn - myFromColumn + 1;
-		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-		myTab->addItem(myComboBox, myRow, myFromColumn + width / 2, myToColumn);
-	} else {
-		myTab->addItem(myComboBox, myRow, myFromColumn, myToColumn);
-	}
-*/
 	reset();
 }
 
@@ -189,7 +186,7 @@ void ComboOptionView::OnActionPerformed(const Control& source, int actionId)
 }
 
 
-ComboOptionPopup::ComboOptionPopup(void){}
+ComboOptionPopup::ComboOptionPopup(void):__parentComboOptionView(null),__parentSpinOptionView(null){}
 
 ComboOptionPopup::~ComboOptionPopup(void){}
 
@@ -205,20 +202,11 @@ result ComboOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentForm, C
 	if(__pParentForm == null)
 		return E_FAILURE;
 
-/*	Button* pCreateButton = new Button();
-	pCreateButton->Construct(Rectangle(20, 550, 200, 70), L"Create");
-	AddControl(*pCreateButton);
-	pCreateButton->SetActionId(ID_BUTTON_CREATE);
-	pCreateButton->AddActionEventListener(*this);
-*/
 	Button* pCancelButton = new Button();
-	//pCancelButton->Construct(Rectangle(230, 550, 200, 70), L"Cancel");
 	pCancelButton->Construct(Rectangle(125, 570, 200, 70), L"Cancel");
 	AddControl(*pCancelButton);
 	pCancelButton->SetActionId(ID_BUTTON_CANCEL);
 	pCancelButton->AddActionEventListener(*this);
-
-
 	__pComboList = new List();
 	Osp::Graphics::Rectangle rect = GetBounds();
 	__pComboList->Construct(Rectangle(20, 10, 480, 520), LIST_STYLE_NORMAL, LIST_ITEM_SINGLE_TEXT, 90, 0, 400, 0);

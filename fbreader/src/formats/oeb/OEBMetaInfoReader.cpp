@@ -128,6 +128,7 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 
 void OEBMetaInfoReader::endElementHandler(const char *tag) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
+//	AppLog("OEBMetaInfo endElementHandler  = %s", tag);
 	if (myDCMetadataTag == tagString) {
 		interrupt();
 	} else {
@@ -153,6 +154,10 @@ void OEBMetaInfoReader::endElementHandler(const char *tag) {
 				if (myBuffer == "cz") {
 					myBuffer = "cs";
 				}
+			//	AppLog("setLanguage = %s", myBuffer.c_str());
+				if (myBuffer == "UND") {
+						myBuffer.clear();// = "ru";
+							}
 				myBook.setLanguage(myBuffer);
 			}
 			myBuffer.erase();

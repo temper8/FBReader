@@ -62,7 +62,7 @@ protected:
 
 public:
 	
-	virtual void onCloseRequest() = 0;
+//	virtual void onCloseRequest() = 0;
 	// Parent has new child at index
 	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
 	virtual void onNodeEndInsert() = 0;

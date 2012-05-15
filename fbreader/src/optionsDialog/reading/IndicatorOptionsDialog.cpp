@@ -17,7 +17,7 @@
 #include "../../fbreader/FBView.h"
 
 
-IndicatorOptionsDialog::IndicatorOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+IndicatorOptionsDialog::IndicatorOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("IndicatorOptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();

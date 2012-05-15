@@ -95,6 +95,14 @@ shared_ptr<ZLTextPositionIndicatorInfo> FBView::indicatorInfo() const {
 	return ourIndicatorInfo;
 }
 
+void FBView::doTapScrollingX(int x) {
+	if (2 * x < context().width()) {
+		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
+	} else {
+		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+	}
+}
+
 void FBView::doTapScrolling(int y) {
 	if (2 * y < context().height()) {
 		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
@@ -103,8 +111,8 @@ void FBView::doTapScrolling(int y) {
 	}
 }
 
-bool FBView::onFingerTap(int, int y) {
-	doTapScrolling(y);
+bool FBView::onFingerTap(int x, int y) {
+	doTapScrollingX(x);
 	return true;
 }
 

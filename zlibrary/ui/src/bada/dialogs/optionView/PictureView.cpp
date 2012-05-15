@@ -206,7 +206,12 @@ Bitmap* PictureView::makeCover(Bitmap* srcBmp){
 	}
 	else
 		{
-		Dimension coverDim2 = Dimension(imageWidth*3,imageHeight*3);
+		float kx = coverDim.width/imageWidth;
+		float ky = coverDim.height/imageHeight;
+		int k;
+		if (kx<ky) k=kx; else k=ky;
+		AppLog("k = %d", k);
+		Dimension coverDim2 = Dimension(imageWidth*k,imageHeight*k);
 		int dy = (coverDim.height - coverDim2.height) / 2;
 		int dx = (coverDim.width - coverDim2.width) / 2;
 		srcBmp->Scale(coverDim2);
@@ -259,10 +264,12 @@ void PictureView::_createItem() {
 	pItem->Construct(330);
 	pItem->SetItemFormat(*myTab->form()->__pImageViewListItemFormat);
 	pItem->SetElement(ID_LIST_BACKGROUND, String(""));
-	pItem->SetElement(ID_LIST_BITMAP1, *myBottonActions[0]);
-	pItem->SetElement(ID_LIST_BITMAP2, *myBottonActions[1]);
-	pItem->SetElement(ID_LIST_BITMAP3, *myBottonActions[2]);
-	pItem->SetElement(ID_LIST_BITMAP4, *myBottonActions[3]);
+
+//	pItem->SetElement(ID_LIST_BITMAP1, *myBottonActions[0]);
+//	pItem->SetElement(ID_LIST_BITMAP2, *myBottonActions[1]);
+//	pItem->SetElement(ID_LIST_BITMAP3, *myBottonActions[2]);
+//	pItem->SetElement(ID_LIST_BITMAP4, *myBottonActions[3]);
+
 	//*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4,false);
 //	*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
 	//pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));

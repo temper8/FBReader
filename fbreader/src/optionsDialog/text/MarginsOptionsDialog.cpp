@@ -22,7 +22,7 @@
 #include "../../options/FBOptions.h"
 #include "../../options/FBTextStyle.h"
 
-MarginsOptionsDialog::MarginsOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+MarginsOptionsDialog::MarginsOptionsDialog(): AbstractOptionsDialog(ZLResourceKey("MarginsOptionsDialog"), true) {
 	// TODO Auto-generated constructor stub
 	FBReader &fbreader = FBReader::Instance();
 	FBOptions &options = FBOptions::Instance();

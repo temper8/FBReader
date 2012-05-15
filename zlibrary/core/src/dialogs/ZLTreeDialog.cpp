@@ -97,7 +97,7 @@ void CoverUpdaterRunner::run() {
 	}
 }
 
-ZLTreeDialog::ZLTreeDialog(const ZLResource &resource):myResource(resource),noIcons(false) {
+ZLTreeDialog::ZLTreeDialog(const ZLResource &resource):myResource(resource),showIcons(true) {
 }
 
 ZLTreeDialog::~ZLTreeDialog() {
@@ -144,18 +144,16 @@ void ZLTreeDialog::loadCovers() {
 					if (!exe.isNull()) {
 						AppLog("exe not null");
 						updater->addTask(exe);
-						if (updater->hasTasks()) {
-											AppLog("hasTasks");
-											updater->run();
-							}
-					}
+						if (updater->hasTasks()) updater->run();
+
+						}
 					//ZLExecutionData::perform(coverImage->synchronizationData());
 					updateNode(node,index);
 				}
 
 
 			index++;
-			if (terminateThread) {
+			if (exitThread()) {
 					AppLog("terminateThread 3");
 					break;
 				}

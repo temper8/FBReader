@@ -9,7 +9,8 @@ class ZLTreeDialog : public ZLTreeListener  {
 
 protected:
 	ZLTreeDialog(const ZLResource &resource);
-	bool terminateThread;
+	virtual bool exitThread() = 0;
+	bool showIcons;
 public:
 	virtual ~ZLTreeDialog();
 	const ZLResource &myResource;
@@ -26,7 +27,7 @@ public:
 	virtual void onNodeUpdated(ZLTreeNode *node) = 0;
 
 public:
-	bool noIcons;
+	virtual void setShowIcons(bool value);
 	virtual bool back();
 	virtual void updateNode(ZLTreeTitledNode &node, int index) = 0;
 	virtual bool enter(ZLTreeNode* node)=0;
@@ -34,6 +35,7 @@ public:
 	ZLTreeNode* myCurrentNode;
 	void loadCovers();
 	virtual void treadTerminator() =0;
+
 	//ZLTreeListener::RootNode& myRootNode;
 
 };

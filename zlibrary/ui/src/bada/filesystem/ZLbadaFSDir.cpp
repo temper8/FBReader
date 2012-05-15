@@ -34,7 +34,42 @@ using namespace Osp::Io;
 #include "ZLbadaFSManager.h"
 
 void ZLbadaFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
-	 AppLog("ZLbadaFSDir::collectSubDirs") ;
+	 AppLog("ZLbadaFSDir::collectSubDirs");
+    Directory dir;
+    DirEnumerator *pDirEnum = null;
+    result r = E_SUCCESS;
+    // Opens the directory
+    r = dir.Construct(path().c_str());
+    AppLog(" dir.Construct %s",path().c_str()) ;
+    if(IsFailed(r))  AppLog("IsFailed"); //goto CATCH;
+    // Reads all the directory entries
+    pDirEnum = dir.ReadN();
+    //  if(!pDirEnum)    goto CATCH;
+    while(pDirEnum->MoveNext() == E_SUCCESS)
+    {
+        DirEntry dirEntry = pDirEnum->GetCurrentDirEntry();
+        if (dirEntry.IsDirectory())  {
+        	Osp::Base::String str = dirEntry.GetName();
+        	AppLog("dirEntry name Length = %d",str.GetLength()) ;
+        	Utf8Encoding utf8;
+        	ByteBuffer* pBB = utf8.GetBytesN(str);
+        	std::string  shortName((const char*)pBB->GetPointer());//,str.GetLength());
+        	AppLog("dirEntry name = %s",shortName.c_str()) ;
+        	if ((shortName ==".")||(shortName == ".."))
+        		    AppLog("dirEntry name dots");
+        	else
+        			names.push_back(shortName);
+        	delete pBB;
+        }
+
+    }
+
+    // Deletes the enumerator
+    delete pDirEnum;
+
+    AppLog("Succeeded");
+
+
 /*	DIR *dir = opendir(path().c_str());
 	if (dir != 0) {
 		const std::string namePrefix = path() + delimiter();
@@ -77,18 +112,22 @@ void ZLbadaFSDir::collectFiles(std::vector<std::string> &names, bool includeSyml
 
     // Reads all the directory entries
     pDirEnum = dir.ReadN();
-  //  if(!pDirEnum)
-  //      goto CATCH;
+  //  if(!pDirEnum)    goto CATCH;
     while(pDirEnum->MoveNext() == E_SUCCESS)
     {
         DirEntry dirEntry = pDirEnum->GetCurrentDirEntry();
-        Osp::Base::String str = dirEntry.GetName();
-        AppLog("dirEntry name Length = %d",str.GetLength()) ;
-        Utf8Encoding utf8;
-       	ByteBuffer* pBB = utf8.GetBytesN(str);
-        std::string  shortName((const char*)pBB->GetPointer(),str.GetLength());
-        AppLog("dirEntry name = %s",shortName.c_str()) ;
-        names.push_back(shortName);
+        if (!dirEntry.IsDirectory())
+        {
+        	Osp::Base::String str = dirEntry.GetName();
+        	AppLog("fileEntry name Length = %d",str.GetLength()) ;
+        	Utf8Encoding utf8;
+        	ByteBuffer* pBB = utf8.GetBytesN(str);
+        	std::string  shortName((const char*)pBB->GetPointer(),str.GetLength());
+        	AppLog("fileEntry name = %s",shortName.c_str()) ;
+        	names.push_back(shortName);
+        	delete pBB;
+        }
+
     }
 
     // Deletes the enumerator

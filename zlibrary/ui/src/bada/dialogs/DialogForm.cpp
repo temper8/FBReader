@@ -26,16 +26,18 @@ bool DialogForm::Initialize(const char *title, bool __showApplyButton)
 	AppLog("DialogForm::Initialize \n");
 	// Construct an XML form FORM_STYLE_INDICATOR|
 
-//	if (showApplyButton) {
-	if (true) {
+	if (showApplyButton) {
+//	if (true) {
+		AppLog("showApplyButton true");
 	//	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1);
-		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
+		Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
 		AddSoftkeyActionListener(SOFTKEY_0, *this);
 		SetSoftkeyActionId(SOFTKEY_0, ID_ACT_UPDATE);
 		SetSoftkeyText(SOFTKEY_0, L"Apply");
 	}
 	else
-		Construct(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
+		Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
+
 	SetTitleText(String(title));
 
 	AddSoftkeyActionListener(SOFTKEY_1, *this);
@@ -87,6 +89,7 @@ void DialogForm::setMenuView(MenuView* view) {
 
 	__pOptionMenu = new OptionMenu();
 	__pOptionMenu->Construct();
+	__pOptionMenu->AddActionEventListener(*this);
 
 	updateMenu();
 	SetOptionkeyActionId(ID_OPTIONKEY);
@@ -127,11 +130,13 @@ result DialogForm::OnInitializing(void)
 	arrowDownBmp = pImage->DecodeN("/Res/icons/arrow_down.png", BITMAP_PIXEL_FORMAT_ARGB8888);
 	AppLog("pImage->DecodeN");
     __pCustomList = new GroupedList();
+
 	GroupCount = 0;
 	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
-	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK);
-//	__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_MARK_WITH_DIVIDER);
+	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK, true);
+//	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK_WITH_DIVIDER);
 	//__pCustomList->AddCustomItemEventListener(*this);
+    __pCustomList->SetBackgroundColor(Color(41,41,41));
 	__pCustomList->AddGroupedItemEventListener(*this);
 	  AddControl(*__pCustomList);
 
@@ -142,7 +147,7 @@ result DialogForm::OnInitializing(void)
 	  __pSpinViewListItemFormat->Construct();
 
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 400, 80), 30, Color::COLOR_GREY, Color::COLOR_GREY);
-	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(420, 25, 400, 80), 30);
+	  __pSpinViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(415, 25, 400, 80), 30);
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pSpinViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 
@@ -154,7 +159,7 @@ result DialogForm::OnInitializing(void)
 	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(10, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
 	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(10, 50, 400, 80), 28);
 	  __pComboViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
-	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 40, 40));
+	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 25, 32, 32));
 
 //---------------------- __pStringViewListItemFormat --------------------------------
 
@@ -162,7 +167,7 @@ result DialogForm::OnInitializing(void)
 	  __pStringViewListItemFormat->Construct();
 
 	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
-	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 45, 400, 80), 25);
+	  __pStringViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(30, 45, 400, 78), 25);
 	  __pStringViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
 	  __pStringViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
 
@@ -185,10 +190,10 @@ result DialogForm::OnInitializing(void)
 	__pBooleanListItemFormat = new CustomListItemFormat();
 	__pBooleanListItemFormat->Construct();
 
-	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(20, 10, 400, 80), 28, Color::COLOR_GREY, Color::COLOR_GREY);
+	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(15, 25, 400, 80), 28);//, Color::COLOR_GREY, Color::COLOR_GREY);
 	__pBooleanListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(20, 55, 400, 80), 20);
 	__pBooleanListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
-	__pBooleanListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 15, 50, 50));
+	__pBooleanListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 20, 50, 50));
 	__pBooleanListItemFormat->SetElementEventEnabled(ID_LIST_CHECKBOX, true);
 
 
@@ -224,18 +229,19 @@ result DialogForm::OnInitializing(void)
 	__pImageViewListItemFormat->Construct();
 
 	__pImageViewListItemFormat->AddElement(ID_LIST_BACKGROUND, Osp::Graphics::Rectangle(0, 0, 480, 330));
-	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 15, 200, 300));
-	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP1, Osp::Graphics::Rectangle(240, 25, 220, 52));
-	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP2, Osp::Graphics::Rectangle(240, 100, 220, 52));
-	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP3, Osp::Graphics::Rectangle(240, 175, 220, 52));
-	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP4, Osp::Graphics::Rectangle(240, 250, 220, 52));
+//	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 15, 200, 300));
+	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(120, 15, 200, 300));
+//	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP1, Osp::Graphics::Rectangle(240, 25, 220, 52));
+//	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP2, Osp::Graphics::Rectangle(240, 100, 220, 52));
+//	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP3, Osp::Graphics::Rectangle(240, 175, 220, 52));
+//	__pImageViewListItemFormat->AddElement(ID_LIST_BITMAP4, Osp::Graphics::Rectangle(240, 250, 220, 52));
 
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BACKGROUND, true);
 	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP, true);
-	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP1, true);
-	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP2, true);
-	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP3, true);
-	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
+//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP1, true);
+//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP2, true);
+//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP3, true);
+//	__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
 
 
 //---------------------- __pButtonViewListItemFormat --------------------------------
@@ -258,7 +264,7 @@ result  DialogForm::AddTab(const char *title){
 	AppLog("DialogForm::AddTab %s", title);
 	result r = E_SUCCESS;
 
-    __pCustomList->AddGroup(String(title), null);
+    __pCustomList->AddGroup(String(" "), null);
     GroupCount++;
 
 }
@@ -290,6 +296,7 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 	case ID_ACT_CLOSE:
 		{
 			AppLog("Close button is clicked!");
+			__badaOptionsDialog->accept();
 			Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 			//pFrame->SetCurrentForm(*pPreviousForm);
 			//pPreviousForm->Draw();
@@ -303,11 +310,13 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 		{
 			AppLog("UpdateContent");
 			//((shared_ptr<ZLbadaOptionsDialog>)__badaOptionsDialog)->apply();
-			if (showApplyButton) {
+			/*if (showApplyButton) {
 				__badaOptionsDialog->accept();
 				pPreviousForm->SendUserEvent(2, null);
 			}
-			else {
+			else
+				*/
+			{
 				for (int i = 1; i<myMenuView->myActions.size();i++){
 					shared_ptr<ZLRunnableWithKey> a = myMenuView->myActions[i];
 					if (a->makesSense()) {
@@ -427,10 +436,15 @@ void DialogForm::ShowColorComboOptionPopup(ColorOptionView* pColorOptionView){
 void DialogForm::ShowSpinOptionPopup(SpinOptionView* pSpinOptionView){
 	//DeleteCreateCategoryPopup();
 
-	__pSpinOptionPopup = new SpinOptionPopup();
-	//AddControl(*__pComboOptionPopup);
-	__pSpinOptionPopup->Construct(this, pSpinOptionView);
-	__pSpinOptionPopup->Show();
+	//__pSpinOptionPopup = new SpinOptionPopup();
+
+	//__pSpinOptionPopup->Construct(this, pSpinOptionView);
+	//__pSpinOptionPopup->Show();
+
+	__pComboOptionPopup = new ComboOptionPopup();
+	__pComboOptionPopup->Construct(this, pSpinOptionView);
+	__pComboOptionPopup->Show();
+
 }
 
 

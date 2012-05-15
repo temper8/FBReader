@@ -26,6 +26,7 @@
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
 #include <stdlib.h>
+#include <libxml/xmlexports.h>
 
 //void ZLXMLReaderInternal::fCharacterDataHandler(void *userData, const char *text, int len) {
 //void fCharacterDataHandler(void *userData, const char *text, int len) {
@@ -44,6 +45,7 @@ void fCharacterDataHandler(void *userData,	const xmlChar *text, int len) {
 	//	AppLog("fCharacterDataHandler len = %d",len);
 	}
 }
+
 
 //void ZLXMLReaderInternal::fStartElementHandler(void *userData, const char *name, const char **attributes) {
 //typedef void(* startElementSAXFunc)(void *ctx, const xmlChar *name, const xmlChar **atts)
@@ -137,10 +139,13 @@ void fEndElementHandler(void *userData, const xmlChar *name) {
 static xmlDocPtr ParseEntity;
 
 xmlEntityPtr fgetEntity(	void * 	user_data, 	const xmlChar * name){
-	//AppLog("fgetEntity %s",name );
+	AppLog("fgetEntity %s",name );
 	//ZLXMLReader &reader = *(ZLXMLReader*)userData;
 	xmlEntityPtr ep = xmlGetPredefinedEntity(name);
-	if (ep) return ep;
+	if (ep) {
+		AppLog("ExternalID	 %s",ep->ExternalID);
+		AppLog("SystemID	 %s",ep->SystemID);
+		 return ep;}
 	//if (strncmp((const char*)name, "FBReaderVersion", 14) == 0) {
 	AppLog("FBReaderVersion !!!!!!!");
 	//return  xmlGetPredefinedEntity(name);
@@ -150,6 +155,15 @@ xmlEntityPtr fgetEntity(	void * 	user_data, 	const xmlChar * name){
 	AppLog("Облом с  xmlGetDocEntity!!!!!!!");
 	return xmlGetPredefinedEntity((xmlChar *)"lt");
 }
+
+void	funparsedEntityDeclSAXFunc	(void * ctx,
+					 const xmlChar * name,
+					 const xmlChar * publicId,
+					 const xmlChar * systemId,
+					 const xmlChar * notationName){
+	AppLog("funparsedEntityDeclSAXFunc %s",name );
+}
+
 
 int fHasInternalSubsetSAXFunc (void *ctx)
 {
@@ -198,13 +212,17 @@ static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *en
 	}
 	return XML_STATUS_ERROR;
 }
-
+*/
 
 //static void parseDTD(XML_Parser parser, const std::string &fileName) {
-static void parseDTD(xmlSAXHandlerPtr sax, const std::string &fileName) {
+static void parseDTD(xmlParserCtxtPtr ctxt, const std::string &fileName) {
 	AppLog("XML_ParserCreate");
-	xmlSAXParseEntity(xmlSAXHandlerPtr sax, filename.c_str());
-	XML_Parser entityParser = XML_ExternalEntityParserCreate(parser, 0, 0);
+	//xmlSAXParseEntity(xmlSAXHandlerPtr sax, filename.c_str());
+	const char *URL = fileName.c_str();
+	xmlParserCtxtPtr entityCtxt = xmlCreateEntityParserCtxt((const xmlChar*)URL,(const xmlChar*)"FBReader Ent",NULL);
+	if (entityCtxt == NULL) AppLog("entityCtxt == NULL");
+
+//	XML_Parser entityParser = XML_ExternalEntityParserCreate(parser, 0, 0);
 	ZLFile dtdFile(fileName);
 	shared_ptr<ZLInputStream> entityStream = dtdFile.inputStream();
 	if (!entityStream.isNull() && entityStream->open()) {
@@ -213,65 +231,47 @@ static void parseDTD(xmlSAXHandlerPtr sax, const std::string &fileName) {
 		size_t length;
 		do {
 			length = entityStream->read(buffer, BUFSIZE);
-			if (XML_Parse(entityParser, buffer, length, 0) == XML_STATUS_ERROR) {
+			int r = xmlParseChunk(entityCtxt, buffer, length, 0);
+			AppLog("xmlParseChunk r=%d len = %d", r, length);
+			//AppLog("ctxt->encoding = %s", entityStream->encoding);
+			if (r != 0) {
 				break;
 			}
 		} while (length == BUFSIZE);
 	}
-	XML_ParserFree(entityParser);
+    xmlParseChunk(entityCtxt, 0, 0, 1);
+    xmlFreeParserCtxt(entityCtxt);
+	//XML_ParserFree(entityParser);
 }
-*/
+
 
 
 void fErrorSAXFunc (void *ctx, const char *msg, ...)
 {
-    va_list args;
+//    va_list args;
 
-    va_start(args, msg);
+//    va_start(args, msg);
     //g_logv("XML", G_LOG_LEVEL_CRITICAL, msg, args);
-    AppLog("fErrorSAXFunc ");
-    AppLog(msg, args);
-    va_end(args);
+    AppLog("fErrorSAXFunc %s", msg);
+//    AppLog(msg, args);
+ //   va_end(args);
 
 }
 
 void fFatalErrorSAXFunc (void *ctx,	const char *msg, ...)
 {
-	AppLog("fErrorSAXFunc %s", msg);
+	AppLog("fFatalErrorSAXFunc %s", msg);
 }
 
-ZLEncodingConverterInfoPtr ZLXMLReaderInternal::encodingInfo;
+//ZLEncodingConverterInfoPtr ZLXMLReaderInternal::encodingInfo;
 
 int	ZLXMLReaderInternal::fxmlCharEncodingInputFunc(unsigned char * out, int * outlen,
 					 const unsigned char * in,  int * inlen)
 {
-	//AppLog("fxmlCharEncodingInputFunc inlen=%d",*inlen);
-//	AppLog("fxmlCharEncodingInputFunc start inlen =%d, outlen =%d",*inlen, *outlen);
-//	if (out!=0) {AppLog("fxmlCharEncodingInputFunc out!=0 %s");}
-	AppLog("fxmlCharEncodingInputFunc in");
-	//ZLEncodingConverterInfoPtr info = ZLEncodingCollection::Instance().info("windows-1251");
-	if (!encodingInfo.isNull()) {
-		shared_ptr<ZLEncodingConverter> converter = encodingInfo->createConverter();
-		if (!converter.isNull()) {
-		//	AppLog("in =%s",in);
-			AppLog("fxmlCharEncodingInputFunc in 2");
-			std::string myBuffer;
-			converter->convert(myBuffer, (const char*)in, (const char*)(in + *inlen));
-			AppLog("fxmlCharEncodingInputFunc in 3");
-			//TODO проверка на размер буффера
-			*outlen = myBuffer.length();
-			//*outlen = *inlen;
-			//AppLog("fxmlCharEncodingInputFunc len =%d, size =%d",*outlen, myBuffer.size());
-		//	out =(unsigned char*)malloc(*outlen);
-			//memcpy(out,(char*)myBuffer.c_str(),*outlen);
-			memcpy(out,(char*)myBuffer.data(),*outlen);
-			//memcpy(out,(char*)in,*outlen);
-			AppLog("fxmlCharEncodingInputFunc inlen =%d, outlen =%d",*inlen, *outlen);
-	//		AppLog("out =%s",out);
-			return *outlen;
-		}
-	};
-	return -1;
+//	AppLog("fxmlCharEncodingInputFunc inlen=%d",*inlen);
+	*outlen = *inlen;
+	memcpy(out,(char*)in,*outlen);
+	return *outlen;
 
 }
 int	fxmlCharEncodingOutputFunc(unsigned char * out, int * outlen,
@@ -284,6 +284,7 @@ int	fxmlCharEncodingOutputFunc(unsigned char * out, int * outlen,
 void ZLXMLReaderInternal::init(const char *encoding) {
 
 	if (myInitialized) {
+		AppLog("ZLXMLReaderInternal::myInitialized");
 	//	xmlCleanupParser();
 //		XML_ParserReset(myParser, encoding);
 	}
@@ -292,26 +293,33 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 
 	myInitialized = true;
 	//XML_UseForeignDTD(myParser, XML_TRUE);
-	MySaxhandler.initialized = 1;//XML_PARSER_DTD;//XML_PARSER_START;
+	//MySaxhandler.initialized = 1;//XML_PARSER_DTD;//XML_PARSER_START;
 //	AppLog("XML_UseForeignDTD %d",xmlSubstituteEntitiesDefault(0));
 	const std::vector<std::string> &dtds = myReader.externalDTDs();
 	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
-	//	myDTDStreamLocks.insert(ZLFile(*it).inputStream());
+		//myDTDStreamLocks.insert(ZLFile(*it).inputStream());
 		AppLog("parseDTD %s",((std::string)*it).c_str());
+		//const char *URL = ((std::string)*it).c_str();
+		//xmlNodePtr children;
+		//if (ctxt == null) AppLog("ctxt == null");
+		//if (ctxt->myDoc == NULL) AppLog("ctxt->myDoc == null");
+		//int r = xmlParseCtxtExternalEntity(ctxt,(const xmlChar*)URL,(const xmlChar*)"FBReader Ent",	&children);
 		//ParseEntity=xmlSAXParseEntity(&MySaxhandler,((std::string)*it).c_str());
 		//ParseEntity=xmlParseEntity(((std::string)*it).c_str());
-		//if (ParseEntity) AppLog("xmlParseEntity OK"); else AppLog("xmlParseEntity bad");
+		//AppLog("xmlParseCtxtExternalEntity =%d",r);
+	//	if (r==0) AppLog("xmlParseEntity OK"); else AppLog("xmlParseEntity bad");
 
-	//	parseDTD(myParser, *it);
+		//parseDTD(ctxt, *it);
 	}
 //	XML_SetUserData(myParser, &myReader);
 	AppLog("XML_SetUserData");
 	if (encoding != 0) {
 		AppLog("encoding %s",encoding);
 		encodingInfo = ZLEncodingCollection::Instance().info(encoding);
-		AppLog("encodingInfo = ZLEncodingCollection::Instance()");
+		if (!encodingInfo.isNull()) converter = encodingInfo->createConverter();
+
 		xmlNewCharEncodingHandler(encoding,fxmlCharEncodingInputFunc,fxmlCharEncodingOutputFunc);
-		AppLog("xmlNewCharEncodingHandler");
+		AppLog("xmlNewCharEncodingHandler encoding %s",encoding);
 	    }
 	//if (encoding != 0) {
 		//XML_SetEncoding(myParser, encoding);
@@ -323,23 +331,27 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 
 	AppLog("XML_SetEncoding");
 
-
-	//pMySaxhandler->startElement = fStartElementHandler;
-	//pMySaxhandler->endElement = fEndElementHandler;
-	//pMySaxhandler->characters = fCharacterDataHandler;
-	//pMySaxhandler->warning = fCharacterDataHandler;
-	//pMySaxhandler->error = fUnknownEncodingHandler;
-
-	//XML_SetStartElementHandler(myParser, fStartElementHandler);
-	//XML_SetEndElementHandler(myParser, fEndElementHandler);
-	//XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
-	//XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, 0);
 }
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 	//AppLog("xmlParseChunk len = %d",len);
+
+	if (!converter.isNull()) {
+			//	AppLog("in =%s",in);
+				//AppLog("fxmlCharEncodingInputFunc parseBuffer 2");
+				std::string myBuffer;
+				converter->convert(myBuffer, (const char*)buffer, (const char*)(buffer + len));
+				int outlen = myBuffer.length();
+				int r = xmlParseChunk(ctxt, (char*)myBuffer.data(), outlen, 0);
+				AppLog("ctxt->encoding = %s", ctxt->encoding);
+				AppLog("xmlParseChunk r=%d outlen = %d", r, outlen);
+				return (r == 0);
+			}
+
+//	AppLog("0ctxt->encoding = %s", ctxt->encoding);
 	int r = xmlParseChunk(ctxt, buffer, len, 0);
 	AppLog("xmlParseChunk r=%d len = %d", r, len);
+	AppLog("ctxt->encoding = %s", ctxt->encoding);
 	return (r == 0);
 	//return true;
 }
@@ -357,7 +369,7 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 	MySaxhandler.getEntity = fgetEntity;
 	MySaxhandler.error = fErrorSAXFunc;
 	MySaxhandler.fatalError = fFatalErrorSAXFunc;
-
+	MySaxhandler.unparsedEntityDecl = funparsedEntityDeclSAXFunc;
 	//AppLog("xmlCreatePushParserCtxt");
 
 	ctxt = xmlCreatePushParserCtxt(&MySaxhandler,  &myReader, NULL, 0, NULL);
@@ -365,9 +377,7 @@ ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encodi
 			AppLog("xmlCreatePushParserCtxt контекст создать не удалось");
 	     return;
 	 }
-//	int r = xmlCtxtUseOptions(ctxt, 524288);XML_PARSE_HUGE = 524288
-	// int r = xmlCtxtUseOptions(ctxt, XML_PARSE_SAX1);
-	// AppLog("xmlCtxtUseOptions  r=%d",r);
+
 	myInitialized = false;
 }
 

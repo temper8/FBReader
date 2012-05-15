@@ -58,7 +58,7 @@ void StaticTextOptionView::_createItem() {
 	if (found)  textHeight=initText(caption.c_str(),myText, 2000);
 	 	 	 else textHeight=initText(null,myText, 2000);
 	AppLog("textHeight = %d",textHeight);
-	pItem->Construct(textHeight+10);
+	pItem->Construct(textHeight+20);
 
     pItem->SetItemFormat(*myTab->form()->__pStaticTextListItemFormat);
 //   pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
@@ -90,7 +90,7 @@ result StaticTextOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, co
 		return r;
 */
 	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_WHITE);
-	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+20, rect.y+5), *pEnrichedText) != E_SUCCESS)
+	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+20, rect.y+10), *pEnrichedText) != E_SUCCESS)
 		return r;
 
 	return r;

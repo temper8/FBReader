@@ -10,7 +10,6 @@
 
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>
-//#include "../util/ZLQtKeyUtil.h"
 
 #include "ZLbadaOptionView.h"
 #include "ZLOptionEntry.h"
@@ -57,7 +56,6 @@ void SpinOptionView::UpdateItem(){
     pItem->SetItemFormat(*myTab->form()->__pSpinViewListItemFormat);
     pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
 	pItem->SetElement(ID_LIST_TEXT_SUBTITLE, str);
-
 	myTab->form()->__pCustomList->SetItemAt(groupIndex,itemIndex, *pItem, ID_LIST_ITEM);
 }
 
@@ -82,10 +80,8 @@ void SpinOptionView::OnActionPerformed( int actionId)
     switch (actionId)
     {
 	case ID_BUTTON_CHECKED:
-	        // Todo:
 	    	AppLog("ComboOptionView::ID_BUTTON_CHECKED");
 	    	myTab->form()->ShowSpinOptionPopup(this);
-
 	    	//onStateChanged(true);
 	        break;
 	case ID_BUTTON_UNCHECKED:
@@ -159,7 +155,6 @@ void SpinOptionPopup::OnActionPerformed(const Control& source, int actionId)
 	switch(actionId)
 	{
 		case ID_BUTTON_CREATE:
-			//if(CreateCategory() == true)
 			__parentSpinOptionView->myValue = tmpValue;
 			__parentSpinOptionView->UpdateItem();
 			__pParentForm->SendUserEvent(0, null);
@@ -171,4 +166,60 @@ void SpinOptionPopup::OnActionPerformed(const Control& source, int actionId)
 			break;
 	}
 }
+
+//--------------------------------------------------------
+void SpinOptionView::OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status){
+	AppLog("myTab->form()->SendUserEvent");
+	myValue = index + minValue();
+	UpdateItem();
+	myTab->form()->SendUserEvent(0, null);
+}
+result ComboOptionPopup::Construct(const Osp::Ui::Controls::Form* pParentForm, SpinOptionView* parentSpinOptionView){
+	//Rectangle formArea = pParentForm->GetClientAreaBounds();
+	Rectangle formArea = pParentForm->GetBounds();
+	AppLog("ComboOptionPopup height=%d",formArea.height);
+	AppLog("ComboOptionPopup width=%d",formArea.width);
+	result r = Popup::Construct(true, Dimension(formArea.width-10,formArea.height));
+	if(IsFailed(r))	return r;
+	__parentSpinOptionView = parentSpinOptionView;
+
+	SetTitleText(String(parentSpinOptionView->title().c_str()));
+	__pParentForm = const_cast<Form*>(pParentForm);
+
+	if(__pParentForm == null)
+		return E_FAILURE;
+
+	Button* pCancelButton = new Button();
+	pCancelButton->Construct(Rectangle(125, formArea.height-160, 200, 70), L"Cancel");
+	AddControl(*pCancelButton);
+	pCancelButton->SetActionId(ID_BUTTON_CANCEL);
+	pCancelButton->AddActionEventListener(*this);
+	__pComboList = new List();
+	Osp::Graphics::Rectangle rect = GetBounds();
+	__pComboList->Construct(Rectangle(10, 00, formArea.width-40, formArea.height-190), LIST_STYLE_RADIO , LIST_ITEM_SINGLE_TEXT, 80, 0, formArea.width-80, 0);
+	int selectedIndex = -1;
+
+	int minValue = parentSpinOptionView->minValue();
+	int maxValue = parentSpinOptionView->maxValue();
+	if (maxValue>500) maxValue = 500;
+
+	int index = 0;
+	for ( int i = minValue; i<=maxValue; i++, index++){
+		String itemText;
+		itemText.Format(25, L" %d ", i);
+		__pComboList->AddItem(&itemText, null, null, null );
+		if (i == __parentSpinOptionView->myValue) 	selectedIndex = index;
+	}
+	if (selectedIndex >= 0) {
+	//	__pComboList->setCurrentIndex(selectedIndex);
+		__pComboList->ScrollToTop(selectedIndex);
+		__pComboList->SetItemChecked(selectedIndex, true);
+
+	}
+	__pComboList->AddItemEventListener(*__parentSpinOptionView);
+    AddControl(*__pComboList);
+
+	return E_SUCCESS;
+}
+
 

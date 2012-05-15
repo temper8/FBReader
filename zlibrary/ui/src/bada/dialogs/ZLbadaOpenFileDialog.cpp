@@ -45,8 +45,6 @@ ZLbadaOpenFileDialog::~ZLbadaOpenFileDialog() {
 bool ZLbadaOpenFileDialog::run(){
 	String tmpContentPath;
 	ByteBuffer* bb;
-
-
 	if (pSearchResultInfo) {
 		tmpContentPath = ((ContentInfo*)pSearchResultInfo->GetContentInfo())->GetContentPath();
 		bb = Osp::Base::Utility::StringUtil::StringToUtf8N(tmpContentPath);

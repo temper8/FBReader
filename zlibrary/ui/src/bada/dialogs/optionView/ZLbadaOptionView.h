@@ -162,7 +162,9 @@ private:
 
 };
 
-class SpinOptionView : public ZLbadaOptionView, public Osp::Ui::IAdjustmentEventListener  {
+class SpinOptionView : 	public ZLbadaOptionView,
+						public Osp::Ui::IItemEventListener,
+						public Osp::Ui::IAdjustmentEventListener  {
 
 public:
 	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
@@ -179,11 +181,10 @@ protected:
     virtual void OnActionPerformed(int actionId);
 private:
     void UpdateItem();
-//	Osp::Ui::Controls::EditField* myEditField;
-//	Osp::Ui::Controls::Slider* pSlider;
-//	OptionListItem* pItem;
-	//QSpinBox *mySpinBox;
+    void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);
+
 	friend class SpinOptionPopup;
+	friend class ComboOptionPopup;
 };
 
 
@@ -193,6 +194,7 @@ public:
 	ComboOptionPopup(void);
 	virtual ~ComboOptionPopup(void);
 	result Construct(const Osp::Ui::Controls::Form* pParentForm, ComboOptionView* parentComboOptionView);
+	result Construct(const Osp::Ui::Controls::Form* pParentForm, SpinOptionView* parentSpinOptionView);
 
 protected:
 	static const int ID_BUTTON_CREATE = 100;
@@ -204,6 +206,7 @@ public:
 public:
 	Osp::Ui::Controls::Form* 		__pParentForm;
 	ComboOptionView* 		__parentComboOptionView;
+	SpinOptionView* 		__parentSpinOptionView;
 	Osp::Ui::Controls::List*		__pComboList;
 
 private:
@@ -214,6 +217,7 @@ private:
 
 //public Osp::Ui::Controls::Panel,
 class ComboOptionView : public ZLbadaOptionView,
+						public Osp::Ui::Controls::ICustomListElement,
 						public Osp::Ui::IActionEventListener,
 						public Osp::Ui::IItemEventListener  {
 
@@ -232,6 +236,8 @@ private:
     int selected;
     std::string comboValue;
 private:
+	result DrawElement(const Osp::Graphics::Canvas& canvas, const Osp::Graphics::Rectangle& rect, Osp::Ui::Controls::CustomListItemStatus itemStatus);
+
 	virtual void OnActionPerformed(int actionId);
 	void OnActionPerformed(const Osp::Ui::Control& source, int actionId);
     void OnItemStateChanged(const Osp::Ui::Control &source, int index, int itemId, Osp::Ui::ItemStatus status);

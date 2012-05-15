@@ -42,6 +42,7 @@ XHTMLImageFinder::XHTMLImageFinder(OEBCoverReader &coverReader) : myCoverReader(
 static const std::string IMG = "img";
 
 void XHTMLImageFinder::startElementHandler(const char *tag, const char **attributes) {
+	AppLog("XHTMLImageFinder %s", tag);
 	if (IMG == tag) {
 		const char *src = attributeValue(attributes, "src");
 		if (src != 0) {
@@ -65,7 +66,7 @@ shared_ptr<ZLImage> OEBCoverReader::readCover(const ZLFile &file) {
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(myCoverXHTML);
 	if (!myCoverXHTML.empty()) {
 		ZLFile coverFile(myCoverXHTML);
-		AppLog("coverFile");
+		AppLog("coverFile %s",myCoverXHTML.c_str());
 		const std::string ext = coverFile.extension();
 		if (ext == "gif" || ext == "jpeg" || ext == "jpg") {
 			myImage = new ZLFileImage(ZLFile(myCoverXHTML), 0);
