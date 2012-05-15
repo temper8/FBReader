@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <group name="Options">
-    <option name="BookPath" value="~/FBooks:~/Books"/>
+    <option name="BookPath" value="/Media/Others:/Storagecard/Media/Books"/>
     <option name="DownloadDirectory" value="~/FBooks"/>
   </group>
   <group name="TapScrolling">

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <resources>
 	<node name="library" value="FBReader library">
 		<node name="byAuthor" value="By author">
@@ -100,7 +101,7 @@
 			<node name="collapseTree" value="Hide books"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" value="Read"/>
+			<node name="read" value="Read local copy"/>
 			<node name="delete" value="Delete local copy"/>
 			<node name="download" value="Download"/>
 			<node name="readDemo" value="Read sample"/>
@@ -116,12 +117,11 @@
 		<node name="showNetLibrary" value="NetWork library"/>
 		<node name="showRecent" value="Recent"/>
 		<node name="addBook" value="Add Book..."/>
-		<node name="night" value="Night"/>
-		<node name="day" value="Day"/>
-		<node name="more" value="More..."/>
-		<node name="day-night" value="Day/Night"/>
-		<node name="increaseFont" value="Increase Font"/>
-		<node name="decreaseFont" value="Decrease Font"/>
+		<node name="night" value="Night" />
+		<node name="day" value="Day" />
+		<node name="day-night" value="Day\Night" />
+		<node name="increaseFont"  value="Increase Font"/>
+		<node name="decreaseFont"  value="Decrease Font"/>
 		<node name="library" value="Library">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
@@ -265,9 +265,61 @@
 			<node name="buy" value="&amp;Buy"/>
 			<node name="buyAndDownload" value="Buy and &amp;download"/>
 		</node>
-		<node name="TextOptionsDialog">
-			<node name="title" value="Text Options"/>
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - Options"/>
 			<node name="tab">
+				<node name="Library" value="Library">
+					<node name="bookPath" value="Book Path"/>
+					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
+					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo"/>
+					<node name="downloadDirectory" value="Directory for Downloaded Books"/>
+				</node>
+				<node name="NetworkLibrary" value="Network Search">
+					<node name="useProxy" value="Use Proxy"/>
+					<node name="proxyHost" value="Proxy Host"/>
+					<node name="proxyPort" value="Proxy Port"/>
+					<node name="timeout" value="Network Operations Timeout, seconds"/>
+				</node>
+				<node name="Language" value="Language">
+					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
+					<node name="defaultLanguage" value="Default Language"/>
+					<node name="defaultEncodingSet" value="Default Encoding Set"/>
+					<node name="defaultEncoding" value="Default Encoding"/>
+					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
+				</node>
+				<node name="Indicator" value="Indicator">
+					<node name="type" value="Show as">
+						<node name="osScrollbar" value="OS Scrollbar"/>
+						<node name="fbIndicator" value="Old Style Indicator"/>
+						<node name="none" value="Don't Show"/>
+					</node>
+					<node name="height" value="Indicator Height"/>
+					<node name="offset" value="Offset from Text"/>
+					<node name="pageNumber" value="Show Position as Numbers"/>
+					<node name="time" value="Show Time"/>
+					<node name="fontSize" value="Font Size"/>
+					<node name="tocMarks" value="Show TOC Marks"/>
+					<node name="navigation" value="Enable Navigation"/>
+				</node>
+				<node name="Scrolling" value="Scrolling">
+					<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs"/>
+					<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling"/>
+					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling"/>
+					<node name="enableTapScrolling" value="Enable Tap Scrolling"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
+				</node>
+				<node name="Selection" value="Selection">
+					<node name="enableSelection" value="Enable Text Selection"/>
+				</node>
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
+				</node>
+				<node name="Margins" value="Margins">
+					<node name="left" value="Left Margin"/>
+					<node name="right" value="Right Margin"/>
+					<node name="top" value="Top Margin"/>
+					<node name="bottom" value="Bottom Margin"/>
+				</node>
 				<node name="Format" value="Format">
 					<node name="optionsFor" value="Options for"/>
 					<node name="lineSpacing" value="Line Spacing">
@@ -298,47 +350,15 @@
 					<node name="allowHyphenations" value="Allow Hyphenations"/>
 					<node name="autoHyphenations" value="Auto Hyphenations"/>
 				</node>
-			</node>
-		</node>
-		<node name="MarginsOptionsDialog">
-			<node name="title" value="Margins Options"/>
-			<node name="tab">
-				<node name="Margins" value="Margins">
-					<node name="left" value="Left Margin"/>
-					<node name="right" value="Right Margin"/>
-					<node name="top" value="Top Margin"/>
-					<node name="bottom" value="Bottom Margin"/>
-				</node>
-			</node>
-		</node>
-		<node name="LibraryOptionsDialog">
-			<node name="title" value="Library Options"/>
-			<node name="tab">
-				<node name="Library" value="Library">
-					<node name="bookPath" value="Book Path"/>
-					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
-					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo"/>
-					<node name="downloadDirectory" value="Directory for Downloaded Books"/>
-				</node>
-			</node>
-		</node>
-		<node name="AppearanceOptionsDialog">
-			<node name="title" value="Appearance Options"/>
-			<node name="tab">
-				<node name="Rotation" value="Screen orientation">
+				<node name="Rotation" value="Rotation">
 					<node name="direction" value="Rotation Type">
-						<node name="sensor" value="Device orientation sensitive"/>
-						<node name="portrait" value="Portrait"/>
-						<node name="landscape" value="Landscape"/>
-						<node name="reversePortrait" value="Reverse portrait"/>
-						<node name="reverseLandscape" value="Reverse landscape"/>
+						<node name="disabled" value="Disabled"/>
+						<node name="clockwise" value="90 Degrees Clockwise"/>
+						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
+						<node name="180" value="180 Degrees"/>
+						<node name="cycle" value="Cycle Through All 4 Directions"/>
 					</node>
 				</node>
-			</node>
-		</node>
-		<node name="ColorOptionsDialog">
-			<node name="title" value="Colors Options"/>
-			<node name="tab">
 				<node name="Colors" value="Colors">
 					<node name="colorFor" value="Color for">
 						<node name="background" value="Background"/>
@@ -351,71 +371,6 @@
 						<node name="treeLines" value="Tree Lines"/>
 						<node name="indicator" value="Position Indicator"/>
 					</node>
-				</node>
-			</node>
-		</node>
-		<node name="SystemOptionsDialog">
-			<node name="title" value="System Options"/>
-			<node name="tab">
-				<node name="Language" value="Language">
-					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
-					<node name="defaultLanguage" value="Default Language"/>
-					<node name="defaultEncodingSet" value="Default Encoding Set"/>
-					<node name="defaultEncoding" value="Default Encoding"/>
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
-				</node>
-				<node name="Config" value="Config">
-					<node name="autoSave" value="Save State Automatically"/>
-					<node name="timeout" value="Timeout between Savings, seconds"/>
-				</node>
-			</node>
-		</node>
-		<node name="PageTurningOptionsDialog">
-			<node name="title" value="Page Turning Options"/>
-			<node name="tab">
-				<node name="Scrolling" value="Page turning">
-					<node name="volumeKeys" value="Turn page with volume keys"/>
-					<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs"/>
-					<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling"/>
-					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling"/>
-					<node name="enableTapScrolling" value="Enable Tap Scrolling"/>
-					<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
-				</node>
-			</node>
-		</node>
-		<node name="IndicatorOptionsDialog">
-			<node name="title" value="Progress Indicator Options"/>
-			<node name="tab">
-				<node name="Indicator" value="Indicator">
-					<node name="type" value="Show as">
-						<node name="osScrollbar" value="OS Scrollbar"/>
-						<node name="fbIndicator" value="Horizontal footer"/>
-						<node name="none" value="Don't Show"/>
-					</node>
-					<node name="height" value="Indicator Height"/>
-					<node name="offset" value="Offset from Text"/>
-					<node name="pageNumber" value="Show Position as Numbers"/>
-					<node name="time" value="Show Time"/>
-					<node name="fontSize" value="Font Size"/>
-					<node name="tocMarks" value="Show TOC Marks"/>
-					<node name="navigation" value="Enable Navigation"/>
-				</node>
-			</node>
-		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Options"/>
-			<node name="tab">
-				<node name="NetworkLibrary" value="Network Search">
-					<node name="useProxy" value="Use Proxy"/>
-					<node name="proxyHost" value="Proxy Host"/>
-					<node name="proxyPort" value="Proxy Port"/>
-					<node name="timeout" value="Network Operations Timeout, seconds"/>
-				</node>
-				<node name="Selection" value="Selection">
-					<node name="enableSelection" value="Enable Text Selection"/>
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
 				</node>
 				<node name="Keys" value="Keys">
 					<node name="grabSystemKeys" value="Grab System Keys"/>
@@ -458,6 +413,10 @@
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel"/>
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
+				</node>
+				<node name="Config" value="Config">
+					<node name="autoSave" value="Save State Automatically"/>
+					<node name="timeout" value="Timeout between Savings, seconds"/>
 				</node>
 				<node name="Dictionary" value="Dictionary">
 					<node name="enableIntegration" value="Enable Integration with %s"/>
@@ -563,12 +522,12 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Remove Book"/>
-			<node name="message" value="Remove Book&#xA;â€œ%sâ€&#xA;from the Library?"/>
-			<node name="deleteFile" value="Are you sure you want to&#xA;remove file&#xA;â€œ%sâ€&#xA;from the disk?"/>
+			<node name="message" value="Remove Book&#xA;“%s”&#xA;from the Library?"/>
+			<node name="deleteFile" value="Are you sure you want to&#xA;remove file&#xA;“%s”&#xA;from the disk?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Remove Tag"/>
-			<node name="message" value="Remove Tag â€œ%sâ€?"/>
+			<node name="message" value="Remove Tag “%s”?"/>
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Error"/>
@@ -605,8 +564,8 @@
 			<node name="message" value="Can't download this book at the moment"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Loading book..."/>
-			<node name="loadingBookList" value="Loading library..."/>
+			<node name="loadingBook" value="Loading book. Please, wait..."/>
+			<node name="loadingBookList" value="Loading library. Please, wait..."/>
 			<node name="migrate" value="Upgrading to the new version. Please, wait..."/>
 			<node name="downloadBookList" value="Downloading book list. Please, wait..."/>
 			<node name="downloadBook" value="Downloading book. Please, wait..."/>
@@ -622,7 +581,7 @@
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book"/>
-			<node name="message" value="Are you sure you want to buy&#xA;â€œ%sâ€&#xA;book?"/>
+			<node name="message" value="Are you sure you want to buy&#xA;“%s”&#xA;book?"/>
 		</node>
 		<node name="AuthenticationDialog">
 			<node name="title" value="Authentication"/>
@@ -637,11 +596,11 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Disable catalog"/>
-			<node name="message" value="Are you sure you want to disable&#xA;â€œ%sâ€ catalog?&#xA;&#xA;You can enable this catalog again at&#xA;â€œNetwork Searchâ€ tab in the Preferences dialog."/>
+			<node name="message" value="Are you sure you want to disable&#xA;“%s” catalog?&#xA;&#xA;You can enable this catalog again at&#xA;“Network Search” tab in the Preferences dialog."/>
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Delete Book"/>
-			<node name="message" value="Are you sure&#xA;you want to remove&#xA;â€œ%sâ€ book&#xA;from the disk?"/>
+			<node name="message" value="Are you sure&#xA;you want to remove&#xA;“%s” book&#xA;from the disk?"/>
 		</node>
 		<node name="RegisterUserDialog">
 			<node name="title" value="Register User"/>
@@ -671,6 +630,7 @@
 			<node name="title" value="Network Library"/>
 			<node name="message" value="ghdfghdfgdh"/>
 		</node>
+
 		<node name="TOCTreeDialog">
 			<node name="title" value="Book Content"/>
 		</node>
@@ -737,27 +697,7 @@
 		<node name="ReadingOptionsDialog" value="Reading Options Dialogxx"/>
 		<node name="text" value="Text">
 			<node name="summary" value="Font, hyphenations, etc."/>
-		</node>
-		<node name="textStyles" value="Text Styles">
-			<node name="summary" value="Separate settings for titles, epigraphs, etc."/>
-		</node>
-		<node name="margins" value="Margins">
-			<node name="summary" value="Text margins"/>
-		</node>
-		<node name="colors" value="Colors">
-			<node name="summary" value="Colors settings"/>
-		</node>
-		<node name="appearance" value="Appearance">
-			<node name="summary" value="Display settings, status bar, button lights"/>
-		</node>
-		<node name="indicator" value="Progress indicator">
-			<node name="summary" value="Scrollbar, footer settings"/>
-		</node>
-		<node name="scrolling" value="Page turning">
-			<node name="summary" value="How to turn pages"/>
-		</node>
-		<node name="library" value="Library Options">
-			<node name="summary" value="..."/>
-		</node>
-	</node>
+	       	</node>
+       	</node>
+
 </resources>

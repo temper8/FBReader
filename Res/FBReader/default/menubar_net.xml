@@ -5,8 +5,8 @@
 	<item id="bookInfo"/>
 	<item id="preferences"/>
 	<item id="day-night"/>
-	<item id="more"/>
 	<item id="quit"/>
+	<item id="showNetLibrary"/>
 	<item id="increaseFont"/>
 	<item id="decreaseFont"/>
 </menubar>
