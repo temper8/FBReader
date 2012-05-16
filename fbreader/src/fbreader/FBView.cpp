@@ -175,6 +175,7 @@ void FBView::TapScroller::run() {
 }
 
 bool FBView::onStylusRelease(int x, int y) {
+	AppLog("FBView::onStylusRelease");
 	const bool hadSelection = !selectionModel().isEmpty();
 
 	if (!myTapScroller.isNull()) {
@@ -183,13 +184,15 @@ bool FBView::onStylusRelease(int x, int y) {
 	}
 
 	if (ZLTextView::onStylusRelease(x, y)) {
+		AppLog("FBView::onStylusRelease 2");
 		return true;
 	}
 	
 	if (_onStylusRelease(x, y)) {
+		AppLog("FBView::onStylusRelease 3");
 		return true;
 	}
-
+	AppLog("FBView::onStylusRelease 4");
 	FBReader &fbreader = FBReader::Instance();
 	myIsReleasedWithoutMotion =
 		myIsReleasedWithoutMotion && (abs(x - pressedX()) <= 5) && (abs(y - pressedY()) <= 5);

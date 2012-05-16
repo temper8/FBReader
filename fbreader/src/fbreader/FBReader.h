@@ -124,6 +124,7 @@ public:
 	shared_ptr<ProgramCollection> webBrowserCollection() const;
 	void openLinkInBrowser(const std::string &url) const;
 
+	bool isFootnoteMode();
 	void tryShowFootnoteView(const std::string &id, const std::string &type);
 	BookTextView &bookTextView() const;
 	void showBookTextView();

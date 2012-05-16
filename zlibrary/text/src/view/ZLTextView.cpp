@@ -405,6 +405,7 @@ bool ZLTextView::onStylusMovePressed(int x, int y) {
 }
 
 bool ZLTextView::onStylusClick(int x, int y, int count) {
+	AppLog("ZLTextView::onStylusClick count=%d",count);
 	if (count > 20) {
 		return true;
 	} else if (count > 10) {
@@ -413,19 +414,22 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 		myDoubleClickInfo.Count = 20;
 		return true;
 	} else if (count > 2) {
+		AppLog("ZLTextView::onStylusClick count > 2");
 		if (myTextAreaController.area().selectionModel().selectWord(textArea().realX(x), y)) {
 			ZLApplication::Instance().refreshWindow();
 			myDoubleClickInfo.Count = 10;
 			return true;
 		} else {
+			AppLog("ZLTextView::onStylusClick xxx");
 			myDoubleClickInfo.Count = 0;
 		}
 	} else {
+		AppLog("ZLTextView::onStylusClick 1");
 		myTextAreaController.area().selectionModel().clear();
 		ZLApplication::Instance().refreshWindow();
 		return false;
 	}
-
+	AppLog("ZLTextView::onStylusClick 2");
 	return true;
 }
 
@@ -433,7 +437,7 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 	stopSelectionScrolling();
 
 	myDoubleClickInfo.update(x, y, false);
-
+	AppLog("myDoubleClickInfo.Count 1 %d", myDoubleClickInfo.Count);
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() &&
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
@@ -441,11 +445,11 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 			positionIndicator()->isResponsibleFor(x, y)) {
 		return true;
 	}
-
+	AppLog("myDoubleClickInfo.Count 2 %d", myDoubleClickInfo.Count);
 	if (myDoubleClickInfo.Count > 0) {
 		return onStylusClick(x, y, myDoubleClickInfo.Count);
 	}
-
+	AppLog("myDoubleClickInfo.Count 3 %d", myDoubleClickInfo.Count);
 	myTextAreaController.area().selectionModel().deactivate();
 	return false;
 }

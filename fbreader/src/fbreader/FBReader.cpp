@@ -369,20 +369,25 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
+	AppLog("FBReader::tryShowFootnoteView type=%s",type.c_str());
 	if (type == "external") {
 		openLinkInBrowser(id);
 	} else if (type == "internal") {
 		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 			BookModel::Label label = myModel->label(id);
+			AppLog("myMode == BOOK_TEXT_MODE");
 			if (!label.Model.isNull()) {
 				if (label.Model == myModel->bookTextModel()) {
+					AppLog("myMode == BOOK_TEXT_MODE 1");
 					bookTextView().gotoParagraph(label.ParagraphNumber);
 				} else {
+					AppLog("(myMode == BOOK_TEXT_MODE 2");
 					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
 					view.setModel(label.Model);
 					setMode(FOOTNOTE_MODE);
 					view.gotoParagraph(label.ParagraphNumber);
 				}
+				AppLog("(myMode == BOOK_TEXT_MODE 3");
 				setHyperlinkCursor(false);
 				refreshWindow();
 			}
@@ -422,7 +427,12 @@ void FBReader::showLibraryView() {
 	}
 }
 
+bool FBReader::isFootnoteMode(){
+	return (myMode == FOOTNOTE_MODE);
+}
+
 void FBReader::setMode(ViewMode mode) {
+	AppLog("FBReader::setMode %d", mode);
 	if (mode == myMode) {
 		return;
 	}

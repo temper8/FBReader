@@ -311,12 +311,15 @@ bool BookTextView::_onStylusPress(int x, int y) {
 }
 
 bool BookTextView::onStylusClick(int x, int y, int count) {
+	AppLog("BookTextView::onStylusClick count=%d",count);
 	FBReader &fbreader = FBReader::Instance();
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
+		AppLog("rectangle != 0");
 		std::string id;
 		std::string type;
 		if (getHyperlinkInfo(*rectangle, id, type)) {
+			AppLog("tryShowFootnoteView %s, %s",id.c_str(),type.c_str());
 			fbreader.tryShowFootnoteView(id, type);
 			return true;
 		}

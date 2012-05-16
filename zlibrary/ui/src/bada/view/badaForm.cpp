@@ -19,6 +19,8 @@ using namespace Osp::Ui::Controls;
 using namespace Osp::System;
 using namespace Osp::Base::Runtime;
 
+#define ID_BACK_TO_READING	2600
+
 result badaForm::OnDraw(void)
 {
 	AppLog("badaForm::OnDraw(void)");
@@ -159,6 +161,7 @@ if (touchMove == 1){
 			Draw();
 			delete myTimer;
 			myTimer = 0;
+			touchMove = 0;
 			showNewPage = true;
 		}
 
@@ -176,6 +179,7 @@ else {
 	 			Draw();
 	 			delete myTimer;
 	 			myTimer = 0;
+	 			touchMove = 0;
 	 			showNewPage = true;
 	 		}
    }
@@ -249,6 +253,7 @@ void badaForm::OnTouchLongPressed(const Control &source, const Point &currentPos
 
 void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
+	if (myTimer) return;
 	AppLog("OnTouchMoved");
 	int x = currentPosition.x - startTouchPosition.x;
 	int y = currentPosition.y - startTouchPosition.y;
@@ -295,6 +300,7 @@ void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &current
 
 void badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
+  if (myTimer) return;
   AppLog("OnTouchPressed");
   startTouchPosition = currentPosition;
   myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
@@ -304,10 +310,24 @@ void badaForm::OnTouchPressed(const Control &source, const Point &currentPositio
 
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
-	if (myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y)) return;
+	if (myTimer) return;
+	AppLog("OnTouchReleased");
+	if (myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y)) 	{
+		AppLog("onStylusRelease");
+		FBReader &fbreader = FBReader::Instance();
+		if (fbreader.isFootnoteMode()){
+			AppLog("isFootnoteMode");
+			SetFormStyle(FORM_STYLE_NORMAL|FORM_STYLE_SOFTKEY_1);
+			AddSoftkeyActionListener(SOFTKEY_1, *this);
+			SetSoftkeyActionId(SOFTKEY_1, ID_BACK_TO_READING);
+			SetSoftkeyText(SOFTKEY_1, L"Back");
+			RequestRedraw();
+		}
+		return;
+	}
 
 	touchMove = 0;
-	AppLog("OnTouchReleased");
+
 	if (!showNewPage) {
 		Canvas* pCanvas = GetCanvasN();
 		pCanvas->Copy(Point(0,0),*myCanvas,formRect);
@@ -377,6 +397,13 @@ void badaForm::setOrientation(int angle){
 }
 
 void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::OrientationStatus  orientationStatus ){
+   if (myTimer) {
+	   myTimer->Cancel();
+	   delete myTimer;
+	   myTimer = 0;
+	   touchMove = 0;
+	   showNewPage = true;
+   }
 
 	AppLog("OnOrientationChanged");
 	formRect = GetClientAreaBounds();
@@ -394,7 +421,7 @@ void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::
 	OnDraw();
 }
 
-badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true), touchMove(0){
+badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true), touchMove(0), myTimer(0){
 
 }
 
@@ -482,6 +509,15 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
 {
     int indx;
     AppLog("actionId %d",actionId);
+    if (actionId == ID_BACK_TO_READING ) {
+    	FBReader &fbreader = FBReader::Instance();
+    	fbreader.showBookTextView();
+    	RemoveOptionkeyActionListener(*this);
+    	SetFormStyle(FORM_STYLE_NORMAL);
+    	RequestRedraw();
+    	return;
+    }
+
     indx = actionId - ID_OPTIONMENU_ITEM0;//__pOptionMenu->GetItemIndexFromActionId(actionId);
     if (indx<0) return;
     AppLog("OPTIONMENU %d",indx);
