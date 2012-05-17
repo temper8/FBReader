@@ -66,6 +66,17 @@ static const std::string OPTIONS = "Options";
 
 const std::string FBReader::PageIndexParameter = "pageIndex";
 
+#include <FApp.h>
+#include <FText.h>
+
+
+using namespace Osp::App;
+using namespace Osp::Base;
+using namespace Osp::Base::Collection;
+using namespace Osp::Text;
+
+
+
 class OpenFileHandler : public ZLMessageHandler {
 
 public:
@@ -354,6 +365,36 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	if (url.empty()) {
 		return;
 	}
+	AppLog("openLinkInBrowser url=%s",url.c_str());
+
+   int len = url.length();
+   String bada_str;
+   ByteBuffer buffer;
+   buffer.Construct(len + 1);
+   buffer.SetArray((const byte*)url.data(), 0, len);
+   buffer.SetByte( '\0');
+   buffer.Flip();
+   Utf8Encoding utf8;
+   int charCount;
+   utf8.GetCharCount(buffer, charCount);
+   utf8.GetString(buffer, bada_str);
+
+	ArrayList* pDataList = null;
+	pDataList = new ArrayList();
+	pDataList->Construct();
+	String* pData = null;
+
+	pData = new String(L"url:" + bada_str);
+	//pData = new String(L"url:http://www.bada.com");
+	pDataList->Add(*pData);
+	//APPCONTROL_BROWSER
+	AppControl* pAc = AppManager::FindAppControlN(APPCONTROL_BROWSER, APPCONTROL_OPERATION_VIEW);
+	//AppControl* pAc = AppManager::FindAppControlN(APPCONTROL_PROVIDER_BROWSER, APPCONTROL_OPERATION_VIEW);
+	if (pAc)    {       pAc->Start(pDataList, null);       delete pAc;    }
+	pDataList->RemoveAll(true);
+	delete pDataList;
+
+	/*
 	shared_ptr<ProgramCollection> collection = webBrowserCollection();
 	if (collection.isNull()) {
 		return;
@@ -365,7 +406,7 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	std::string copy = url;
 //	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
 	ZLLogger::Instance().println("URL", copy);
-	program->run("openLink", copy);
+	program->run("openLink", copy);*/
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
