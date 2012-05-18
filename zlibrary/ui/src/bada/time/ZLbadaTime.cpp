@@ -31,19 +31,23 @@ ZLbadaTimeManager::ZLbadaTimeManager(): ZLUnixTimeManager() {
 void ZLbadaTimeManager::OnTimerExpired(Timer& timer){
 	AppLog("OnTimerExpired");
 	shared_ptr<ZLRunnable> task = myTasks.find(&timer)->second;
+	int interval = myInterval.find(&timer)->second;
+	AppLog("interval =%d",interval);
 	task->run();
-	//TODO timer.Start(1000);
+	timer.Start(interval);
 }
 
 void ZLbadaTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	AppLog("ZLbadaTimeManager::addTask interval=%d",interval );
 	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {
+		AppLog("ZLbadaTimeManager::addTask new Timer");
 		Timer* _pTimer = new Timer;
 		_pTimer->Construct(*this);
 		//int id = startTimer(interval);
 		myTimers[task] = _pTimer;
 		myTasks[_pTimer] = task;
+		myInterval[_pTimer] = interval;
 		_pTimer->Start(interval);
 
 	}
@@ -54,14 +58,14 @@ void ZLbadaTimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
 	AppLog("ZLbadaTimeManager::removeTaskInternal" );
 	std::map<shared_ptr<ZLRunnable>,Timer*>::iterator it = myTimers.find(task);
 	if (it != myTimers.end()) {
+		AppLog("ZLbadaTimeManager::removeTaskInternal erase" );
 		myTasks.erase(myTasks.find(it->second));
+		Timer* _pTimer = it->second;
+		_pTimer->Cancel();
 		myTimers.erase(it);
+		myInterval.erase(_pTimer);
 		delete it->second;
 	}
 
 }
 
-//void ZLbadaTimeManager::timerEvent(QTimerEvent *event) {
-//	AppLog("ZLbadaTimeManager::timerEvent" );
-	//myTasks[event->timerId()]->run();
-//}

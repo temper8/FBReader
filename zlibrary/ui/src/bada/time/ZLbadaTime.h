@@ -22,10 +22,6 @@
 
 #include <map>
 
-
-//#include <QtCore/QObject>
-//#include <QtCore/QTimerEvent>
-
 #include "../../../../core/src/unix/time/ZLUnixTime.h"
 //#include "../../core/unix/time/ZLUnixTime.h"
 #include <FBase.h>
@@ -40,7 +36,6 @@ public:
 	void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
-	//void timerEvent(QTimerEvent *event);
 	void OnTimerExpired(Osp::Base::Runtime::Timer& timer);
 
 protected:
@@ -49,6 +44,7 @@ protected:
 private:
 	std::map<shared_ptr<ZLRunnable>,Osp::Base::Runtime::Timer*> myTimers;
 	std::map<Osp::Base::Runtime::Timer*,shared_ptr<ZLRunnable> > myTasks;
+	std::map< Osp::Base::Runtime::Timer*, int  > myInterval;
 };
 
 #endif /* __ZLQTTIME_H__ */

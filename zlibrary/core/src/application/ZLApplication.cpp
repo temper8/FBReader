@@ -79,9 +79,6 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 //	myInitialView = new GView(*context());
 
 
-//	if (ConfigAutoSavingOption.value()) {
-//		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
-//	}
 
 	myPresentWindowHandler = new PresentWindowHandler();
 	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
