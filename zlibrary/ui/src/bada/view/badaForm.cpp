@@ -187,6 +187,10 @@ else {
 
 void badaForm::PrevPage(){
 	AppLog("PrevPage");
+	if (myTimer) {
+		myTimer->Cancel();
+		delete myTimer;
+	}
     myTimer = new Timer;
     myTimer->Construct(*this);
     dx = 0;
@@ -206,6 +210,10 @@ void badaForm::PrevPage(){
 
 void badaForm::NextPage(){
 	AppLog("NextPage");
+	if (myTimer) {
+			myTimer->Cancel();
+			delete myTimer;
+		}
     myTimer = new Timer;
     myTimer->Construct(*this);
     dx = 0;
