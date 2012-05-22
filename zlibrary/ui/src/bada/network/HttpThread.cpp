@@ -189,7 +189,7 @@ void HttpThread::OnTransactionReadyToRead(HttpSession& httpSession, HttpTransact
 	if(pHttpResponse == null) return;
 	AppLog("####### pHttpResponse != null #######");
 	AppLog("####### HttpStatusCode %d",pHttpResponse->GetStatusCode());
-	if (pHttpResponse->GetStatusCode() == HTTP_STATUS_OK)
+	if (pHttpResponse->GetStatusCode() == E_SUCCESS)
 	{
 		AppLog("####### GetHttpStatusCode() == HTTP_STATUS_OK #######");
 		HttpHeader* pHttpHeader = pHttpResponse->GetHeader();

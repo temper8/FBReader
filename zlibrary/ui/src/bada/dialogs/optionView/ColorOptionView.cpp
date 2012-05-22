@@ -212,7 +212,7 @@ void ColorComboOptionPopup::OnAdjustmentValueChanged(const Osp::Ui::Control& sou
 	tmpColor = ZLColor(sliderR->GetValue(),sliderG->GetValue(),sliderB->GetValue());
 	panelColor->SetBackgroundColor(Osp::Graphics::Color(tmpColor.Red,tmpColor.Green, tmpColor.Blue));
 	panelColor->Draw();
-	Draw();
+//	Draw();
 	this->RequestRedraw(true);
 	AppLog("adjustment %d",adjustment);
 }

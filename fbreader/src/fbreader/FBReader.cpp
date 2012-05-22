@@ -102,7 +102,7 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 		TapScrollingZonesOption(ZLCategoryKey::CONFIG, "TapScrolling", "Zones", 0,1,0),
 	EnableTapScrollingOption(ZLCategoryKey::CONFIG, "TapScrolling", "Enabled", true),
     	EnableTapScrollingByVolumeKeysOption(ZLCategoryKey::CONFIG, "TapScrolling", "VolumeKeys", true),
-	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", true),
+	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", false),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	LastOpenedPreferencesDialog(ZLCategoryKey::CONFIG, "PreferencesDialog", "LastOpened", ""),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
@@ -392,7 +392,7 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	//pData = new String(L"url:http://www.bada.com");
 	pDataList->Add(*pData);
 	//APPCONTROL_BROWSER
-	AppControl* pAc = AppManager::FindAppControlN(APPCONTROL_BROWSER, APPCONTROL_OPERATION_VIEW);
+	AppControl* pAc = AppManager::FindAppControlN(APPCONTROL_BROWSER, OPERATION_VIEW);
 	//AppControl* pAc = AppManager::FindAppControlN(APPCONTROL_PROVIDER_BROWSER, APPCONTROL_OPERATION_VIEW);
 	if (pAc)    {       pAc->Start(pDataList, null);       delete pAc;    }
 	pDataList->RemoveAll(true);
