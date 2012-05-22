@@ -111,7 +111,7 @@
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Информация о книге..."/>
+		<node name="bookInfo" value="Информация о книге"/>
 		<node name="toc" value="Содержание"/>
 		<node name="showLibrary" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
@@ -161,8 +161,8 @@
 			<node name="toggleFullscreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
 		</node>
-		<node name="preferences" value="Настройки..."/>
-		<node name="quit" value="Закрыть"/>
+		<node name="preferences" value="Настройки"/>
+		<node name="quit" value="Выход"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
@@ -316,9 +316,8 @@
 			<node name="title" value="Настройки библиотеки"/>
 			<node name="tab">
 				<node name="Library" value="Библиотека">
-
-					node name="bookPath" value="Каталоги с книгами" /&gt;
-										<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
+					<node name="bookPath" value="Каталоги с книгами"/>
+					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
 					<node name="collectBooksWithoutMetaInfo" value="Сканировать книги без метаинформации"/>
 					<node name="downloadDirectory" value="Каталог для загружаемых книг"/>
 				</node>
@@ -381,7 +380,7 @@
 					<node name="keyLinesToScroll" value="Сколько строк пролистывать за 1 раз"/>
 					<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы"/>
 					<node name="enableTapScrolling" value="Листать нажатием на экран либо протягиванием страницы"/>
-					<node name="fingerOnly" value="Листать нажатием на экран"/>
+					<node name="fingerOnly" value="Листать только нажатием на экран"/>
 				</node>
 			</node>
 		</node>
@@ -744,21 +743,22 @@
 			<node name="summary" value="Отдельные настройки для заголовков, эпиграфов и т.п."/>
 		</node>
 		<node name="margins" value="Отступы">
-			<node name="summary" value="Настрйоки отступов"/>
+			<node name="summary" value="Поля вокруг текста"/>
 		</node>
 		<node name="colors" value="Цвета">
 			<node name="summary" value="Настройки цвета"/>
 		</node>
 		<node name="appearance" value="Внешний вид">
-			<node name="summary" value="Экран, строка состояния, подсветка кнопок"/>
+			<node name="summary" value="Ориентация экрана"/>
 		</node>
-		<node name="indicator" value="Индикатор">
-			<node name="summary" value="Scrollbar, footer settings"/>
+		<node name="indicator" value="Полоса прокрутки">
+			<node name="summary" value="Индикатор количества прочитанного"/>
 		</node>
 		<node name="scrolling" value="Перелистывание страниц">
 			<node name="summary" value="Как листать страницы"/>
 		</node>
 		<node name="library" value="Настройки библиотеки">
-			<node name="summary" value=""/>
+			<node name="summary" value="Путь к каталогу с книгами."/>
+		</node>
 	</node>
 </resources>
