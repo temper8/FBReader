@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
 <fontslist>
-
-	<font>
-		<family>DejaVu Sans Mono</family>
-		<regular>DejaVuSansMono.ttf</regular>
-		<italic>DejaVuSansMono-It.ttf</italic>
-
-	</font>
-
 	<font>
 		<family>PT Serif</family>
 		<regular>PTF55F.ttf</regular>
@@ -22,12 +14,4 @@
 		<italic>PTS56F-FC.ttf</italic>
 		<boldItalic>PTS56F.ttf</boldItalic>
 	</font>
-	<font>
-		<family>Times New Roman</family>
-		<regular>times.ttf</regular>
-		<bold>times.ttf</bold>
-		<italic>timesiI.ttf</italic>
-		<boldItalic>times.ttf</boldItalic>
-	</font>
-
 </fontslist>
