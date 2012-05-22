@@ -110,7 +110,7 @@
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Book Info..."/>
+		<node name="bookInfo" value="Book Info"/>
 		<node name="toc" value="Table of Contents"/>
 		<node name="showLibrary" value="Open library"/>
 		<node name="showNetLibrary" value="NetWork library"/>
@@ -160,8 +160,8 @@
 			<node name="toggleFullscreen" value="Full Screen"/>
 			<node name="toggleIndicator" value="Toggle Indicator"/>
 		</node>
-		<node name="preferences" value="Preferences..."/>
-		<node name="quit" value="Close"/>
+		<node name="preferences" value="Preferences"/>
+		<node name="quit" value="Quit"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
@@ -748,7 +748,7 @@
 			<node name="summary" value="Colors settings"/>
 		</node>
 		<node name="appearance" value="Appearance">
-			<node name="summary" value="Display settings, status bar, button lights"/>
+			<node name="summary" value="Display settings"/>
 		</node>
 		<node name="indicator" value="Progress indicator">
 			<node name="summary" value="Scrollbar, footer settings"/>
