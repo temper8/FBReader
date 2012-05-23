@@ -1,10 +1,11 @@
 *.o
 *.d
-*.pyc
 .Target-Debug
 .Target-Release
-.settings
 Target-Debug
 Target-Release
 DebugInfo
+FBReader.htb
+.settings
+.cproject
 
