@@ -111,6 +111,7 @@
 	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Book Info"/>
+		<node name="bookPreview" value="Book Info"/>
 		<node name="toc" value="Table of Contents"/>
 		<node name="showLibrary" value="Open library"/>
 		<node name="showNetLibrary" value="NetWork library"/>

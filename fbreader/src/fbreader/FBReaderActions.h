@@ -38,6 +38,7 @@ public:
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;
 	static const std::string SHOW_OPTIONS_DIALOG;
+	static const std::string SHOW_BOOK_PREVIEW_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
 	static const std::string SHOW_LIBRARY_OPTIONS_DIALOG;
 	static const std::string SHOW_NETWORK_OPTIONS_DIALOG;
@@ -203,6 +204,16 @@ public:
 	AddBookAction(int visibleInModes);
 	void run();
 };
+
+
+
+class ShowBookPreviewAction : public ModeDependentAction {
+
+public:
+	ShowBookPreviewAction();
+	void run();
+};
+
 
 class ShowBookInfoAction : public ModeDependentAction {
 

@@ -2,7 +2,7 @@
 <menubar>
 	<item id="showLibrary"/>
 	<item id="toc"/>
-	<item id="bookInfo"/>
+	<item id="bookPreview"/>
 	<item id="preferences"/>
 	<item id="day-night"/>
 	<item id="more"/>

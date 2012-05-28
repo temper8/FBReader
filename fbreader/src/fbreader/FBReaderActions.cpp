@@ -114,13 +114,13 @@ void ShowOptionsDialogAction::run() {
 
 //	dialog->rootNode().insert(new TextStylesTreeNode, index++);
 
-	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
+//	dialog->rootNode().insert(new SystemOptionsDialogNode, index++);
 
 //	dialog->rootNode().insert(new ReadingOptionsDialogNode(), index++);
 
 //	dialog->rootNode().insert(new LookAndFeelOptionsDialogNode, index++);
 
-	dialog->rootNode().insert(new LibraryOptionsDialogNode, index++);
+//	dialog->rootNode().insert(new LibraryOptionsDialogNode, index++);
 
 //	dialog->rootNode().insert(new ColorOptionsDialogNode, index++);
 
@@ -265,6 +265,22 @@ bool ScrollToEndOfTextAction::isEnabled() const {
 
 void ScrollToEndOfTextAction::run() {
 	FBReader::Instance().bookTextView().scrollToEndOfText();
+}
+
+
+ShowBookPreviewAction::ShowBookPreviewAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::FOOTNOTE_MODE) {
+}
+
+void ShowBookPreviewAction::run() {
+	AppLog("ShowBookInfoAction::run()");
+	FBReader &fbreader = FBReader::Instance();
+	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
+	shared_ptr<Book> book = fbreader.myModel->book();
+///	if (BookInfoDialog(book).dialog().run()) {
+	if (SimpleBookPreviewDialog(book).dialog().run()) {
+	//	fbreader.openBook(book);
+	//	fbreader.refreshWindow();
+	}
 }
 
 ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::FOOTNOTE_MODE) {

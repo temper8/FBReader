@@ -29,6 +29,7 @@ const std::string ActionCode::SHOW_NETWORK_LIBRARY = "showNetLibrary";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::SHOW_HELP = "showHelp";
 const std::string ActionCode::SHOW_BOOK_INFO_DIALOG = "bookInfo";
+const std::string ActionCode::SHOW_BOOK_PREVIEW_DIALOG = "bookPreview";
 const std::string ActionCode::SHOW_OPTIONS_DIALOG = "preferences";
 const std::string ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG = "libraryOptions";
 const std::string ActionCode::SHOW_NETWORK_OPTIONS_DIALOG = "networkOptions";

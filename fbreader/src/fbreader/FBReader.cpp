@@ -143,6 +143,8 @@ FBReader::FBReader(const std::string &bookToOpen) :	ZLApplication("FBReader"),
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	//addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_TOC, new ShowTOCTreeAction());
+
+	addAction(ActionCode::SHOW_BOOK_PREVIEW_DIALOG, new ShowBookPreviewAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
 	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
@@ -244,6 +246,7 @@ void FBReader::initWindow() {
 		AppLog("openBook(book)");
 		openBook(book);
 	}
+
 	refreshWindow();
 
 	ZLTimeManager::Instance().addTask(new TimeUpdater(), 5000);
@@ -251,6 +254,7 @@ void FBReader::initWindow() {
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
 	}
+
 }
 
 void FBReader::refreshWindow() {
@@ -479,6 +483,7 @@ bool FBReader::isFootnoteMode(){
 void FBReader::setMode(ViewMode mode) {
 	AppLog("FBReader::setMode %d", mode);
 	if (mode == myMode) {
+		refreshWindow();
 		return;
 	}
 

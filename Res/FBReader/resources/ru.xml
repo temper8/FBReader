@@ -112,6 +112,7 @@
 	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Информация о книге"/>
+		<node name="bookPreview" value="Информация о книге"/>
 		<node name="toc" value="Содержание"/>
 		<node name="showLibrary" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
