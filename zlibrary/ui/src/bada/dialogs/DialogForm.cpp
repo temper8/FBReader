@@ -59,6 +59,7 @@ DialogForm::~DialogForm() {
 	AppLog("delete buttonBmp;...");
 	delete buttonBmp;
 	delete buttonBmp2;
+	delete arrowDownBmp;
 	AppLog("delete __pCustomListItemFormat...");
 	delete __pComboViewListItemFormat;
 	delete __pSpinViewListItemFormat;
@@ -123,11 +124,11 @@ result DialogForm::OnInitializing(void)
 
 	   // Creates CustomList
 	Rectangle formRect = GetClientAreaBounds();
-	Osp::Media::Image *pImage = new Osp::Media::Image();
-    r = pImage->Construct();
-	buttonBmp = pImage->DecodeN("/Res/icons/button-220x50.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-	buttonBmp2 = pImage->DecodeN("/Res/icons/button-220x50s.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-	arrowDownBmp = pImage->DecodeN("/Res/icons/arrow_down.png", BITMAP_PIXEL_FORMAT_ARGB8888);
+	Osp::Media::Image image;// = new Osp::Media::Image();
+    r = image.Construct();
+	buttonBmp = image.DecodeN("/Res/icons/button-220x50.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	buttonBmp2 = image.DecodeN("/Res/icons/button-220x50s.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+	arrowDownBmp = image.DecodeN("/Res/icons/arrow_down.png", BITMAP_PIXEL_FORMAT_ARGB8888);
 	AppLog("pImage->DecodeN");
     __pCustomList = new GroupedList();
 
@@ -159,7 +160,7 @@ result DialogForm::OnInitializing(void)
 	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(10, 10, 400, 80), 25, Color::COLOR_GREY, Color::COLOR_GREY);
 	  __pComboViewListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(10, 50, 400, 80), 28);
 	  __pComboViewListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(10, 5, 70, 90));
-	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 25, 32, 32));
+	  __pComboViewListItemFormat->AddElement(ID_LIST_CHECKBOX, Osp::Graphics::Rectangle(420, 25, 36, 36));
 
 //---------------------- __pStringViewListItemFormat --------------------------------
 
