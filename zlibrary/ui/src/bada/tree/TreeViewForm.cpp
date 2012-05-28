@@ -262,16 +262,16 @@ void TreeViewForm::OnActionPerformed(const Osp::Ui::Control& source, int actionI
 
 void TreeViewForm::CreateContextMenuListStyle(void)
 {
-	AppResource* pAppResource = Application::GetInstance()->GetAppResource();
+//	AppResource* pAppResource = Application::GetInstance()->GetAppResource();
 
 
-	__pContextMenuIconText = new ContextMenu();
-	__pContextMenuIconText->Construct(Point(100, 240), CONTEXT_MENU_STYLE_LIST);
+//	__pContextMenuIconText = new ContextMenu();
+//	__pContextMenuIconText->Construct(Point(100, 240), CONTEXT_MENU_STYLE_LIST);
 //	__pContextMenuIconText->AddItem(L"text1",ID_CONTEXT_ITEM1, *pNormalBitmap1, pPressedBitmap1);
 //	__pContextMenuIconText->AddItem(L"text2",ID_CONTEXT_ITEM2, *pNormalBitmap2, pPressedBitmap2);
 //	__pContextMenuIconText->AddItem(L"text1",ID_CONTEXT_ITEM0);
 //	__pContextMenuIconText->AddItem(L"text2",ID_CONTEXT_ITEM1);
-	__pContextMenuIconText->AddActionEventListener(*this);
+//	__pContextMenuIconText->AddActionEventListener(*this);
 
 	// Deallocate bitmaps
 	//delete pNormalBitmap1;

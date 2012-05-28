@@ -51,7 +51,7 @@ protected:
 	Osp::Ui::Controls::Button*			pBtnClose;
 	Osp::Ui::Controls::List*			__pLstSearchList;
 	Osp::Ui::Controls::Popup*			__pCommonPopup;
-	Osp::Ui::Controls::ContextMenu* __pContextMenuIconText;
+//	Osp::Ui::Controls::ContextMenu* __pContextMenuIconText;
 
 	Osp::Base::Collection::IList*				__pLstContentType;
 	Osp::Base::Collection::IList*				__pLstContentInfo;
