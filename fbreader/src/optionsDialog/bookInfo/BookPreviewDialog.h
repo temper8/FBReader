@@ -14,6 +14,25 @@
 
 #include "../../formats/FormatPlugin.h"
 
+
+class SimpleBookPreviewDialog {
+public:
+	SimpleBookPreviewDialog(shared_ptr<Book> book);
+	virtual ~SimpleBookPreviewDialog();
+
+	ZLOptionsDialog &dialog();
+
+private:
+	shared_ptr<ZLOptionsDialog> myDialog;
+	shared_ptr<Book> myBook;
+
+	friend class BookPreviewTitleEntry;
+	friend class BookOpenAction;
+};
+
+inline ZLOptionsDialog &SimpleBookPreviewDialog::dialog() { return *myDialog; }
+
+
 class BookPreviewDialog {
 public:
 	BookPreviewDialog(shared_ptr<Book> book);
