@@ -142,6 +142,22 @@ int BookRemoveAction::removeBookDialog() const {
 	return Library::REMOVE_DONT_REMOVE;
 }
 
+SimpleBookPreviewAction::SimpleBookPreviewAction(shared_ptr<Book> book) : myBook(book) {
+}
+
+void SimpleBookPreviewAction::run() {
+	if (SimpleBookPreviewDialog(myBook).dialog().run()) {
+	//if (BookInfoDialog(myBook).dialog().run()) {
+	//if (MobileBookInfoDialog(myBook).dialog().run()) {
+		// TODO: select current node (?) again
+		FBReader::Instance().refreshWindow();
+	}
+}
+
+ZLResourceKey SimpleBookPreviewAction::key() const {
+	return ZLResourceKey("edit");
+}
+
 BookEditInfoAction::BookEditInfoAction(shared_ptr<Book> book) : myBook(book) {
 }
 

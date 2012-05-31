@@ -90,11 +90,11 @@ LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 	Library &library = Library::Instance();
 	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
 
-	BookPathComboEntry *bookPathComboEntry =
-			new BookPathComboEntry(library.PathOption);
-	libraryTab.addOption(ZLResourceKey("bookPath"), bookPathComboEntry);
+//	BookPathComboEntry *bookPathComboEntry =
+//			new BookPathComboEntry(library.PathOption);
+//	libraryTab.addOption(ZLResourceKey("bookPath"), bookPathComboEntry);
 
 	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
+//	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
 //	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
 }

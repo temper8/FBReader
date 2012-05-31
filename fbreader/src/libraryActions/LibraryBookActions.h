@@ -51,6 +51,18 @@ private:
 	const shared_ptr<Book> myBook;
 };
 
+class SimpleBookPreviewAction : public ZLRunnableWithKey {
+
+public:
+	SimpleBookPreviewAction(shared_ptr<Book> book);
+	void run();
+	ZLResourceKey key() const;
+
+private:
+	const shared_ptr<Book> myBook;
+};
+
+
 class BookEditInfoAction : public ZLRunnableWithKey {
 
 public:
