@@ -47,7 +47,7 @@ BookMenuEntry::BookMenuEntry(shared_ptr<Book> book) : ZLMenuOptionEntry() {
 
 	menuActions.push_back(new BookReadAction(book));
 	menuActions.push_back(new BookReadAction(book));
-	menuActions.push_back(new BookRemoveAction(book));
+//	menuActions.push_back(new BookRemoveAction(book));
 }
 
 const std::string &BookMenuEntry::initialValue() const {
