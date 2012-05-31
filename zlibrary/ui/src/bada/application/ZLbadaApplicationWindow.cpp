@@ -163,7 +163,7 @@ void ZLbadaApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButton
 ZLbadaApplicationWindow::ZLbadaApplicationWindow(ZLApplication *a): ZLApplicationWindow(a) {
 	// TODO Auto-generated constructor stub
 
-
+	AppLog("ZLbadaApplicationWindow");
 }
 
 ZLbadaApplicationWindow::~ZLbadaApplicationWindow() {
@@ -179,20 +179,22 @@ ZLViewWidget *ZLbadaApplicationWindow::createViewWidget() {
 	myViewWidget = new ZLbadaViewWidget(Angle);
 
 	// Create a form
-	badaForm *pbadaForm = new badaForm(*myViewWidget);
-	pbadaForm->Initialize();
+	//badaForm *pbadaForm = new badaForm(*myViewWidget);
+	//pbadaForm->Initialize();
+	badaForm &pbadaForm = badaForm::Instance();
+	pbadaForm.Initialize(myViewWidget);
 	//pbadaForm->SetOrientation(ORIENTATION_PORTRAIT_REVERSE );
 
 	// Add the form to the frame
 	ZLbadaLibraryImplementation::myBadaApp->TestTest();
-	Frame *pFrame = ZLbadaLibraryImplementation::myBadaApp->GetAppFrame()->GetFrame();
-	pFrame->AddControl(*pbadaForm);
+	//Frame *pFrame = ZLbadaLibraryImplementation::myBadaApp->GetAppFrame()->GetFrame();
+	//pFrame->AddControl(*pbadaForm);
 	AppLog("pFrame->AddControl(*pbadaForm)");
 
 	// Set the current form
-	pFrame->SetCurrentForm(*pbadaForm);
+	//pFrame->SetCurrentForm(*pbadaForm);
 	AppLog("SetCurrentForm(*pbadaForm)");
-	myViewWidget->mybadaForm = pbadaForm;
+	myViewWidget->mybadaForm = &pbadaForm;
 	myViewWidget->myWindows = this;
 
 

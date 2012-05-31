@@ -18,7 +18,7 @@ class ZLbadaViewWidget: public ZLViewWidget {
 public:
 	ZLbadaApplicationWindow *myWindows;
     badaForm *mybadaForm;
-
+    Osp::Graphics::Canvas* myCanvas;
 	virtual void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
 	virtual void setScrollbarPlacement(ZLView::Direction direction, bool standard);
 	virtual void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to);

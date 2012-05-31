@@ -139,7 +139,7 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 //	AppLog( "setFont %s",family.c_str());
 //	AppLog( "setFont size %d, %d, %d ",size,bold,italic);
 //	AppLog( "setFont family %s",family.c_str());
-//	bool fontChanged = false;
+	//bool fontChanged = false;
 	bool famylyChanged = false;
 	bool styleChanged = false;
 	std::string newFont = checkFont(family);
@@ -166,9 +166,9 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 
 	if (famylyChanged) {
 		deltaItalic = 0;
-	    if (myFontRegular!=0) delete myFontRegular;
+	    if (myFontRegular!=null) delete myFontRegular;
 		myFontRegular = null;
-	    if (myFontItalic!=0) delete myFontItalic;
+	    if (myFontItalic!=null) delete myFontItalic;
 		myFontItalic = null;
 	//	std::string newFont = checkFont(family);
 		AppLog("newFont %s",newFont.c_str());

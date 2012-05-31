@@ -43,27 +43,31 @@ bool badaApp::OnAppInitializing(AppRegistry& appRegistry)
 	// If this method returns false, the application will be terminated.
 
 	// Uncomment the following statement to listen to the screen on/off events.
-	//PowerManager::SetScreenEventListener(*this);
+	PowerManager::SetScreenEventListener(*this);
 
 
 	ZLbadaLibraryImplementation::SetBada2App(this);
 	AppLog("B2App::OnAppInitializing");
 	ZLbadaLibraryImplementation::createApplicationWindow();
-/* // Create a form
-	B2Form *pB2Form = new B2Form();
-	pB2Form->Initialize();
+ // Create a form
+	AppLog("Create a form");
+	badaForm *pbadaForm = new badaForm();
+	pbadaForm->Initialize();
 
 	// Add the form to the frame
+	AppLog("Add the form to the frame");
 	Frame *pFrame = GetAppFrame()->GetFrame();
-	pFrame->AddControl(*pB2Form);
-
+	pFrame->AddControl(*pbadaForm);
+	pFrame->SetBackgroundColor(Osp::Graphics::Color::COLOR_BLUE);
 	// Set the current form
-	pFrame->SetCurrentForm(*pB2Form);
+	AppLog("Set the current form");
+	pFrame->SetCurrentForm(*pbadaForm);
 
 	// Draw and Show the form
-	pB2Form->Draw();
-	pB2Form->Show();
-*/
+	AppLog("Draw and Show the form");
+	//pbadaForm->Draw();
+	//pbadaForm->Show();
+//	pbadaForm->RequestRedraw(true);
 	return true;
 }
 
@@ -81,6 +85,7 @@ badaApp::OnForeground(void)
 {
 	// TODO:
 	// Start or resume drawing when the application is moved to the foreground.
+	AppLog("OnForeground");
 }
 
 void
@@ -88,6 +93,7 @@ badaApp::OnBackground(void)
 {
 	// TODO:
 	// Stop drawing when the application is moved to the background.
+	AppLog("OnBackground");
 }
 
 void

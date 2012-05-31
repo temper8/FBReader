@@ -10,6 +10,10 @@
 #include <FSystem.h>
 #include "../../../../../fbreader/src/fbreader/FBReader.h"
 #include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
+#include "../../../../../fbreader/src/fbreader/BookTextView.h"
+
+#include "ZLTextArea.h"
+#include "../library/ZLBadaLibraryImplementation.h"
 
 using namespace Osp::App;
 using namespace Osp::Base;
@@ -21,26 +25,94 @@ using namespace Osp::Base::Runtime;
 
 #define ID_BACK_TO_READING	2600
 
+
+badaForm *badaForm::ourInstance = 0;
+
+badaForm &badaForm::Instance() {
+	return *ourInstance;
+}
+
+
 result badaForm::OnDraw(void)
 {
-	AppLog("badaForm::OnDraw(void)");
-	ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder.view()->context();
-	Osp::Graphics::Canvas* pCanvas =  GetCanvasN();
+	AppLog("badaForm::OnDraw(void) %d", myDrawMode);
+	DrawMode __drawMode = myDrawMode;
+	Osp::Graphics::Canvas* pCanvas =   this->GetCanvasN();
+	if (myHolder == null ) __drawMode = DRAW_BLACK_SCREEN;
 
+	switch(__drawMode) {
+		case DRAW_BLACK_SCREEN:
+			AppLog("DRAW_BLACK_SCREEN");
+			//pCanvas->FillRectangle(Osp::Graphics::Color::COLOR_BLACK, formRect);
+			this->SendUserEvent(3, null);
+			//pCanvas->Show();
+			break;
+
+		case SLIDE_NEXT:
+			AppLog("SLIDE_NEXT");
+			if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+			if (srcRect.width > 0) {
+				pCanvas->Copy(Point(0,0),*capturedCanvas,srcRect);
+							pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+							pCanvas->SetLineWidth(2);
+							pCanvas->DrawLine(Point(srcRect.width+1,0),Point(srcRect.width+1,srcRect.height));
+			}
+			pCanvas->Show();
+			break;
+
+		case SLIDE_PREV:
+			AppLog("SLIDE_PREV");
+			pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
+			if (srcRect.width > 0) {
+				if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,srcRect);
+							pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+							pCanvas->SetLineWidth(2);
+							pCanvas->DrawLine(Point(srcRect.width+1,0),Point(srcRect.width+1,srcRect.height));
+			}
+			pCanvas->Show();
+			break;
+
+		case DRAW_CURRENT_PAGE:
+			AppLog("DRAW_CURRENT_PAGE");
+		    if (needRepaintHolder) {
+		        needRepaintHolder = false;
+		    	if (myHolder) myHolder->repaint();
+		    }
+			if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+			pCanvas->Show();
+		break;
+	default:
+		AppLog("default");
+		break;
+	};
+
+	delete pCanvas;
+	return E_SUCCESS;
+	 /*
+	ZLbadaPaintContext &context = (ZLbadaPaintContext&)myHolder->view()->context();
   if (touchMove!=0){
 	 // pCanvas =  GetCanvasN();
 	  // pCanvas->Clear();
 		if (touchMove == 1){
-			pCanvas->Copy(Point(0,0),*myCanvas,formRect);
-			AppLog("OnTouchMoved 1");
+			if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+			//pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+			AppLog("OnTouchMoved 1 Next Page");
 			//srcRect(-x,0,formRect.width+x,formRect.height);
+			//if ((srcRect.width>0) && (srcRect.width<formRect.srcRect.width))
 			pCanvas->Copy(Point(0,0),*capturedCanvas,srcRect);
+			pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+			pCanvas->SetLineWidth(2);
+			pCanvas->DrawLine(Point(srcRect.width+1,0),Point(srcRect.width+1,srcRect.height));
 			AppLog("OnTouchMoved 2");
 		}
 		else {
+			AppLog("OnTouchMoved Prev Page");
 			pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
 			//Rectangle srcRect(formRect.width-currentPosition.x,0,currentPosition.x,formRect.height);
-			pCanvas->Copy(Point(0,0),*myCanvas,srcRect);
+			if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,srcRect);
+			pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+			pCanvas->SetLineWidth(2);
+			pCanvas->DrawLine(Point(srcRect.width+1,0),Point(srcRect.width+1,srcRect.height));
 
 		}
 
@@ -51,19 +123,19 @@ result badaForm::OnDraw(void)
 	   Rectangle newRect = GetBounds();
 	   	if (newRect.width==formRect.width)
 	   	{
-	   		Osp::Graphics::Canvas* tmpCanvas = new Canvas;
-	   		tmpCanvas->Construct();
+	   		Osp::Graphics::Canvas* tmpCanvas = myHolder->myCanvas;//new Canvas;
+	   		//tmpCanvas->Construct();
 	   		//tmpCanvas->Clear();
 		   	context.pCanvas = tmpCanvas;
 		   	context.myHeight = formRect.height;
 		   	context.myWidth = formRect.width;
 		   	//context.restoreFont();
-		   	myHolder.view()->paint();
-		   	myCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
+		  // 	myHolder->view()->paint();
+		   //	if (tmpCanvas) 	   	myCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
 		   	if (showNewPage)   		{
 		   			//pCanvas =  GetCanvasN();
 		   			AppLog("pCanvas->Copy");
-	   				pCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
+		   			if (tmpCanvas) pCanvas->Copy(Point(0,0),*tmpCanvas,formRect);
 	   				AppLog("pCanvas->Show");
 	   				//tmpCanvas.Show();
 	   				pCanvas->Show();
@@ -79,13 +151,15 @@ result badaForm::OnDraw(void)
 
 		   	context.pCanvas = 0;
 		   	//context.deleteMyFont();
-		   	delete tmpCanvas;
+		   //	delete tmpCanvas;
 	   	}
    }
 
 if (pCanvas) delete pCanvas;
 // this->AddKeyEventListener(*this);
 //delete tmpCanvas;
+return  E_SUCCESS;
+*/
 }
 
 result badaForm::GetSystemInfomation(void)
@@ -143,17 +217,57 @@ void badaForm::OnKeyReleased (const Osp::Ui::Control &source, Osp::Ui::KeyCode k
 	if (apiVersion == 2) this->ConsumeInputEvent();
 
 }
+
 void badaForm::OnTimerExpired(Timer& timer){
 	dx = dx+ vx;
-	vx = vx + 5;
+	vx = vx + 20;
 
 	AppLog("OnTimerExpired %d",dx);
 	AppLog("formRect.width %d",formRect.width);
+	switch(myDrawMode) {
+		case SLIDE_NEXT:
+			srcRect = Rectangle(dx,0,formRect.width-dx,formRect.height);
+			if (dx<formRect.width) {
+					Draw();
+					myTimer->Start(1);
+			}
+			else	{
+					srcRect = Rectangle(formRect.width,0,0,formRect.height);
+					myDrawMode = DRAW_CURRENT_PAGE;
+					//Draw();
+					delete myTimer;
+					myTimer = 0;
+					//touchMove = 0;
+					//showNewPage = true;
+					Draw();
+			}
+			break;
+
+		case SLIDE_PREV:
+			srcRect = Rectangle(formRect.width-dx,0,dx,formRect.height);
+			if (dx<formRect.width) {
+		 			Draw();
+		 			myTimer->Start(1);
+		 		}
+		 	else	{
+		 			srcRect = Rectangle(0,0,formRect.width,formRect.height);
+		 			myDrawMode = DRAW_CURRENT_PAGE;
+		 			delete myTimer;
+		 			myTimer = 0;
+		 			//touchMove = 0;
+		 			//showNewPage = true;
+		 			Draw();
+		 	}
+			break;
+	default:
+		break;
+	};
+	/*
 if (touchMove == 1){
 		srcRect = Rectangle(dx,0,formRect.width-dx,formRect.height);
 		if (dx<formRect.width) {
 			Draw();
-			myTimer->Start(10);
+			myTimer->Start(1);
 		}
 		else
 		{
@@ -163,6 +277,7 @@ if (touchMove == 1){
 			myTimer = 0;
 			touchMove = 0;
 			showNewPage = true;
+			Draw();
 		}
 
 	}
@@ -171,7 +286,7 @@ else {
 	 srcRect = Rectangle(formRect.width-dx,0,dx,formRect.height);
 	 if (dx<formRect.width) {
 	 			Draw();
-	 			myTimer->Start(10);
+	 			myTimer->Start(1);
 	 		}
 	 		else
 	 		{
@@ -181,8 +296,10 @@ else {
 	 			myTimer = 0;
 	 			touchMove = 0;
 	 			showNewPage = true;
+	 			Draw();
 	 		}
    }
+*/
 }
 
 void badaForm::PrevPage(){
@@ -190,21 +307,24 @@ void badaForm::PrevPage(){
 	if (myTimer) {
 		myTimer->Cancel();
 		delete myTimer;
+		myTimer = 0;
 	}
-    myTimer = new Timer;
-    myTimer->Construct(*this);
-    dx = 0;
-    vx = 20;
-    capturedCanvas->Copy(Point(0,0),*myCanvas,formRect);
-    showNewPage = false;
-	touchMove = 0;
-	FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
-	myCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
-	myCanvas->SetLineWidth(2);
-	myCanvas->DrawLine(Point(formRect.width-1,0),Point(formRect.width-1,formRect.height));
-//	Draw();
-	myTimer->Start(10);
-	touchMove = 2;
+	FBReader &fbreader = FBReader::Instance();
+	const ZLTextArea &textArea  = fbreader.bookTextView().textArea();
+	if (textArea.isEmpty()) {
+		AppLog("textArea isEmpty");
+		return;
+	}
+	if (!textArea.myStartCursor.paragraphCursor().isFirst() || !textArea.myStartCursor.isStartOfParagraph())  {
+				myTimer = new Timer;
+				myTimer->Construct(*this);
+				dx = 0;
+				vx = 60;
+				if (myHolder->myCanvas) capturedCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+				fbreader.doAction(ActionCode::TAP_SCROLL_BACKWARD);
+				myTimer->Start(1);
+				myDrawMode = SLIDE_PREV;
+	}
 }
 
 
@@ -213,21 +333,36 @@ void badaForm::NextPage(){
 	if (myTimer) {
 			myTimer->Cancel();
 			delete myTimer;
+			myTimer = 0;
 		}
-    myTimer = new Timer;
-    myTimer->Construct(*this);
-    dx = 0;
-    vx = 20;
-    capturedCanvas->Copy(Point(0,0),*myCanvas,formRect);
-    showNewPage = false;
-	touchMove = 0;
-	FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
-	capturedCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
-	capturedCanvas->SetLineWidth(2);
-	capturedCanvas->DrawLine(Point(formRect.width,0),Point(formRect.width,formRect.height));
-//	Draw();
-	myTimer->Start(10);
-	touchMove = 1;
+
+
+	FBReader &fbreader = FBReader::Instance();
+	const ZLTextArea &textArea  = fbreader.bookTextView().textArea();
+	if (textArea.isEmpty()) {
+		AppLog("textArea isEmpty");
+		return;
+	}
+	if (!textArea.myEndCursor.paragraphCursor().isLast() ||
+					!textArea.myEndCursor.isEndOfParagraph()) {
+		myTimer = new Timer;
+		myTimer->Construct(*this);
+		dx = 0;
+		vx = 60;
+		if (myHolder->myCanvas) capturedCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+	  //  showNewPage = false;
+		//touchMove = 0;
+		fbreader.doAction(ActionCode::TAP_SCROLL_FORWARD);
+		//size_t pi = fbreader.bookTextView().pageIndex();
+		//capturedCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
+		//capturedCanvas->SetLineWidth(2);
+		//capturedCanvas->DrawLine(Point(formRect.width,0),Point(formRect.width,formRect.height));
+
+		//touchMove = 1;
+		myDrawMode = SLIDE_NEXT;
+		//Draw();
+		myTimer->Start(1);
+	}
 
 }
 
@@ -263,55 +398,74 @@ void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &current
 {
 	if (myTimer) return;
 	AppLog("OnTouchMoved");
+	//touchMoved = true;
+	FBReader &fbreader = FBReader::Instance();
+	if (!fbreader.EnableTapScrollingOption.value()) return;
+	if (fbreader.TapScrollingOnFingerOnlyOption.value()) return;
+
+	const ZLTextArea &textArea  = fbreader.bookTextView().textArea();
+	if (textArea.isEmpty()) {
+		AppLog("textArea isEmpty");
+		touchMoved = true;
+		endOfBook = true;
+		return;
+	}
 	int x = currentPosition.x - startTouchPosition.x;
 	int y = currentPosition.y - startTouchPosition.y;
-	if (showNewPage) {
-		capturedCanvas->Copy(Point(0,0),*myCanvas,formRect);
-		showNewPage = false;
-		if (x<0) {
-			FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
-			capturedCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
-			capturedCanvas->SetLineWidth(2);
-			capturedCanvas->DrawLine(Point(formRect.width,0),Point(formRect.width,formRect.height));
-		}
-		else {
-			FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
-			myCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_GREY);
-			myCanvas->SetLineWidth(2);
-			myCanvas->DrawLine(Point(formRect.width-1,0),Point(formRect.width-1,formRect.height));
+	if (endOfBook) return;
 
+	if (!touchMoved) {
+		AppLog("if (!touchMoved)");
+		//startMove = false;
+		if ((x<0)&& !(!textArea.myEndCursor.paragraphCursor().isLast() || !textArea.myEndCursor.isEndOfParagraph()))
+		{
+			touchMoved = true;
+			endOfBook = true;
+			return;
 		}
+
+		if ((x>0)&& !(!textArea.myStartCursor.paragraphCursor().isFirst() || !textArea.myStartCursor.isStartOfParagraph()))
+		{
+			touchMoved = true;
+			endOfBook = true;
+			return;
+		}
+
+		AppLog("catch canvas");
+		if (myHolder->myCanvas) capturedCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
+		if (x<0)
+			FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+		else
+			FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
 		AppLog("pCanvas->Show");
 	}
 
- //  Canvas* pCanvas = source->GetCanvasN();
+	touchMoved = true;
+
 	if (x<0){
-		touchMove = 1;
-		//pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+		myDrawMode = SLIDE_NEXT;
 		AppLog("OnTouchMoved 1");
-		 srcRect = Rectangle(-x,0,formRect.width+x,formRect.height);
-		//pCanvas->Copy(Point(0,0),*capturedCanvas,srcRect);
-		AppLog("OnTouchMoved 2");
+		srcRect = Rectangle(-x,0,formRect.width+x,formRect.height);
 	}
 	else {
-		touchMove = 2;
-		//pCanvas->Copy(Point(0,0),*capturedCanvas,formRect);
-		 srcRect = Rectangle(formRect.width-currentPosition.x,0,currentPosition.x,formRect.height);
-		//pCanvas->Copy(Point(0,0),*myCanvas,srcRect);
+		myDrawMode = SLIDE_PREV;
+		srcRect = Rectangle(formRect.width-currentPosition.x,0,currentPosition.x,formRect.height);
 	}
 	AppLog("pCanvas->Show");
-//	pCanvas->Show();*/
-//	delete pCanvas;
 	Draw();
-//	myHolder.view()->onStylusMove(currentPosition.x, currentPosition.y);
 }
 
 void badaForm::OnTouchPressed(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
+ touchMoved = false;
+ //startMove = true;
+ endOfBook = false;
   if (myTimer) return;
+  FBReader &fbreader = FBReader::Instance();
+  if (!fbreader.EnableTapScrollingOption.value()) return;
   AppLog("OnTouchPressed");
   startTouchPosition = currentPosition;
-  myHolder.view()->onStylusPress(currentPosition.x, currentPosition.y);
+  myHolder->view()->onStylusPress(currentPosition.x, currentPosition.y);
  // myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y);
 //  onStylusRelease
 }
@@ -319,8 +473,9 @@ void badaForm::OnTouchPressed(const Control &source, const Point &currentPositio
 void badaForm::OnTouchReleased(const Control &source, const Point &currentPosition, const TouchEventInfo &touchInfo)
 {
 	if (myTimer) return;
+	FBReader &fbreader = FBReader::Instance();
 	AppLog("OnTouchReleased");
-	if (myHolder.view()->onStylusRelease(currentPosition.x, currentPosition.y)) 	{
+	if ((!touchMoved)&&(myHolder->view()->onStylusRelease(currentPosition.x, currentPosition.y))) 	{
 		AppLog("onStylusRelease");
 		FBReader &fbreader = FBReader::Instance();
 		if (fbreader.isFootnoteMode()){
@@ -329,19 +484,24 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 			AddSoftkeyActionListener(SOFTKEY_1, *this);
 			SetSoftkeyActionId(SOFTKEY_1, ID_BACK_TO_READING);
 			SetSoftkeyText(SOFTKEY_1, L"Back");
+			myDrawMode = DRAW_CURRENT_PAGE;
 			RequestRedraw();
 		}
 		return;
 	}
 
-	touchMove = 0;
+	//touchMove = 0;
 
-	if (!showNewPage) {
-		Canvas* pCanvas = GetCanvasN();
-		pCanvas->Copy(Point(0,0),*myCanvas,formRect);
+	if (touchMoved) {
+		AppLog("if (touchMoved) DRAW_CURRENT_PAGE");
+		myDrawMode = DRAW_CURRENT_PAGE;
+		Draw();
+		/*
+		Canvas* pCanvas =  this->GetCanvasN();
+		if (myHolder->myCanvas) pCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
 		pCanvas->Show();
 		delete pCanvas;
-		showNewPage = true;
+		showNewPage = true;*/
 	}
 	else
 	{
@@ -356,16 +516,18 @@ void badaForm::OnTouchReleased(const Control &source, const Point &currentPositi
 				}
 				else	{
 					AppLog("no menu");
+					if (touchInfo.IsFlicked()) AppLog("Flicked true");
+					else AppLog("Flicked false");
 					if (2*currentPosition.x>formRect.width)
 					{
 						AppLog("next page");
-						NextPage();
+						if ((!touchMoved)&&fbreader.EnableTapScrollingOption.value()) NextPage();
 						//		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
 					}
 					else
 					{
 						AppLog("prev page");
-						PrevPage();
+						if ((!touchMoved)&&fbreader.EnableTapScrollingOption.value()) PrevPage();
 						//FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
 					}
 				}
@@ -401,49 +563,52 @@ void badaForm::setOrientation(int angle){
 	    	break;
 	}
 	AppLog("badaAngle %d",badaAngle);
-	SetOrientation(badaAngle);
+	if (GetOrientation() != badaAngle) SetOrientation(badaAngle);
 }
 
 void badaForm::OnOrientationChanged( const Osp::Ui::Control&  source,  Osp::Ui::OrientationStatus  orientationStatus ){
-   if (myTimer) {
+    myDrawMode = DRAW_CURRENT_PAGE;
+	if (myTimer) {
 	   myTimer->Cancel();
 	   delete myTimer;
 	   myTimer = 0;
-	   touchMove = 0;
-	   showNewPage = true;
    }
 
 	AppLog("OnOrientationChanged");
+    needRepaintHolder = true;
+
 	formRect = GetClientAreaBounds();
-
-	if (myCanvas) delete myCanvas;
-
-	myCanvas = new Canvas();
-	myCanvas->Construct(formRect);
-
 	if (capturedCanvas) delete capturedCanvas;
-
 	capturedCanvas = new Canvas();
 	capturedCanvas->Construct(formRect);
-
-	OnDraw();
+//    myDrawMode = DRAW_CURRENT_PAGE;
+    //RequestRedraw(true);
+	Draw();
 }
 
-badaForm::badaForm(ZLbadaViewWidget &Holder): myHolder(Holder), MenuItemCount(0), showNewPage(true), touchMove(0), myTimer(0){
-
+badaForm::badaForm(void): needRepaintHolder(false),myDrawMode(DRAW_CURRENT_PAGE),applicationWindowsNotInited(true), myHolder(null), MenuItemCount(0), /*showNewPage(true), touchMove(0),*/ myTimer(0){
+	ourInstance = this;
 }
 
 badaForm::~badaForm(void)
 {
 }
-
-bool badaForm::Initialize()
-{
+bool badaForm::Initialize(){
 	AppLog("badaForm::Initialize()");
+	Construct(FORM_STYLE_NORMAL);
+	SetBackgroundColor(Osp::Graphics::Color::COLOR_BLACK);
+	formRect = GetClientAreaBounds();
+	return true;
+}
+
+bool badaForm::Initialize(ZLbadaViewWidget* Holder)
+{
+	myHolder = Holder;
+	AppLog("badaForm::Initialize2()");
 	// Construct an XML form
 	//Construct(L"IDF_B2FORM");
 	//Construct(FORM_STYLE_NORMAL);FORM_STYLE_TITLE||FORM_STYLE_INDICATOR
-	Construct(FORM_STYLE_NORMAL);
+
 	//SetName(L"IDF_FORM1");
 	//SetTitleText(L"FBReader Form");
 	// Create an OptionMenu
@@ -458,11 +623,11 @@ bool badaForm::Initialize()
 	 //pFrame->AddKeyEventListener(*this);
 	formRect = GetClientAreaBounds();
 
-	myCanvas = new Canvas();
-	myCanvas->Construct();
-
+//	myCanvas = new Canvas();
+//	myCanvas->Construct();
+	if (capturedCanvas) delete capturedCanvas;
 	capturedCanvas = new Canvas();
-	capturedCanvas->Construct();
+	capturedCanvas->Construct(formRect);
 
 	GetSystemInfomation();
 
@@ -477,8 +642,11 @@ result badaForm::OnInitializing(void)
 //	RuntimeInfo::GetValue("ScreenWidth", ScreenWidth);
 //	AppLog("ScreenHeight=%d, ScreenWidth=%d",ScreenHeight, ScreenWidth);
 	// TODO: Add your initialization code here
-
+//	ZLbadaLibraryImplementation::createApplicationWindow();
 //	((GView*)myHolder.myApplication)->ReadImage();
+	//ZLApplication::Instance().initWindow();
+
+	//myZLApplication->initWindow();
 	return r;
 }
 
@@ -535,7 +703,10 @@ void badaForm::OnActionPerformed(const Osp::Ui::Control& source, int actionId)
     	a->Terminate();
     }
     else
-    	myHolder.doAction(ActionIdList[indx]);
+    {
+    	myHolder->doAction(ActionIdList[indx]);
+    	RequestRedraw(true);
+    }
 }
 
 DialogForm* badaForm::CreateDalogForm(void){
@@ -625,7 +796,7 @@ void badaForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::
 			AppLog("badaForm::а теперь Акшен открываем файл");
 			pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
-			myHolder.doAction(ActionIdList[2]);
+			myHolder->doAction(ActionIdList[2]);
 		/*	pFrame->SetCurrentForm(*this);
 			pFrame->RequestRedraw();
 			DetailForm* pDetailForm = static_cast<DetailForm *>(pFrame->GetControl("DetailForm"));
@@ -655,7 +826,11 @@ void badaForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::
 
 		}
 		break;
-
+	case 3:
+		AppLog("initWindow");
+		if (applicationWindowsNotInited )ZLApplication::Instance().initWindow();
+		applicationWindowsNotInited = false;
+		break;
 	default:
 		break;
 	}

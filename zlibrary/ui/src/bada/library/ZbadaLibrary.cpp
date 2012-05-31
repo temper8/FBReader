@@ -85,12 +85,13 @@ ZLApplication* ZLbadaLibraryImplementation::myZLApplication;
 void ZLbadaLibraryImplementation::SetBada2App(badaApp* b) {
 	myBadaApp = b;
 }
+
 void  ZLbadaLibraryImplementation::createApplicationWindow() {
 
 	AppLog("createApplicationWindow(ZLApp)");
 	ZLDialogManager::Instance().createApplicationWindow(myZLApplication);
 	//ZLBadaApplicationWindow *b = ZLApp->myApp
-	myZLApplication->initWindow();
+//	myZLApplication->initWindow();
 }
 
 void ZLbadaLibraryImplementation::run(ZLApplication *application) {

@@ -7,6 +7,7 @@
 
 #include "ZLbadaViewWidget.h"
 #include "badaForm.h"
+#include "ZLbadaPaintContext.h"
 
 void ZLbadaViewWidget::doAction(std::string &actionId){
 	myWindows->application().doAction(actionId);
@@ -29,8 +30,22 @@ void ZLbadaViewWidget::repaint() {
 	AppLog("AngleStateOption2 %d", angle);
 	mybadaForm->setOrientation(angle);
 	// Draw and Show the form
-	mybadaForm->Draw();
-	mybadaForm->Show();
+	//mybadaForm->Draw();
+	//mybadaForm->Show();
+    if (mybadaForm == null ) return;
+	Rectangle formRect = mybadaForm->GetClientAreaBounds();
+
+	if (myCanvas) delete myCanvas;
+
+	myCanvas = new Canvas();
+	myCanvas->Construct(formRect);
+	ZLbadaPaintContext &context = (ZLbadaPaintContext&)view()->context();
+	context.pCanvas = myCanvas;
+	context.myHeight = formRect.height;
+	context.myWidth = formRect.width;
+	//context.restoreFont();
+	view()->paint();
+	//mybadaForm->RequestRedraw(true);
 	AppLog("ZLbadaViewWidget::repaint()");
 
 }

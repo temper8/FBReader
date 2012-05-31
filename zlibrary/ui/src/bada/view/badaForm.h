@@ -21,13 +21,30 @@ class badaForm :
 	public Osp::Base::Runtime::ITimerEventListener  {
 
 // Construction
+	public:
+		enum DrawMode {
+			DRAW_BLACK_SCREEN = 0,
+			SLIDE_NEXT = 1,
+			SLIDE_PREV = 2,
+			DRAW_CURRENT_PAGE = 3,
+		};
+	public:
+		DrawMode myDrawMode;
+		static badaForm &Instance();
+
+	private:
+		static badaForm *ourInstance;
+
+
 public:
-	badaForm(ZLbadaViewWidget &Holder);
+	badaForm(void);
 	virtual ~badaForm(void);
-	bool Initialize(void);
+	bool Initialize();
+	bool Initialize(ZLbadaViewWidget* Holder);
 
 // Implementation
 protected:
+	bool applicationWindowsNotInited;
 	int MenuItemCount;
 	//static const int ID_BUTTON_OK = 101;
 	Osp::Ui::Controls::Button *__pButtonOk;
@@ -37,14 +54,19 @@ protected:
 	Osp::Ui::Controls::OptionMenu* __pOptionMenu;
 	std::string ActionIdList[16];
 	Osp::Graphics::Canvas* pCanvas;
-	Osp::Graphics::Canvas* myCanvas;
+//	Osp::Graphics::Canvas* myCanvas;
 	Osp::Graphics::Canvas* capturedCanvas;
 	Osp::Graphics::Bitmap* pCapturedBitmap;
 	Osp::Graphics::Bitmap* pNextPageBitmap;
 	Osp::Graphics::Point startTouchPosition;
 	Osp::Graphics::Rectangle formRect;
 	Osp::Graphics::Rectangle srcRect;
-	int touchMove;
+//	int touchMove;
+//	bool showNewPage;
+	bool needRepaintHolder;
+	bool endOfBook;
+	bool prevPage;
+	bool touchMoved;
 	int apiVersion;
 	result GetSystemInfomation(void);
 	Osp::Base::Runtime::Timer* myTimer;
@@ -57,13 +79,13 @@ protected:
 public:
 	int ScreenHeight;
 	int ScreenWidth;
-	bool showNewPage;
+
 //	DialogForm* CreateDalogForm(const char* name);
 	DialogForm* CreateDalogForm(void);
     void AddMenuItem(const std::string &name,const  std::string &id);
     Osp::Content::ContentSearchResult* pSearchResultInfo;
 	void goOpenFileForm();
-	ZLbadaViewWidget &myHolder;
+	ZLbadaViewWidget* myHolder;
 
 	void setOrientation(int angle);
 
