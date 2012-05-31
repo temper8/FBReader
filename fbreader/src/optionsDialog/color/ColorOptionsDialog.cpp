@@ -25,7 +25,7 @@ ColorOptionsDialog::ColorOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("
 
 	colorsTab.addOption(resource["background"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption("background")));
 	colorsTab.addOption(resource["text"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption("text")));
-	colorsTab.addOption(resource["selectionBackground"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption(ZLTextStyle::SELECTION_BACKGROUND)));
+//	colorsTab.addOption(resource["selectionBackground"].value(),"",new ZLSimpleColorOptionEntry(options.colorOption(ZLTextStyle::SELECTION_BACKGROUND)));
 	colorsTab.addOption(resource["internalLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("internal")));
 	colorsTab.addOption(resource["externalLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("external")));
 	colorsTab.addOption(resource["bookLink"].value(),"", new ZLSimpleColorOptionEntry(options.colorOption("book")));
