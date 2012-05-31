@@ -17,13 +17,6 @@
  * 02110-1301, USA.
  */
 
-//#include <qapplication.h>
-//#include <qmessagebox.h>
-//#include <qfiledialog.h>
-//#include <qclipboard.h>
-
-
-
 
 
 //#include "ZLQtDialogContent.h"

@@ -81,6 +81,7 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 
 	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
 	AppLog("ZLibraryDirectory = %s",ourZLibraryDirectory.c_str());
+
 }
 
 void ZLibrary::shutdown() {

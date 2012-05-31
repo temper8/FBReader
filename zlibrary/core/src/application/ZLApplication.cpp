@@ -101,6 +101,7 @@ ZLApplication::~ZLApplication() {
 }
 
 void ZLApplication::initWindow() {
+	AppLog("ZLApplication::initWindow");
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
@@ -131,11 +132,14 @@ void ZLApplication::setView(shared_ptr<ZLView> view) {
 	if (view.isNull()) {
 		return;
 	}
+	AppLog("ZLApplication::setView qq");
 	if (!myViewWidget.isNull()) {
+		AppLog("ZLApplication::setView ww");
 		myViewWidget->setView(view);
 		resetWindowCaption();
 		refreshWindow();
 	} else {
+		AppLog("ZLApplication::setView ee");
 		myInitialView = view;
 	}
 }

@@ -80,7 +80,8 @@ void LoadingIcon::rotate() {
 
 Osp::Base::Collection::ArrayList* 	ZLbadaProgressDialog::__pAnimationFrameList = 0;
 
-ZLbadaProgressDialog::ZLbadaProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myRunnable(null) {
+ZLbadaProgressDialog::ZLbadaProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myRunnable(null), __pProgressPopup(null) {
+	AppLog("ZLbadaProgressDialog  = %s",messageText().c_str());
 	__pProgressPopup  = new Osp::Ui::Controls::Popup();
 	if (__pProgressPopup) {
 			result r;
