@@ -36,8 +36,8 @@ ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplica
 void ZLApplicationWindow::init() {
 	AppLog("ZLApplicationWindow::init()");
 	myApplication->myViewWidget = createViewWidget();
-	initToolbar(WINDOW_TOOLBAR);
-	initToolbar(FULLSCREEN_TOOLBAR);
+//	initToolbar(WINDOW_TOOLBAR);
+//	initToolbar(FULLSCREEN_TOOLBAR);
 	initMenu();
 }
 
@@ -51,8 +51,8 @@ void ZLApplicationWindow::initToolbar(ToolbarType type) {
 
 void ZLApplicationWindow::refresh() {
 	AppLog("ZLApplicationWindow::refresh()");
-	refreshToolbar(WINDOW_TOOLBAR);
-	refreshToolbar(FULLSCREEN_TOOLBAR);
+//	refreshToolbar(WINDOW_TOOLBAR);
+//	refreshToolbar(FULLSCREEN_TOOLBAR);
 	AppLog("processAllEvents");
 	processAllEvents();
 }
