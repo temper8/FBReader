@@ -5,21 +5,27 @@
         <English>FBReader</English>
         <eng-GB>FBReader</eng-GB>
     </Name>
-    <Vendor/>
+    <Vendor>Geometer Plus</Vendor>
     <Description/>
     <Icons>
-        <MainMenu>FBWVGA.png<Type1>FBWVGA.png</Type1>
-            <Type2/>
+        <MainMenu>FBReader-type4.png<Type1>FBReader-type1.png</Type1>
+            <Type2>FBReader-type2.png</Type2>
+            <Type3>FBReader-type3.png</Type3>
+            <Type4>FBReader-type4.png</Type4>
+            <Type5/>
         </MainMenu>
         <Setting/>
         <Ticker/>
         <QuickPanel/>
-        <LaunchImage>FB_splash_WVGA.png<Type1>FB_splash_WVGA.png</Type1>
-            <Type2/>
+        <LaunchImage>FB_splash_type1.png<Type1>FB_splash_type1.png</Type1>
+            <Type2>FB_splash_type2.png</Type2>
+            <Type3>FB_splash_type3.png</Type3>
+            <Type4>FB_splash_type1.png</Type4>
+            <Type5/>
         </LaunchImage>
     </Icons>
     <AutoScaling>
         <Enabled>true</Enabled>
-        <BaseResolution>480x800</BaseResolution>
+        <BaseResolution>NormalSize</BaseResolution>
     </AutoScaling>
 </Application>
