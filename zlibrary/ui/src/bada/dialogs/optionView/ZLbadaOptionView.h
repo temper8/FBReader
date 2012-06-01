@@ -356,7 +356,7 @@ class StaticTextOptionView : public ZLbadaOptionView,
 
 public:
 	StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLbadaDialogContent *tab, int row, int fromColumn, int toColumn) : ZLbadaOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myCaption(0), myLabel(0) {}
-
+	~StaticTextOptionView();
 private:
 	void _createItem();
 	void _onAccept() const;

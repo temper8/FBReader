@@ -97,54 +97,59 @@ result StaticTextOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, co
 }
 
 void StaticTextOptionView::addParagraph(std::string &text){
-	  result r = E_SUCCESS;
-    TextElement* pTextElement2 = pTextElement2 = new TextElement();
+	result r = E_SUCCESS;
+	AppLog("addParagraph = %s",text.c_str());
+	AppLog("addParagraph length = %d",text.length());
+	if (text.length()==0) return;
+    TextElement* pTextElement2 = new TextElement();
     r = pTextElement2->Construct(text.c_str());
-    //if (IsFailed(r))   {      goto CATCH;   }
+    //  r = pTextElement2->Construct(L"ttterwerwe");
+    if (IsFailed(r)) goto CATCH;
     pTextElement2->SetTextColor(Color::COLOR_GREY);
     {
-        Font font;
-        font.Construct(FONT_STYLE_PLAIN, 30);
-        pTextElement2->SetFont(font);
+    	Font font;
+    	font.Construct(FONT_STYLE_PLAIN, 30);
+    	pTextElement2->SetFont(font);
     }
-    // Creates a bitmap and scales the size
-    //pBitmap = Application::GetInstance()->GetAppResource()->GetBitmapN(L"example.bmp");
-   // pBitmap->Scale(Dimension(40, 40));
 
-    // Adds the TextElement and the bitmap to the EnrichedText
     pEnrichedText->Add(*pTextElement2);
-  //  pEnrichedText->Add(*pBitmap);
+
+    return;
+
+    CATCH:
+    	AppLog("addParagraph CATCH");
+    	delete pTextElement2;
+    return;
 }
+
+StaticTextOptionView::~StaticTextOptionView(){
+	if(pEnrichedText) {
+			AppLog("~ButtonAction  2");
+			pEnrichedText->RemoveAll(true);
+			delete pEnrichedText;
+		}
+}
+
 int StaticTextOptionView::initText(const char *caption, std::string &text, int height){
-	   result r = E_SUCCESS;
-	  //  EnrichedText* pEnrichedText = null;
-	    TextElement* pTextElement1 = null;
-	   // TextElement* pTextElement2 = null;
-	    int found;
-	    int found2;
-	    std::string p;
-	  //  Bitmap* pBitmap = null;
+   result r = E_SUCCESS;
+   int found;
+   int found2;
+   std::string p;
 
-	    // Creates an EnrichedText instance and sets the attributes
-	    pEnrichedText = new EnrichedText();
-	    r = pEnrichedText->Construct(Dimension(470, height ));
-	    if (IsFailed(r))
-	    {
-	        goto CATCH;
-	    }
-	    pEnrichedText->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
-	    pEnrichedText->SetVerticalAlignment(TEXT_ALIGNMENT_TOP);
-	    pEnrichedText->SetTextWrapStyle(TEXT_WRAP_WORD_WRAP);
-	  //  pEnrichedText->SetTextAbbreviationEnabled(true);
+    // Creates an EnrichedText instance and sets the attributes
+    pEnrichedText = new EnrichedText();
+    r = pEnrichedText->Construct(Dimension(470, height ));
+    if (IsFailed(r))    {        goto CATCH;    }
+    pEnrichedText->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
+    pEnrichedText->SetVerticalAlignment(TEXT_ALIGNMENT_TOP);
+    pEnrichedText->SetTextWrapStyle(TEXT_WRAP_WORD_WRAP);
+    //  pEnrichedText->SetTextAbbreviationEnabled(true);
 
-	    // Create a TextElement and set attributes.
-	    if (caption) {
-	    	pTextElement1 = new TextElement();
+	// Create a TextElement and set attributes.
+	if (caption) {
+	    	TextElement* pTextElement1 = new TextElement();
 	    	r = pTextElement1->Construct(caption);
-	    	if (IsFailed(r))
-	    	    {
-	    	        goto CATCH;
-	    	    }
+	    	//if (IsFailed(r))   {	        goto CATCH;   	    }
 	    	pTextElement1->SetTextColor(Color::COLOR_WHITE);
 	    	{
 	    	Font font;
@@ -154,10 +159,9 @@ int StaticTextOptionView::initText(const char *caption, std::string &text, int h
 	    	pEnrichedText->Add(*pTextElement1);
 	    }
 
-
-	    found=text.find("<p>");
-	    if (found) 	addParagraph(text);
-	    else
+    found=text.find("<p>");
+    if (found) 	addParagraph(text);
+    else
 	    {
 	    	AppLog("found0 = %d",found);
 	    	do
@@ -178,8 +182,8 @@ int StaticTextOptionView::initText(const char *caption, std::string &text, int h
 		    // Cleans up
 	   // pEnrichedText->RemoveAll(true);
 	   // delete pEnrichedText;
-		AppLog("GetTotalLineCount  = %d",pEnrichedText->GetTotalLineCount());
-	    return pEnrichedText->GetTotalLineHeight();
+	AppLog("GetTotalLineCount  = %d",pEnrichedText->GetTotalLineCount());
+    return pEnrichedText->GetTotalLineHeight();
 
 	CATCH:
 	    if (pEnrichedText)

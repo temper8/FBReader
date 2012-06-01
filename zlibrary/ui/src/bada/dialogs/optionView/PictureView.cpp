@@ -66,6 +66,7 @@ ButtonAction::~ButtonAction(){
 	AppLog("~ButtonAction  1");
 	if(pEnrichedText) {
 		AppLog("~ButtonAction  2");
+		pEnrichedText->RemoveAll(true);
 		delete pEnrichedText;
 	}
 	AppLog("~ButtonAction  3");
@@ -84,7 +85,7 @@ ButtonAction::ButtonAction(PictureView* holder, Bitmap* Bmp1, Bitmap* Bmp2):myHo
     pEnrichedText->SetTextWrapStyle(TEXT_WRAP_WORD_WRAP);
 
 
-    r = pTextElement1->Construct("Text Buuton");
+    r = pTextElement1->Construct("Text Button");
     	//if (IsFailed(r))    	    { 	    	        goto CATCH;	    	    }
    	pTextElement1->SetTextColor(Color::COLOR_BLACK);
        	{
