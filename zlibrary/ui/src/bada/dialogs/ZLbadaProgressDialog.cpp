@@ -104,17 +104,17 @@ static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
 void ZLbadaProgressDialog::ConstructAnimationFrameList(void){
 	if (__pAnimationFrameList == null)
 	{
-	Image *pImage = new Image();
-	result r = pImage->Construct();
+	Image image;// = new Image();
+	result r = image.Construct();
 		//Bitmap *pBitmap1 = pAppResource->GetBitmapN("/blue/progressing00_big.png");
-		Bitmap *pBitmap1 = pImage->DecodeN("/Res/icons/ani/progressing00.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap2 = pImage->DecodeN("/Res/icons/ani/progressing01.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap3 = pImage->DecodeN("/Res/icons/ani/progressing02.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap4 = pImage->DecodeN("/Res/icons/ani/progressing03.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap5 = pImage->DecodeN("/Res/icons/ani/progressing04.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap6 = pImage->DecodeN("/Res/icons/ani/progressing05.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap7 = pImage->DecodeN("/Res/icons/ani/progressing06.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
-		Bitmap *pBitmap8 = pImage->DecodeN("/Res/icons/ani/progressing07.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap1 = image.DecodeN("/Res/icons/ani/progressing00.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap2 = image.DecodeN("/Res/icons/ani/progressing01.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap3 = image.DecodeN("/Res/icons/ani/progressing02.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap4 = image.DecodeN("/Res/icons/ani/progressing03.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap5 = image.DecodeN("/Res/icons/ani/progressing04.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap6 = image.DecodeN("/Res/icons/ani/progressing05.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap7 = image.DecodeN("/Res/icons/ani/progressing06.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
+		Bitmap *pBitmap8 = image.DecodeN("/Res/icons/ani/progressing07.png", BITMAP_PIXEL_FORMAT_R8G8B8A8);
 
 		// Creates AnimationFrame.
 		AnimationFrame *pAniFrame1 = new AnimationFrame(*pBitmap1, 100);
