@@ -30,8 +30,9 @@
 
 #include "../filesystem/ZLFSManager.h"
 
-
 #include "../options/ZLConfig.h"
+
+#include "../../../../FBreader/src/database/booksdb/BooksDB.h"
 //#include "../network/ZLNetworkManager.h"
 
 bool ZLibrary::ourLocaleIsInitialized = false;
@@ -97,6 +98,8 @@ void ZLibrary::shutdown() {
 	AppLog("ZLTimeManager::deleteInstance()");
 	ZLConfigManager::deleteInstance();
 	AppLog("ZLConfigManager::deleteInstance()");
+
+	BooksDB::deleteInstance();
 }
 
 std::string ZLibrary::replaceRegExps(const std::string &pattern) {

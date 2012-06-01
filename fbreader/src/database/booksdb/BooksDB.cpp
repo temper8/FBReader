@@ -32,14 +32,15 @@
 
 #include "../sqldb/implsqlite/SQLiteFactory.h"
 
-shared_ptr<BooksDB> BooksDB::ourInstance = 0;
+//shared_ptr<BooksDB> BooksDB::ourInstance = 0;
+BooksDB* BooksDB::ourInstance = 0;
 
 const std::string BooksDB::DATABASE_NAME = "books.db";
 //const std::string BooksDB::STATE_DATABASE_NAME = "state.db";
 //const std::string BooksDB::NET_DATABASE_NAME = "network.db";
 
 BooksDB &BooksDB::Instance() {
-	if (ourInstance.isNull()) {
+	if (ourInstance == 0) {
 		ZLFile dir(databaseDirName());
 		dir.directory(true);
 		ZLFile file(databaseDirName() + ZLibrary::FileNameDelimiter + DATABASE_NAME);
@@ -48,8 +49,16 @@ BooksDB &BooksDB::Instance() {
 		AppLog("initDatabase");
 		ourInstance->initDatabase();
 	}
-	AppLog("initDatabase return *ourInstance");
+	AppLog("Instance return *ourInstance");
 	return *ourInstance;
+}
+
+void BooksDB::deleteInstance(){
+	AppLog("deleteDBInstance");
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
 }
 
 BooksDB::BooksDB(const std::string &path) : SQLiteDataBase(path), myInitialized(false) {
@@ -57,6 +66,7 @@ BooksDB::BooksDB(const std::string &path) : SQLiteDataBase(path), myInitialized(
 }
 
 BooksDB::~BooksDB() {
+	AppLog("~BooksDB()");
 }
 
 bool BooksDB::initDatabase() {
@@ -436,7 +446,8 @@ bool BooksDB::setPalmType(const std::string &fileName, const std::string &type) 
 }
 
 std::string BooksDB::getNetFile(const std::string &url) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		"SELECT file_id FROM NetFiles WHERE url = @url;",
 		connection(), "@url", DBValue::DBTEXT
 	);
@@ -450,7 +461,8 @@ std::string BooksDB::getNetFile(const std::string &url) {
 }
 
 bool BooksDB::setNetFile(const std::string &url, const std::string &fileName) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		"INSERT OR REPLACE INTO NetFiles (url, file_id) VALUES (@url, @file_id);",
 		connection(), "@file_id", DBValue::DBINT, "@url", DBValue::DBTEXT
 	);
@@ -465,7 +477,8 @@ bool BooksDB::setNetFile(const std::string &url, const std::string &fileName) {
 }
 
 bool BooksDB::unsetNetFile(const std::string &url) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		"SELECT file_id FROM NetFiles WHERE url = @url;",
 		connection(), "@url", DBValue::DBTEXT
 	);

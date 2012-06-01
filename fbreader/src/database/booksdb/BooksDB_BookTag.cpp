@@ -46,7 +46,8 @@ static const std::string ADD_TAG =
 	" SELECT last_insert_rowid() AS tag_id";
 
 void BooksDB::loadTags(Book &book) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_BOOK_TAGS_QUERY, connection(), "@book_id", DBValue::DBINT
 	);
 	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
@@ -61,7 +62,8 @@ void BooksDB::loadTags(Book &book) {
 void BooksDB::loadTags(const std::map<int,shared_ptr<Book> > &books) {
 	loadAllTagsById();
 
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_ALL_BOOK_TAGS_QUERY, connection()
 	);
 	shared_ptr<DBDataReader> reader = command->executeReader();
@@ -89,7 +91,8 @@ shared_ptr<Tag> BooksDB::getTagById(int id) const {
 		return tag;
 	}
 
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_SINGLE_TAG_QUERY, connection(), "@tag_id", DBValue::DBINT
 	);
 	((DBIntValue&)*command->parameter("@tag_id").value()) = id;
@@ -106,7 +109,8 @@ shared_ptr<Tag> BooksDB::getTagById(int id) const {
 }
 
 void BooksDB::loadAllTagsById() const {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_ALL_TAGS_QUERY, connection()
 	);
 	shared_ptr<DBDataReader> reader = command->executeReader();

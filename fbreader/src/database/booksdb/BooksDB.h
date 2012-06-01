@@ -39,9 +39,11 @@ public:
 	//static const std::string NET_DATABASE_NAME;
 
 	static BooksDB &Instance();
+	static void deleteInstance();
 
 private:
-	static shared_ptr<BooksDB> ourInstance;
+	//static shared_ptr<BooksDB> ourInstance;
+	static BooksDB* ourInstance;
 
 	BooksDB(const std::string &path);
 

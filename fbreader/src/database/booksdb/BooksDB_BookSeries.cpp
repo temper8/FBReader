@@ -35,7 +35,9 @@ static const std::string LOAD_ALL_SERIES_QUERY =
 	" INNER JOIN Series ON Series.series_id = BookSeries.series_id";
 
 void BooksDB::loadSeries(Book &book) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+	AppLog("DB::loadSeries");
+	//static
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_SERIES_QUERY, connection(), "@book_id", DBValue::DBINT
 	);
 	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
@@ -50,6 +52,7 @@ void BooksDB::loadSeries(Book &book) {
 			);
 		}
 	}
+	AppLog("DB::loadSeries end");
 }
 
 void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
