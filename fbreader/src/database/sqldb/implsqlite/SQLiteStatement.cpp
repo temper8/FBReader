@@ -31,10 +31,10 @@ SQLiteStatement::SQLiteStatement(Database *db, const char *zSql, const char **pz
 	int i=0;
 	String sql = "";
 	String nVal = "";
-	const char *begin = "BEGIN";
+	static const char *begin = "BEGIN";
 	int pos = 0;
 	bool isBegin = false;
-	const char *end = "END";
+	static const char *end = "END";
 	bool isVal = false;
 	while (zSql[i] != 0) {
 		if (isVal) {
@@ -91,7 +91,19 @@ SQLiteStatement::SQLiteStatement(Database *db, const char *zSql, const char **pz
 		pStmt = 0;
 	}
 }
-const char* SQLiteStatement::GetCString(const String& sBadaStr) const {
+
+SQLiteStatement::~SQLiteStatement(){
+	AppLog( "~SQLiteStatement");
+	const size_t size = myCharBuffer.size();
+	AppLog("myCharBuffer size = %d",size);
+	for (size_t i = 0; i < size; ++i) {
+		char* chPtrBuf = myCharBuffer[i];
+		delete chPtrBuf;
+	}
+	 myCharBuffer.clear();
+}
+
+char* SQLiteStatement::GetCString(const String& sBadaStr) {
     if (sBadaStr.GetLength() == 0) return null;
     ByteBuffer* pBuffer = Osp::Base::Utility::StringUtil::StringToUtf8N(sBadaStr);
     AppLog( "SQLiteStatement::GetCString %s",(char *)pBuffer->GetPointer());
@@ -102,6 +114,7 @@ const char* SQLiteStatement::GetCString(const String& sBadaStr) const {
         if (chPtrBuf != null){
             	pBuffer->GetArray((byte*)chPtrBuf, 0, byteCount);
             	delete pBuffer;
+            	myCharBuffer.push_back(chPtrBuf);
             	return chPtrBuf;
         		}
         delete pBuffer;
@@ -225,15 +238,20 @@ int SQLiteStatement::finalize(){
 	if (pEnum) delete pEnum;
 	return SQLITE_OK;
 }
-int SQLiteStatement::prepare(Database *db, const char *zSql, SQLiteStatement **ppStmt, const char **pzTail) {
+int SQLiteStatement::prepare(Database *db, const char *zSql, SQLiteStatement** ppStmt, const char **pzTail) {
+	AppLog("SQLiteStatement::prepare");
 	if (zSql[0]==0) {
 		*ppStmt = 0;
-	} else {
+	} else {AppLog("new SQLiteStatement");
 		*ppStmt = new SQLiteStatement(db, zSql, pzTail);
-		if ((**ppStmt).pStmt==0) {
-			delete ppStmt;
+		if (*ppStmt == 0) AppLog("ppStmt == 0");
+		AppLog("new SQLiteStatement 2");
+		if ((*ppStmt)->pStmt==0) {
+			AppLog("delete ppStmt");
+			delete *ppStmt;
 			*ppStmt = 0;
 		}
+		AppLog("new SQLiteStatement 3");
 	}
 	return SQLITE_OK;
 }

@@ -33,9 +33,12 @@ private:
 	Database *pDb;
 	DbEnumerator* pEnum;
 	SQLiteStatement(Database *db, const char *zSql, const char **pzTail);
+	//~SQLiteStatement();
+	std::vector<char*> myCharBuffer;
 public:
+	~SQLiteStatement();
 	DbStatement* pStmt;
-	const char* GetCString(const String& sBadaStr) const;
+	char* GetCString(const String& sBadaStr);
 	int bind_parameter_index(const char *zName);
 	const char *bind_parameter_name(int num);
 	int column_count();
@@ -51,7 +54,7 @@ public:
 	int step();
 	int reset();
 	int finalize();
-	static int prepare(Database *db, const char *zSql, SQLiteStatement **ppStmt, const char **pzTail);
+	static int prepare(Database *db, const char *zSql, SQLiteStatement** ppStmt, const char **pzTail);
 };
 
 
