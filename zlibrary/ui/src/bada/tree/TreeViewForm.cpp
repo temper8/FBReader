@@ -170,6 +170,8 @@ void   TreeViewForm::updateItem(ZLTreeTitledNode &node, int index){
 	    if (r==E_SUCCESS) AppLog("SetItemAt E_SUCCESS");
 	    		else AppLog("SetItemAt error");
 
+	    if (pBmp != null) delete pBmp;
+
 	    __pCustomList->RefreshItem(index);
 
 	 	RequestRedraw(true);
@@ -372,6 +374,7 @@ void TreeViewForm::UpdateContent(){
 				}
 
 				AddListItem(*__pCustomList, strName, strSub, pBmp);
+				if (pBmp != null) delete pBmp;
 				}
 	}
 
