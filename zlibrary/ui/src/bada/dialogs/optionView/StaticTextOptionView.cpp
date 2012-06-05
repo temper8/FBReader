@@ -90,7 +90,7 @@ result StaticTextOptionView::DrawElement(const Osp::Graphics::Canvas& canvas, co
 		return r;
 */
 	pCanvas->SetForegroundColor(Osp::Graphics::Color::COLOR_WHITE);
-	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+20, rect.y+10), *pEnrichedText) != E_SUCCESS)
+	if (pCanvas->DrawText(Osp::Graphics::Point(rect.x+5, rect.y+10), *pEnrichedText) != E_SUCCESS)
 		return r;
 
 	return r;
