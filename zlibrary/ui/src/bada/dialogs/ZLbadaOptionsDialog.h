@@ -26,6 +26,7 @@ public:
 	void apply();
 
 protected:
+	MenuView* myMenuView;
 //	Osp::Ui::Controls::Form   &myPreviousForm;
 	virtual const std::string &selectedTabKey() const;
 	virtual void selectTab(const ZLResourceKey &key);

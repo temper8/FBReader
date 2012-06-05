@@ -13,3 +13,6 @@ MenuView::MenuView(const std::string &name, const std::string &tooltip, ZLMenuOp
 
      AppLog("MenuView::MenuView 2");
 }
+MenuView::~MenuView(){
+	AppLog("MenuView::~MenuView()");
+}

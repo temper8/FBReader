@@ -18,7 +18,7 @@ using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
 using namespace Osp::Base::Collection;
 
-ZLbadaOptionsDialog::ZLbadaOptionsDialog(Form   *PreviousForm, const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) :  ZLOptionsDialog(resource, applyAction){
+ZLbadaOptionsDialog::ZLbadaOptionsDialog(Form   *PreviousForm, const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) :  ZLOptionsDialog(resource, applyAction),myMenuView(0){
 	AppLog("ZLbadaOptionsDialog resource name = %s",resource.name().c_str());
 	result r = E_SUCCESS;
 	AppLog("ZLbadaOptionsDialog caption() = %s",caption().c_str());
@@ -39,6 +39,7 @@ ZLbadaOptionsDialog::ZLbadaOptionsDialog(Form   *PreviousForm, const ZLResource 
 
 ZLbadaOptionsDialog::~ZLbadaOptionsDialog() {
 	AppLog("ZLbadaOptionsDialog::~ZLbadaOptionsDialog()");
+	if (myMenuView) delete myMenuView;
 	// TODO Auto-generated destructor stub
 }
 
@@ -82,6 +83,6 @@ void ZLbadaOptionsDialog::apply() {
 
 void ZLbadaOptionsDialog::setMenuEntry(ZLMenuOptionEntry* option){
 	AppLog("&ZLbadaOptionsDialog::setMenuEntry()");
-	MenuView* view = new MenuView(std::string(), std::string(), (ZLMenuOptionEntry*)option, null, 0, 0, 0);
-	myDialogForm->setMenuView(view);
+	myMenuView = new MenuView(std::string(), std::string(), (ZLMenuOptionEntry*)option, null, 0, 0, 0);
+	myDialogForm->setMenuView(myMenuView);
 }
