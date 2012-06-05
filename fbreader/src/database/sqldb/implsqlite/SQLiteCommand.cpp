@@ -52,7 +52,7 @@ std::string SQLiteCommand::packCommand(const std::string &command) {
 
 
 SQLiteCommand::~SQLiteCommand() {
-	AppLog("~SQLiteCommand %s",commandString().c_str());
+//	AppLog("~SQLiteCommand %s",commandString().c_str());
 	SQLiteConnection &con = (SQLiteConnection &) connection();
 	if (con.isOpened() && myStatements.size() != 0) {
 		finalizeStatements();
@@ -174,7 +174,7 @@ bool SQLiteCommand::prepareStatements(SQLiteConnection &conn) {
 	while (true) {
 		SQLiteStatement* statement;
 		int res = SQLiteStatement::prepare(db, tail, &statement, &tail);
-		AppLog("while (true) 0");
+		//AppLog("while (true) 0");
 		//int res = SQLiteStatement::prepare(db, tail, statement, &tail);
 		if (res != SQLITE_OK) {
 			AppLog("while  != SQLITE_OK");
@@ -188,19 +188,19 @@ bool SQLiteCommand::prepareStatements(SQLiteConnection &conn) {
 			AppLog("statement == 0");
 			break;
 		}
-		AppLog("while (true) 1");
+		//AppLog("while (true) 1");
 		myStatements.push_back(statement);
-		AppLog("while (true) 2");
+		//AppLog("while (true) 2");
 		conn.addStatement(statement);
-		AppLog("while (true) 3");
+		//AppLog("while (true) 3");
 	}
 	AppLog("while (true) 4");
 	if (!bindParameters()) {
-		AppLog("finalizeStatements false");
+		//AppLog("finalizeStatements false");
 		finalizeStatements();
 		return false;
 	}
-	AppLog("while (true) 5");
+	//AppLog("while (true) 5");
 	return true;
 }
 
@@ -346,9 +346,9 @@ void SQLiteCommand::finalizeStatements() {
 		}
 		delete statement;
 	}
-	AppLog("myStatements.clear()");
+	//AppLog("myStatements.clear()");
 	myStatements.clear();
-	AppLog("myStatements.clear() OK");
+	//AppLog("myStatements.clear() OK");
 }
 
 

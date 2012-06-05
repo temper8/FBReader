@@ -56,16 +56,16 @@ bool SQLiteConnection::open() {
 
 void SQLiteConnection::finalizeOpenedStatements() {
 	size_t size = myStatements.size();
-	AppLog("finalizeOpenedStatements size = %d",size);
+//	AppLog("finalizeOpenedStatements size = %d",size);
 	for (size_t i = 0; i < size; ++i) {
 		const int res = myStatements[i]->finalize();
 		if (res != SQLITE_OK) {
 			dumpError();
 		}
 	}
-	AppLog("myStatements.clear()");
+//	AppLog("myStatements.clear()");
 	myStatements.clear();
-	AppLog("myStatements.clear() OK");
+//	AppLog("myStatements.clear() OK");
 }
 
 bool SQLiteConnection::close() {
