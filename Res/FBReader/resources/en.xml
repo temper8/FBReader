@@ -488,7 +488,6 @@
 				<node name="Common" value="Common">
 					<node name="file" value="File"/>
 					<node name="title" value="Title"/>
-					<node name="language" value="Language"/>
 					<node name="encodingSet" value="Encoding Set"/>
 					<node name="encoding" value="Encoding"/>
 				</node>
@@ -497,6 +496,7 @@
 					<node name="authors" value="Author"/>
 					<node name="seriesTitle" value="Series Title"/>
 					<node name="bookIndex" value="Book Index"/>
+					<node name="language" value="Language"/>
 					<node name="price" value="Price"/>
 					<node name="bay" value="Bay"/>
 				</node>
@@ -635,6 +635,10 @@
 		<node name="emptyCatalogBox">
 			<node name="title" value="Information"/>
 			<node name="message" value="Catalog is empty."/>
+		</node>
+		<node name="emptyContentBox">
+			<node name="title" value="Information"/>
+			<node name="message" value="The content is absent."/>
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Disable catalog"/>

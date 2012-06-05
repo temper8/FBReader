@@ -163,6 +163,16 @@ void ShowLibraryTreeAction::run() {
 }
 
 void ShowTOCTreeAction::run() {
+	shared_ptr<BookModel> model = FBReader::Instance().myModel;
+	bool isEnabled = !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
+
+	if (!isEnabled) {
+	//	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), error);
+		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyContentBox"));
+		AppLog("TOC not visible");
+		return;
+	}
+
 	AppLog("ShowTOCTreeAction::run() ");
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog(ZLResourceKey("TOCTreeDialog"));
 	AppLog("ShowTOCTreeAction::createTreeDialog() ");
@@ -185,8 +195,9 @@ void ShowTOCTreeAction::run() {
 }
 
 bool ShowTOCTreeAction::isVisible() const {
-	shared_ptr<BookModel> model = FBReader::Instance().myModel;
-	return !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
+	return true;
+	//shared_ptr<BookModel> model = FBReader::Instance().myModel;
+	//return !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
 }
 
 

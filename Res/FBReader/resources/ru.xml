@@ -489,15 +489,15 @@
 				<node name="Common" value="Основная информация">
 					<node name="file" value="Файл"/>
 					<node name="title" value="Название"/>
-					<node name="language" value="Язык"/>
 					<node name="encodingSet" value="Набор кодировок"/>
 					<node name="encoding" value="Кодировка"/>
 				</node>
 				<node name="BookInfo" value="Информация о книге">
 					<node name="title" value="Название"/>
-					<node name="authors" value="Авторы:"/>
+					<node name="authors" value="Авторы"/>
 					<node name="seriesTitle" value="Серия"/>
 					<node name="bookIndex" value="Номер книги в серии"/>
+					<node name="language" value="Язык"/>
 					<node name="price" value="Цена"/>
 					<node name="bay" value="Купить"/>
 				</node>
@@ -636,6 +636,10 @@
 		<node name="emptyCatalogBox">
 			<node name="title" value="Информация"/>
 			<node name="message" value="Каталог пуст."/>
+		</node>
+		<node name="emptyContentBox">
+			<node name="title" value="Информация"/>
+			<node name="message" value="Содержание отсутствует."/>
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Отключение каталога"/>
