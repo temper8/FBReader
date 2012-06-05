@@ -46,11 +46,10 @@ void ScrollingAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<ZLView> view = fbreader.currentView();
 	int delay = fbreader.myLastScrollingTime.millisecondsTo(ZLTime());
-	if (view.isNull() ||
-			(delay >= 0 && delay < scrollingDelay())) {
+	if (view.isNull()) {
+		// ||(delay >= 0 && delay < scrollingDelay())) {
 		return;
 	}
-
 	if (view->isInstanceOf(ZLTextView::TYPE_ID)) {
 		((ZLTextView&)*view).scrollPage(myForward, myTextScrollingMode, textOptionValue());
 		FBReader::Instance().refreshWindow();

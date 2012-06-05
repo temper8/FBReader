@@ -213,7 +213,7 @@ void badaForm::PrevPage(){
 				dx = 0;
 				vx = 60;
 				if (myHolder->myCanvas) capturedCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
-				fbreader.doAction(ActionCode::TAP_SCROLL_BACKWARD);
+				fbreader.doAction(ActionCode::PAGE_SCROLL_BACKWARD);
 				myTimer->Start(1);
 				myDrawMode = SLIDE_PREV;
 	}
@@ -243,7 +243,7 @@ void badaForm::NextPage(){
 		vx = 60;
 		if (myHolder->myCanvas) capturedCanvas->Copy(Point(0,0),*myHolder->myCanvas,formRect);
 
-		fbreader.doAction(ActionCode::TAP_SCROLL_FORWARD);
+		fbreader.doAction(ActionCode::PAGE_SCROLL_FORWARD);
 
 		myDrawMode = SLIDE_NEXT;
 
@@ -280,8 +280,11 @@ void badaForm::OnTouchMoved(const Osp::Ui::Control &source, const Point &current
 	AppLog("OnTouchMoved");
 	//touchMoved = true;
 	FBReader &fbreader = FBReader::Instance();
-	if (!fbreader.EnableTapScrollingOption.value()) return;
-	if (fbreader.TapScrollingOnFingerOnlyOption.value()) return;
+	if ((!fbreader.EnableTapScrollingOption.value()) ||
+			(fbreader.TapScrollingOnFingerOnlyOption.value())) {
+		touchMoved = true;
+		return;
+	}
 
 	const ZLTextArea &textArea  = fbreader.bookTextView().textArea();
 	if (textArea.isEmpty()) {
