@@ -26,7 +26,8 @@
 
 #include <ZLColor.h>
 #include <ZLTypeId.h>
-//#include "ZLPaintContext.h"
+#include "ZLPaintContext.h"
+
 class ZLViewWidget;
 class ZLPaintContext;
 

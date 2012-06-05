@@ -154,9 +154,9 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 			if (italic) myFont = myFontItalic;
 				else myFont = myFontRegular;
 			if (myFont!=0) pCanvas->SetFont(*myFont);
+			}
 		  return;
-		 }
-	}
+		}
 
 
 	myStoredSize = size;
@@ -184,7 +184,6 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 		std::string fontItalic;
 		if (badaFont.empty()) {
 			fontRegular = findFont(newFont, false, false);
-
 
 			AppLog("findFont");
 			fontItalic = findFont(newFont, false, true);
@@ -238,45 +237,7 @@ void ZLbadaPaintContext::setFont(const std::string &family, int size, bool bold,
 
 	if (italic) myFont = myFontItalic;
 		else myFont = myFontRegular;
-	/*
-	Osp::Graphics::Font* font;
 
-	std::string fontPath;
-
-	fontPath = findFont(family, bold, italic);
-	//std::map<std::string, std::string>::const_iterator it = myFontsList.find(family);
-	//if (it != myFontsList.end()) {
-	if (!fontPath.empty()) {
-		//fontPath = it->second;
-		AppLog("not empty fontFamily %s",fontPath.c_str());
-		font = new Osp::Graphics::Font;
-		if (font->Construct(Osp::Base::String(fontPath.c_str()),style, size) != E_SUCCESS){
-					AppLog("font == NULL");
-					font = new Osp::Graphics::Font;
-					font->Construct(style,size);
-				}
-	//	printFaceName(font);
-	}
-	else
-	  {AppLog("empty");
-		font = new Osp::Graphics::Font;
-		if (font->Construct(String(family.c_str()),style,size) != E_SUCCESS){
-			delete font;
-			font = null;
-			//AppLog( "loadDefaultFont ");
-			//font = loadDefaultFont(style,size);
-			if (font == null) {
-				font = new Osp::Graphics::Font;
-			//	AppLog( "Construct bada font ");
-				font->Construct(style,size);
-			}
-		}
-   }
-*/
-//	font = new Osp::Graphics::Font;
-//	font->Construct(style,size);
-	//if (italic) font->SetCharSpace(-1);
-	//AppLog("getCharSpace %d",font->GetCharSpace());
 	AppLog("maxh=%d, getsize=%d, getas=%d, getdes=%d", myFont->GetMaxHeight(), myFont->GetSize(), myFont->GetAscender(), myFont->GetDescender());
 	mySpaceWidth = -1;
 	myDescent = myFont->GetDescender();
@@ -443,11 +404,12 @@ void ZLbadaPaintContext::drawString(int x, int y, const char *str, int len, bool
 	if ((myFont!=0)&&(pCanvas!=0))  {
 	//	AppLog("pCanvas->SetFont(*myFont)");
 	//	pCanvas->SetFont(*myFont);
-	}
+
 	 if (myStoredItalic)
 		 pCanvas->DrawText(Point(x, y - myFont->GetMaxHeight()+ deltaItalic), bada_str);
 	 else
 		 pCanvas->DrawText(Point(x, y - myFont->GetMaxHeight()), bada_str);
+}
  /*
  if (!myStoredItalic) pCanvas->DrawText(Point(x, y-myFont->GetMaxHeight()), bada_str);
  else{

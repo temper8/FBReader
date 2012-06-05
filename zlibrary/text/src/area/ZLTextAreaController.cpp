@@ -87,12 +87,12 @@ ZLTextWordCursor ZLTextAreaController::buildInfos(const ZLTextWordCursor &start)
 	int textHeight = myArea.height();
 	int counter = 0;
 	do {
-		AppLog("do textHeight = %d counter = %d",  myArea.height(), counter);
+	//	AppLog("do textHeight = %d counter = %d",  myArea.height(), counter);
 		ZLTextWordCursor paragraphEnd = cursor;
 		paragraphEnd.moveToParagraphEnd();
 		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
-		AppLog("paragraphStart = %d paragraphEnd = %d",  paragraphStart.elementIndex(), paragraphEnd.elementIndex());
+	//	AppLog("paragraphStart = %d paragraphEnd = %d",  paragraphStart.elementIndex(), paragraphEnd.elementIndex());
 
 		ZLTextArea::Style style(myArea, myArea.myProperties.baseStyle());
 		style.applyControls(paragraphStart, cursor);
@@ -100,7 +100,6 @@ ZLTextWordCursor ZLTextAreaController::buildInfos(const ZLTextWordCursor &start)
 
 		while (!info->End.isEndOfParagraph())
 		{
-			AppLog("myArea.processTextLine");
 			info = myArea.processTextLine(style, info->End, paragraphEnd);
 			textHeight -= info->Height + info->Descent;
 			AppLog("info->Height = %d info->Descent = %d", info->Height, info->Descent);

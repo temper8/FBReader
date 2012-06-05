@@ -21,10 +21,12 @@
 #define __ZLVIEWWIDGET_H__
 
 #include <string>
+#include <shared_ptr.h>
 
 #include "ZLView.h"
 
 class ZLView;
+
 
 class ZLViewWidget {
 
