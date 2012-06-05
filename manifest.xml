@@ -2,7 +2,7 @@
 <Manifest>
     <Id>3g6nj80c10</Id>
     <Secret>BDB8DB842BFBFE615DEFCB296F46A5E7</Secret>
-  <AppVersion>0.0.2</AppVersion>
+  <AppVersion>0.0.3</AppVersion>
   <ManifestVersion>1.2</ManifestVersion>
   <AppType>C++App</AppType>
     <Privileges>
