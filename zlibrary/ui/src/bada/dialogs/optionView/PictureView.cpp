@@ -169,10 +169,7 @@ PictureView::~PictureView(){
 void PictureView::updateActions(){
 	std::string s0 = "Button0";
 	std::string s1 = "Button1";
-	//myBottonActions[0]->SetCaption(s0);
-	//myBottonActions[1]->SetCaption(s1);
-	//myBottonActions[2]->SetCaption(s0);
-	///myBottonActions[3]->SetCaption(s1);
+
 	myBottonActions[0]->visible = false;
 	myBottonActions[1]->visible = false;
 	myBottonActions[2]->visible = false;
@@ -227,8 +224,7 @@ void PictureView::_createItem() {
     if (myImage.isNull()) {
         return;
     }
-    Bitmap *pBmp = null;//new Bitmap;
-    //pBmp->Construct(Dimension(200,300), BITMAP_PIXEL_FORMAT_ARGB8888);
+    Bitmap *pBmp = null;
 
 	shared_ptr<ZLImage> cover = myImage;
 	if (cover.isNull()) {	AppLog("cover.isNull()");}
@@ -236,14 +232,8 @@ void PictureView::_createItem() {
 			{
 			shared_ptr<ZLImageData> coverData = ZLImageManager::Instance().imageData(*cover);
 			if (!coverData.isNull()) {
-				//pBitmapLeftIcon = 	((ZLbadaImageData&)coverData).pBitmap;
-				//Bitmap *pBmp;
 				ZLImageData &image = *coverData;
 				Bitmap *tmpBmp = 	((ZLbadaImageData&)image).pBitmap;
-				//int imageWidth = tmpBmp->GetWidth();
-				//int imageHeight = tmpBmp->GetHeight();
-				//AppLog("image w = %d, h = %d", imageWidth, imageHeight);
-				//pBmp->Merge(Point(0,0), *tmpBmp, Rectangle(0,0,imageWidth,imageHeight));
 				pBmp = makeCover(tmpBmp);
 			}
 			else
@@ -255,39 +245,21 @@ void PictureView::_createItem() {
 	myBottonActions[1] = new ButtonAction(this, myTab->form()->buttonBmp, myTab->form()->buttonBmp2);
 	myBottonActions[2] = new ButtonAction(this, myTab->form()->buttonBmp, myTab->form()->buttonBmp2);
 	myBottonActions[3] = new ButtonAction(this, myTab->form()->buttonBmp, myTab->form()->buttonBmp2);
-//    Bitmap *buttonBmp = new Bitmap;
- //   buttonBmp->Construct(*myTab->form()->buttonBmp, Osp::Graphics::Rectangle(0,0,300,52));
-//    Bitmap *buttonBmp2 = new Bitmap;
- //   buttonBmp2->Construct(*myTab->form()->buttonBmp2, Osp::Graphics::Rectangle(0,0,300,52));
-	//ZLButtonOptionEntry &entry = (ZLButtonOptionEntry&)*myOption;
 	updateActions();
 	OptionListItem* pItem = new OptionListItem(this);
 	pItem->Construct(330);
 	pItem->SetItemFormat(*myTab->form()->__pImageViewListItemFormat);
 	pItem->SetElement(ID_LIST_BACKGROUND, String(""));
 
-//	pItem->SetElement(ID_LIST_BITMAP1, *myBottonActions[0]);
-//	pItem->SetElement(ID_LIST_BITMAP2, *myBottonActions[1]);
-//	pItem->SetElement(ID_LIST_BITMAP3, *myBottonActions[2]);
-//	pItem->SetElement(ID_LIST_BITMAP4, *myBottonActions[3]);
-
-	//*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4,false);
-//	*myTab->form()->__pImageViewListItemFormat->SetElementEventEnabled(ID_LIST_BITMAP4, true);
-	//pItem->SetElement(ID_LIST_TEXT_TITLE,String((ZLOptionView::name()).c_str()));
-	//pItem->SetElement(ID_LIST_TEXT_SUBTITLE, subTitle);
-	if (pBmp!=null) pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
-	//pItem->SetCheckBox(ID_LIST_CHECKBOX);
-	//pItem->SetElement(ID_FORMAT_CUSTOM, *(static_cast<ICustomListElement *>(__pListElement)));
+	if (pBmp!=null) {
+			pItem->SetElement(ID_LIST_BITMAP, *pBmp, pBmp);
+			delete pBmp;
+	}
 	myTab->form()->__pCustomList->AddItem(myTab->form()->GroupCount-1, *pItem, ID_LIST_ITEM);
 
 	groupIndex = myTab->form()->GroupCount-1;
 	itemIndex = myTab->form()->__pCustomList->GetItemCountAt(groupIndex)-1;
 	AppLog("groupIndex =%d itemIndex=%d",groupIndex,itemIndex);
-	//myTab->form()->__pCustomList->GetLastCheckedItemIndex( groupIndex, itemIndex);
-	//checkState = ((ZLBooleanOptionEntry&)*myOption).initialState();
-//	myTab->form()->__pCustomList->SetItemEnabled(groupIndex,itemIndex,false);
-
-
 	AppLog("PictureView::_createItem() end");
 }
 
