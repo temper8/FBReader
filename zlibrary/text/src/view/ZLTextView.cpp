@@ -295,6 +295,7 @@ void ZLTextView::findPrevious() {
 }
 
 bool ZLTextView::onStylusPress(int x, int y) {
+	AppLog("ZLTextView::onStylusPress 1");
 	stopSelectionScrolling();
 
 	myDoubleClickInfo.update(x, y, true);
@@ -308,7 +309,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
   if (model.isNull()) {
 	  return false;
 	}
-
+  AppLog("ZLTextView::onStylusPress 2");
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() &&
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
@@ -321,7 +322,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 			return true;
 		}
 	}
-
+	AppLog("ZLTextView::onStylusPress 3");
 	if (model->kind() == ZLTextModel::TREE_MODEL) {
 		const ZLTextTreeNodeRectangle *node = textArea().treeNodeByCoordinates(x, y);
 		if (node != 0) {
@@ -352,11 +353,11 @@ bool ZLTextView::onStylusPress(int x, int y) {
 				preparePaintInfo();
 			}
 			ZLApplication::Instance().refreshWindow();
-
+			AppLog("ZLTextView::onStylusPress 4");
 			return true;
 		}
 	}
-
+	AppLog("ZLTextView::onStylusPress 5");
 	return false;
 }
 
@@ -416,6 +417,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	} else if (count > 2) {
 		AppLog("ZLTextView::onStylusClick count > 2");
 		if (myTextAreaController.area().selectionModel().selectWord(textArea().realX(x), y)) {
+			AppLog("selectWord(textArea");
 			ZLApplication::Instance().refreshWindow();
 			myDoubleClickInfo.Count = 10;
 			return true;
@@ -426,7 +428,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	} else {
 		AppLog("ZLTextView::onStylusClick 1");
 		myTextAreaController.area().selectionModel().clear();
-		ZLApplication::Instance().refreshWindow();
+		//ZLApplication::Instance().refreshWindow();
 		return false;
 	}
 	AppLog("ZLTextView::onStylusClick 2");
@@ -610,11 +612,14 @@ void ZLTextView::DoubleClickInfo::update(int x, int y, bool press) {
 	ZLTime current;
 	int dcDeltaX = X - x;
 	int dcDeltaY = Y - y;
+	/*
 	if ((current.millisecondsFrom(Time) < myView.doubleClickDelay()) &&
 			(dcDeltaX > -5) && (dcDeltaX < 5) &&
 			(dcDeltaY > -5) && (dcDeltaY < 5)) {
 		++Count;
-	} else {
+	} else
+	*/
+	{
 		Count = press ? 1 : 0;
 	}
 	X = x;
