@@ -29,8 +29,8 @@ bool DialogForm::Initialize(const char *title, bool __showApplyButton)
 	if (showApplyButton) {
 //	if (true) {
 		AppLog("showApplyButton true");
-	//	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1);
-		Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
+		Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1);
+	//	Construct(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
 		AddSoftkeyActionListener(SOFTKEY_0, *this);
 		SetSoftkeyActionId(SOFTKEY_0, ID_ACT_UPDATE);
 		SetSoftkeyText(SOFTKEY_0, L"Apply");
@@ -47,7 +47,7 @@ bool DialogForm::Initialize(const char *title, bool __showApplyButton)
 	return true;
 }
 
-DialogForm::DialogForm() : myMenuView(null) {
+DialogForm::DialogForm() : myMenuView(null),__pOptionMenu(null) {
 	// TODO Auto-generated constructor stub
 	AppLog("DialogForm::DialogForm()");
 }
@@ -55,7 +55,7 @@ DialogForm::DialogForm() : myMenuView(null) {
 DialogForm::~DialogForm() {
 	// TODO Auto-generated destructor stub
 	AppLog("delete __badaOptionsDialog;...");
-	__badaOptionsDialog =0;
+	__badaOptionsDialog = 0;
 	AppLog("delete buttonBmp;...");
 	delete buttonBmp;
 	delete buttonBmp2;
@@ -70,6 +70,10 @@ DialogForm::~DialogForm() {
 	delete __pImageViewListItemFormat;
 	delete __pButtonViewListItemFormat;
 	delete __pStaticTextListItemFormat;
+//	__pCustomList->RemoveGroupedItemEventListener(*this);
+	AppLog("delete __pCustomList");
+//	delete __pCustomList;
+	if (__pOptionMenu) delete __pOptionMenu;
 	AppLog("DialogForm::~DialogForm()");
 }
 
@@ -87,22 +91,34 @@ void DialogForm::HideOptionMenu(void) {
 void DialogForm::setMenuView(MenuView* view) {
 	AppLog("DialogForm::setMenuView");
 	myMenuView = view;
+	int actionsCount = myMenuView->myActions.size();
 
-	__pOptionMenu = new OptionMenu();
-	__pOptionMenu->Construct();
-	__pOptionMenu->AddActionEventListener(*this);
+	AppLog("DialogForm::setMenuView %d",actionsCount);
+	if (actionsCount>2) {
+		if (showApplyButton)		{
+			this->SetFormStyle(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_0|FORM_STYLE_SOFTKEY_1|FORM_STYLE_OPTIONKEY);
+			__pOptionMenu = new OptionMenu();
+			__pOptionMenu->Construct();
+			SetOptionkeyActionId(ID_OPTIONKEY);
+			AddOptionkeyActionListener(*this);
+		}
 
+		else
+			this->SetFormStyle(FORM_STYLE_NORMAL|FORM_STYLE_TITLE|FORM_STYLE_SOFTKEY_1);
+
+	}
 	updateMenu();
-	SetOptionkeyActionId(ID_OPTIONKEY);
-	AddOptionkeyActionListener(*this);
+
 }
 
 void DialogForm::updateMenu(){
 	int actionsCount = myMenuView->myActions.size();
 	AppLog("actionsCount %d", actionsCount);
 	actionsCount =0;
-	int itemsCount = __pOptionMenu->GetItemCount();
-	for (int i= 0; i<itemsCount; i++) __pOptionMenu->RemoveItemAt(0);
+	if (__pOptionMenu != null) {
+		int itemsCount = __pOptionMenu->GetItemCount();
+		for (int i= 0; i<itemsCount; i++) __pOptionMenu->RemoveItemAt(0);
+	}
 
 	for (int i = 1; i<myMenuView->myActions.size();i++){
 		shared_ptr<ZLRunnableWithKey> a = myMenuView->myActions[i];
@@ -110,7 +126,7 @@ void DialogForm::updateMenu(){
 			std::string text = a->text(ZLResource::resource("networkView")["bookNode"]);
 			if (actionsCount == 0) SetSoftkeyText(SOFTKEY_0, text.c_str());
 			else
-				__pOptionMenu->AddItem(text.c_str(),ID_OPTIONMENU_ITEM0+i);
+				if (__pOptionMenu != null) __pOptionMenu->AddItem(text.c_str(),ID_OPTIONMENU_ITEM0+i);
 			actionsCount++;
 		}
 
@@ -134,7 +150,7 @@ result DialogForm::OnInitializing(void)
 
 	GroupCount = 0;
 	//__pCustomList->Construct(Rectangle(0, 0, 480, 800), CUSTOM_LIST_STYLE_NORMAL);
-	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK, true);
+	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK, false);
 //	__pCustomList->Construct(Rectangle(0, 0, formRect.width, formRect.height), CUSTOM_LIST_STYLE_MARK_WITH_DIVIDER);
 	//__pCustomList->AddCustomItemEventListener(*this);
     __pCustomList->SetBackgroundColor(Color(41,41,41));
@@ -176,13 +192,13 @@ result DialogForm::OnInitializing(void)
 
 //---------------------- __pStaticTextListItemFormat --------------------------------
 
-  	  __pStaticTextListItemFormat = new CustomListItemFormat();
-  	  __pStaticTextListItemFormat->Construct();
+    __pStaticTextListItemFormat = new CustomListItemFormat();
+    __pStaticTextListItemFormat->Construct();
 
-  	  __pStaticTextListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(90, 25, 300, 52));
-  	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, 400, 80), 55, Color::COLOR_BLUE, Color::COLOR_BLUE);
-  	  __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 30, 400, 80), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
-  	  __pStaticTextListItemFormat->AddElement(ID_LIST_CUSTOM, Osp::Graphics::Rectangle(0, 0, 480, 1300));
+    __pStaticTextListItemFormat->AddElement(ID_LIST_BITMAP, Osp::Graphics::Rectangle(90, 25, 300, 52));
+    __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_TITLE, Osp::Graphics::Rectangle(90, 15, 400, 80), 55, Color::COLOR_BLUE, Color::COLOR_BLUE);
+    __pStaticTextListItemFormat->AddElement(ID_LIST_TEXT_SUBTITLE, Osp::Graphics::Rectangle(90, 30, 400, 80), 30, Color::COLOR_BLACK, Color::COLOR_BLUE);
+    __pStaticTextListItemFormat->AddElement(ID_LIST_CUSTOM, Osp::Graphics::Rectangle(0, 0, 480, 1300));
 
 
 //---------------------- __pBooleanListItemFormat --------------------------------
@@ -265,7 +281,7 @@ result  DialogForm::AddTab(const char *title){
 	AppLog("DialogForm::AddTab %s", title);
 	result r = E_SUCCESS;
 
-    __pCustomList->AddGroup(String(" "), null);
+    __pCustomList->AddGroup(String(""), null);
     GroupCount++;
 
 }
@@ -299,10 +315,7 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 			AppLog("Close button is clicked!");
 			__badaOptionsDialog->accept();
 			Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-			//pFrame->SetCurrentForm(*pPreviousForm);
-			//pPreviousForm->Draw();
-			//pPreviousForm->Show();
-			//((badaForm*)pPreviousForm)->pSearchResultInfo=null;
+
 			pPreviousForm->SendUserEvent(0, null);
 		}
 		break;
@@ -356,6 +369,7 @@ void DialogForm::OnActionPerformed(const Osp::Ui::Control & source, int actionId
 		break;
 	}
 }
+
 void DialogForm::runAction(shared_ptr<ZLRunnableWithKey> action){
 	std::string text = action->key().Name;
 	AppLog("OnActionPerformed= %s", text.c_str());
@@ -435,12 +449,7 @@ void DialogForm::ShowColorComboOptionPopup(ColorOptionView* pColorOptionView){
 }
 
 void DialogForm::ShowSpinOptionPopup(SpinOptionView* pSpinOptionView){
-	//DeleteCreateCategoryPopup();
 
-	//__pSpinOptionPopup = new SpinOptionPopup();
-
-	//__pSpinOptionPopup->Construct(this, pSpinOptionView);
-	//__pSpinOptionPopup->Show();
 
 	__pComboOptionPopup = new ComboOptionPopup();
 	__pComboOptionPopup->Construct(this, pSpinOptionView);
@@ -475,27 +484,6 @@ void  DialogForm::OnItemStateChanged (const Osp::Ui::Control &source, int groupI
 	OptionListItem* pItem = (OptionListItem*)__pCustomList->GetItemAt(groupIndex, itemIndex);
 	pItem->OnActionPerformed(elementId);
 
-    switch (itemId)
-    {
-        case ID_LIST_ITEM:
-            {
-                switch (elementId)
-                {
-                    case ID_LIST_TEXT_TITLE:
-                        // Todo:
-                        break;
-
-                    case ID_LIST_BITMAP:
-                        // Todo:
-                        break;
-                    default:
-                        break;
-                }
-            }
-            break;
-        default:
-            break;
-    }
 }
 
 
