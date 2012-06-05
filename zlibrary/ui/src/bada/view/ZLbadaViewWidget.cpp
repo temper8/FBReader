@@ -13,7 +13,7 @@ void ZLbadaViewWidget::doAction(std::string &actionId){
 	myWindows->application().doAction(actionId);
 }
 
-ZLbadaViewWidget::ZLbadaViewWidget(ZLView::Angle initialAngle): ZLViewWidget(initialAngle) {
+ZLbadaViewWidget::ZLbadaViewWidget(ZLView::Angle initialAngle): ZLViewWidget(initialAngle), myCanvas(null) {
 }
 
 ZLbadaViewWidget::~ZLbadaViewWidget() {
@@ -39,6 +39,8 @@ void ZLbadaViewWidget::repaint() {
 
 	myCanvas = new Canvas();
 	myCanvas->Construct(formRect);
+
+
 	ZLbadaPaintContext &context = (ZLbadaPaintContext&)view()->context();
 	context.pCanvas = myCanvas;
 	context.myHeight = formRect.height;
