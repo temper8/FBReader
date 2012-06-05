@@ -38,7 +38,7 @@ TreeViewForm::~TreeViewForm() {
 	AppLog("__pCustomList->RemoveAllItems()");
     delete __pCustomListItemFormat;
 	AppLog("delete __pCustomListItemFormat;");
-
+	delete __pNoIconsListItemFormat;
 //    delete __pCustomList;
     AppLog("delete __pCustomList;");
 }
