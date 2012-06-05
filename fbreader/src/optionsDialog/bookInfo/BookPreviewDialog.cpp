@@ -162,23 +162,33 @@ SimpleBookPreviewDialog::SimpleBookPreviewDialog(shared_ptr<Book> book) : myBook
 	BookInfoTab.addOption(ZLResourceKey("authors"), new StaticTextEntry(authors));
 	BookInfoTab.addOption(ZLResourceKey("seriesTitle"), new StaticTextEntry(myBook->seriesTitle()));
 
+	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
+	languageCodes.push_back("de-traditional");
+	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
+	std::string language = bookLanEntry->initialValue();
+	//BookInfoTab.addOption(ZLResourceKey("language"), bookLanEntry);
+	//bookLanEntry->setActive(false);
+	BookInfoTab.addOption(ZLResourceKey("language"), new StaticTextEntry(language));
+	delete bookLanEntry;
 
 	//commonTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Common"));
 	//SummaryTab.addOption(ZLResourceKey("title"), new StaticTextEntry(myBook.Summary));
-	ZLStringInfoEntry* fileNameOption =  new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()));
-	SummaryTab.addOption(ZLResourceKey("file"),fileNameOption);
-	fileNameOption->setActive(false);
+//	ZLStringInfoEntry* fileNameOption =  new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()));
+//	SummaryTab.addOption(ZLResourceKey("file"),fileNameOption);
+//	fileNameOption->setActive(false);
+	std::string filePath = ZLFile::fileNameToUtf8(book->file().path());
+	SummaryTab.addOption(ZLResourceKey("file"), new StaticTextEntry(filePath));
 	AppLog("commonTab.addOption file");
 
-	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
-	languageCodes.push_back("de-traditional");
+//	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
+//	languageCodes.push_back("de-traditional");
 
 //	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
 	//	AppLog("myLanguageEntry = new BookLanguageEntry");
-	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
-	SummaryTab.addOption(ZLResourceKey("language"), bookLanEntry);
-	bookLanEntry->setActive(false);
+//	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
+//	SummaryTab.addOption(ZLResourceKey("language"), bookLanEntry);
+//	bookLanEntry->setActive(false);
 
 }
 
@@ -211,23 +221,32 @@ BookPreviewDialog::BookPreviewDialog(shared_ptr<Book> book) : myBook(book)  {
 	BookInfoTab.addOption(ZLResourceKey("authors"), new StaticTextEntry(authors));
 	BookInfoTab.addOption(ZLResourceKey("seriesTitle"), new StaticTextEntry(myBook->seriesTitle()));
 
+	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
+	languageCodes.push_back("de-traditional");
+	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
+	std::string language = bookLanEntry->initialValue();
+	//BookInfoTab.addOption(ZLResourceKey("language"), bookLanEntry);
+	//bookLanEntry->setActive(false);
+	BookInfoTab.addOption(ZLResourceKey("language"), new StaticTextEntry(language));
+	delete bookLanEntry;
 
 	//commonTab.addOption(ZLResourceKey("file"), new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path())));
 	ZLDialogContent &SummaryTab = myDialog->createTab(ZLResourceKey("Common"));
 	//SummaryTab.addOption(ZLResourceKey("title"), new StaticTextEntry(myBook.Summary));
-	ZLStringInfoEntry* fileNameOption =  new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()));
-	SummaryTab.addOption(ZLResourceKey("file"),fileNameOption);
-	fileNameOption->setActive(false);
+	//ZLStringInfoEntry* fileNameOption =  new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()));
+	//SummaryTab.addOption(ZLResourceKey("file"),fileNameOption);
+	//fileNameOption->setActive(false);
+
+	std::string filePath = ZLFile::fileNameToUtf8(book->file().path());
+	SummaryTab.addOption(ZLResourceKey("file"), new StaticTextEntry(filePath));
+
 	AppLog("commonTab.addOption file");
 
-	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
-	languageCodes.push_back("de-traditional");
+
 
 //	myLanguageEntry = new BookLanguageEntry(*this, languageCodes);
 	//	AppLog("myLanguageEntry = new BookLanguageEntry");
-	BookLanguageEntry* bookLanEntry = new BookLanguageEntry(myBook, languageCodes);
-	SummaryTab.addOption(ZLResourceKey("language"), bookLanEntry);
-	bookLanEntry->setActive(false);
+
 
 }
 
